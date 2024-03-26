@@ -6,7 +6,6 @@ export const FontFamily = {
   tiltles20PxBold: 'Inter-Bold',
   interSemiBold: 'Inter-SemiBold',
   interLight: 'Inter-Light',
-  quicksandBold: 'Quicksand-Bold',
 };
 /* font sizes */
 export const FontSize = {

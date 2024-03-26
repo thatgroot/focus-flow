@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Image } from 'expo-image';
 import { StyleSheet, Text, View } from 'react-native';
-import { Color, FontFamily, FontSize, Border } from '../../styles/GlobalStyles';
+import { Color, FontFamily, FontSize, Border } from '@/styles/GlobalStyles';
 
 const Splash = () => {
   return (
@@ -26,7 +26,6 @@ const styles = StyleSheet.create({
   flowTypo: {
     textAlign: 'center',
     color: Color.colorCornflowerblue_100,
-    fontFamily: FontFamily.quicksandBold,
     fontWeight: '700',
     fontSize: FontSize.size_17xl,
   },
