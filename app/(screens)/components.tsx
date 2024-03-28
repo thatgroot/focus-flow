@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  FlatList,
+  LayoutAnimation,
 } from "react-native";
 import LabeledInput from "@/components/InputField";
 import Checkbox from "@/components/CheckBox";
@@ -16,6 +18,67 @@ import Button from "@/elements/Button";
 import Link from "@/elements/Link";
 import TimeEntry from "@/components/TimeEntry";
 import DayCard from "@/components/DayCard";
+import { TimerSection } from "@/components/TimerSection";
+import { BottomNav } from "@/components/BottomNav";
+import { Schedules } from "@/components/Schedules";
+import { SubjectCard } from "@/components/SubjectCard";
+import { CompletedTask } from "@/components/CompletedTask";
+import { Users } from "@/components/Users";
+import { StudyGroup } from "@/components/StudyGroup";
+import { CircularImageWithOverlays } from "@/components/CircularImageWithOverlays";
+import { calculateAngle, calculatePosition } from "@/utils";
+import { theme } from "@/styles/theme";
+
+const DATA: StudyGroupProps[] = [
+  {
+    gradient: ["#9AA5B5", "#9AA5B5"],
+    type: "Study",
+    title: "Study Together",
+    users: [
+      require("@/assets/images/user1.png"),
+      require("@/assets/images/user2.png"),
+      require("@/assets/images/user3.png"),
+      require("@/assets/images/user4.png"),
+    ],
+    count: "33,558",
+  },
+  {
+    gradient: ["#8a97dd", "#8a97dd85"],
+    type: "Study",
+    title: "Practical Group",
+    users: [
+      require("@/assets/images/user1.png"),
+      require("@/assets/images/user2.png"),
+      require("@/assets/images/user3.png"),
+      require("@/assets/images/user4.png"),
+    ],
+    count: "33,558",
+  },
+  {
+    gradient: ["#FFCA65", "#FFCA65"],
+    type: "Study",
+    title: "Practical Group",
+    users: [
+      require("@/assets/images/user1.png"),
+      require("@/assets/images/user2.png"),
+      require("@/assets/images/user3.png"),
+      require("@/assets/images/user4.png"),
+    ],
+    count: "33,558",
+  },
+  {
+    gradient: ["#FEB5A6", "#FEB5A6"],
+    type: "Study",
+    title: "Practical Group",
+    users: [
+      require("@/assets/images/user1.png"),
+      require("@/assets/images/user2.png"),
+      require("@/assets/images/user3.png"),
+      require("@/assets/images/user4.png"),
+    ],
+    count: "33,558",
+  },
+];
 
 const SignInScreen = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -29,23 +92,21 @@ const SignInScreen = () => {
     // Handle the selected label here (e.g., update state)
   };
   return (
-    <ScrollView>
+    <ScrollView style={{backgroundColor:theme.colors.background}}>
       <View style={styles.container}>
         <TouchableOpacity
           style={{ ...styles.button, marginVertical: 12 }}
           onPress={() => {
-            setIsVisible(!isVisible);
+            toggleBottomSheet();
           }}
         >
           <Text style={styles.buttonText}>Bottom Sheet</Text>
         </TouchableOpacity>
-        {isVisible && (
-          <BottomSheet
-            onBack={() => {
-              setIsVisible(false);
-            }}
-          />
-        )}
+        <BottomSheet
+          onBack={() => {
+            setIsVisible(false);
+          }}
+        />
 
         <View
           style={{
@@ -95,10 +156,10 @@ const SignInScreen = () => {
                 filled: true,
                 active: false,
               },
-
-            ].map(({ day, date, filled, active }) => {
+            ].map(({ day, date, filled, active }, index) => {
               return (
                 <DayCard
+                  key={index}
                   filled={filled}
                   active={active}
                   dayOfWeek={day}
@@ -108,12 +169,141 @@ const SignInScreen = () => {
             })}
           </View>
         </View>
+        <View
+          style={{
+            height: 40,
+          }}
+        ></View>
+
+        <CircularImageWithOverlays
+          mainImage={require("@/assets/images/group-illustration.png")}
+          orbitImages={[
+            { source: require("@/assets/images/user1.png") }, // Destructure unnecessary properties
+            { source: require("@/assets/images/user2.png") },
+            { source: require("@/assets/images/user3.png") },
+            { source: require("@/assets/images/user4.png") },
+          ].map((image, index) => ({
+            source: image.source,
+            position: calculatePosition(270, 128, calculateAngle(index, 4), 4),
+          }))}
+        />
+        <FlatList
+          data={DATA}
+          renderItem={({ item }) => (
+            <View style={{ margin: 6 }}>
+              <StudyGroup {...item} />
+            </View>
+          )}
+          keyExtractor={(item) => item.gradient.toString()} // Replace with unique identifier
+          numColumns={2}
+        />
+
+        <View
+          style={{
+            gap: 30,
+            alignItems: "center",
+          }}
+        >
+          {[
+            {
+              title: "Sociology",
+              description:
+                "Lorem ipsum dolor sit amet consectetur. Quis non in nunc id.Lorem ipsum dolor sit amet.",
+              completedDate: "Completed : Aug 19",
+              spentTime: "Spent : 2h 25m",
+            },
+            {
+              title: "History",
+              description:
+                "Lorem ipsum dolor sit amet consectetur. Quis non in nunc id.Lorem ipsum dolor sit amet.",
+              completedDate: "Completed : Aug 20",
+              spentTime: "Spent : 1h 45m",
+            },
+            {
+              title: "Mathematics",
+              description:
+                "Lorem ipsum dolor sit amet consectetur. Quis non in nunc id.Lorem ipsum dolor sit amet.",
+              completedDate: "Completed : Aug 21",
+              spentTime: "Spent : 3h 10m",
+            },
+            {
+              title: "Literature",
+              description:
+                "Lorem ipsum dolor sit amet consectetur. Quis non in nunc id.Lorem ipsum dolor sit amet.",
+              completedDate: "Completed : Aug 22",
+              spentTime: "Spent : 2h 55m",
+            },
+            {
+              title: "Physics",
+              description:
+                "Lorem ipsum dolor sit amet consectetur. Quis non in nunc id.Lorem ipsum dolor sit amet.",
+              completedDate: "Completed : Aug 23",
+              spentTime: "Spent : 4h 20m",
+            },
+          ].map((data, index) => (
+            <CompletedTask key={index} {...data} />
+          ))}
+        </View>
+        <View
+          style={{
+            gap: 30,
+            alignItems: "center",
+          }}
+        >
+          {["Sociology", "Biology", "Physics"].map((subject, index) => (
+            <SubjectCard
+              key={index}
+              title={subject}
+              items={[
+                { text: "Assignment", bg: "#FEB5A625" },
+                {
+                  text: "Quiz",
+                  bg: "#8D99DE30",
+                },
+                {
+                  text: "Session",
+                  bg: "#FFCA6535",
+                },
+                {
+                  text: "Exam",
+                  bg: "#13CE6630",
+                },
+              ]}
+              dueDate="27-Dec-2024"
+              dueTime="09:00 PM"
+              bgColor="#8d99de"
+              borderColor="#000"
+            />
+          ))}
+        </View>
+        <Schedules />
+        <BottomNav />
+        <Users
+          users={[
+            require("@/assets/images/user1.png"),
+            require("@/assets/images/user2.png"),
+            require("@/assets/images/user3.png"),
+            require("@/assets/images/user4.png"),
+          ]}
+        />
+        <TimerSection
+          clock={require("@/assets/images/clock.png")}
+          users={[
+            require("@/assets/images/user1.png"),
+            require("@/assets/images/user2.png"),
+            require("@/assets/images/user3.png"),
+            require("@/assets/images/user4.png"),
+          ]}
+          image={require("@/assets/images/study_illustration.png")} // Adjust the path based on your project structure
+        />
+
         <View style={styles.signInContainer}>
           <Text style={styles.title}>Sign In</Text>
           <Text style={styles.subtitle}>
             Enter Your Credentials to Continue:
           </Text>
         </View>
+
         <View style={styles.inputContainer}>
           <LabeledInput
             label="Email"
