@@ -28,6 +28,14 @@ import { StudyGroup } from "@/components/StudyGroup";
 import { CircularImageWithOverlays } from "@/components/CircularImageWithOverlays";
 import { calculateAngle, calculatePosition } from "@/utils";
 import { theme } from "@/styles/theme";
+import Today from "@/components/Today";
+import Reminder from "@/components/Reminder";
+import ModalWrapper from "@/components/ModalWrapper";
+import AddCourseModal from "@/components/AddCourseModal";
+import ReminderNotification from "@/components/ReminderNotification";
+import ShareSchedule from "@/components/ShareSchedule";
+import ShareSuccess from "@/components/ShareSuccess";
+import TaskCategories from "@/components/TaskCategories";
 
 const DATA: StudyGroupProps[] = [
   {
@@ -92,7 +100,7 @@ const SignInScreen = () => {
     // Handle the selected label here (e.g., update state)
   };
   return (
-    <ScrollView style={{backgroundColor:theme.colors.background}}>
+    <ScrollView style={{ backgroundColor: theme.colors.background, flex: 1 }}>
       <View style={styles.container}>
         <TouchableOpacity
           style={{ ...styles.button, marginVertical: 12 }}
@@ -107,7 +115,18 @@ const SignInScreen = () => {
             setIsVisible(false);
           }}
         />
+        <Today />
+        <ModalWrapper isVisible={false} onClose={() => {}}>
+          <Reminder />
+        </ModalWrapper>
 
+        <TaskCategories />
+        <ShareSuccess />
+
+        <ShareSchedule />
+        <AddCourseModal isVisible={false} onClose={() => {}} />
+
+        <ReminderNotification />
         <View
           style={{
             flexDirection: "column",
@@ -277,7 +296,6 @@ const SignInScreen = () => {
           ))}
         </View>
         <Schedules />
-        <BottomNav />
         <Users
           users={[
             require("@/assets/images/user1.png"),
@@ -348,7 +366,6 @@ const SignInScreen = () => {
           }}
         >
           <Button text="Sign In" onPress={() => {}} />
-
           <View style={styles.signUpContainer}>
             <Text style={styles.signUpText}>Don’t have an Account?</Text>
             <Link onPress={() => {}} text="Sign Up" />

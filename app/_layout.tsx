@@ -1,22 +1,20 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useFonts } from "expo-font";
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
 import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+  SafeAreaProvider,
+} from "react-native-safe-area-context";
 
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
-} from 'expo-router';
+} from "expo-router";
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(screens)',
+  initialRouteName: "(screens)",
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -24,7 +22,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    inter: require('../assets/fonts/Inter-Regular.ttf'),
+    inter: require("../assets/fonts/Inter-Regular.ttf"),
     ...FontAwesome.font,
   });
 
@@ -48,9 +46,21 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   return (
+    <SafeAreaProvider>
       <Stack>
-        <Stack.Screen name='(screens)' options={{ headerShown: false }} />
-        <Stack.Screen name='modal' options={{ presentation: 'modal' }} />
+        {/* <Stack.Screen name="(screens)" options={{ headerShown: false }} /> */}
+        <Stack.Screen
+          name="(screens)"
+          options={{
+            title: "Home Screen",
+            headerShown:false,
+          }}
+        />
+        <Stack.Screen
+          name="modal"
+          options={{ presentation: "modal", header: () => <></> }}
+        />
       </Stack>
+    </SafeAreaProvider>
   );
 }

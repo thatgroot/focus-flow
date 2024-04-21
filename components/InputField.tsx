@@ -31,7 +31,7 @@ export default function LabeledInput({
 }: Props) {
   const [text, setText] = useState("");
   const [inputState, setInputState] = useState<
-     "active" | "invalid" | "valid" | "inactive"
+    "active" | "invalid" | "valid" | "inactive"
   >("inactive");
 
   const handleChangeText = (inputText: string) => {
@@ -46,8 +46,13 @@ export default function LabeledInput({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
-      <View style={{ ...styles.inputContainer, borderColor: stateBorderColor[inputState]}}>
+      {label && <Text style={styles.label}>{label}</Text>}
+      <View
+        style={{
+          ...styles.inputContainer,
+          borderColor: stateBorderColor[inputState],
+        }}
+      >
         <TextInput
           style={styles.input}
           onChangeText={handleChangeText}
@@ -61,10 +66,12 @@ export default function LabeledInput({
           value={text}
           autoCapitalize="none"
         />
-        <Image
-          style={styles.icon}
-          source={require("@/assets/icons/eye.png")} // Placeholder icon, replace with appropriate image
-        />
+        {inputType === "password" && (
+          <Image
+            style={styles.icon}
+            source={require("@/assets/icons/eye.png")} // Placeholder icon, replace with appropriate image
+          />
+        )}
       </View>
       {error && inputState == "invalid" && (
         <View style={styles.errorContainer}>
@@ -89,11 +96,9 @@ const styles = StyleSheet.create({
   },
   label: {
     flex: 0,
-    flexGrow: 0,
-    flexShrink: 0,
     fontSize: 14,
     fontWeight: "600",
-    color: "#808191",
+    color: "#353535",
   },
   inputContainer: {
     flexDirection: "row",

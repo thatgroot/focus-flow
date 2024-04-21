@@ -1,9 +1,16 @@
-import * as React from 'react';
-import { Image } from 'expo-image';
-import { StyleSheet, Text, View } from 'react-native';
-import { Color, FontFamily, FontSize, Border } from '@/styles/GlobalStyles';
+import * as React from "react";
+import { Image } from "expo-image";
+import { StyleSheet, Text, View } from "react-native";
+import { Color, FontFamily, FontSize, Border } from "@/styles/GlobalStyles";
+import { router, useNavigation } from "expo-router";
 
 const Splash = () => {
+  React.useEffect(() => {
+    // go to (auth/signin)
+    setTimeout(() => {
+      router.replace("/auth/register");
+    }, 1000);
+  }, []);
   return (
     <View style={[styles.splash]}>
       <Image
@@ -11,8 +18,8 @@ const Splash = () => {
           width: 225,
           height: 225,
         }}
-        contentFit='contain'
-        source={require('../../assets/images/group1.png')}
+        contentFit="contain"
+        source={require("../../assets/images/group1.png")}
       />
       <View style={{}}>
         <Text style={[styles.flowTypo]}>FOCUS</Text>
@@ -24,9 +31,9 @@ const Splash = () => {
 
 const styles = StyleSheet.create({
   flowTypo: {
-    textAlign: 'center',
+    textAlign: "center",
     color: Color.colorCornflowerblue_100,
-    fontWeight: '700',
+    fontWeight: "700",
     fontSize: FontSize.size_17xl,
   },
 
@@ -34,8 +41,8 @@ const styles = StyleSheet.create({
     borderRadius: Border.br_xl,
     backgroundColor: Color.bacgroundColor,
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     gap: 16,
   },
 });
