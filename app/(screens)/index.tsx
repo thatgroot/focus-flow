@@ -8,7 +8,7 @@ const Splash = () => {
   React.useEffect(() => {
     // go to (auth/signin)
     setTimeout(() => {
-      router.replace("/auth/register");
+      router.replace("/(screens)/add_course");
     }, 1000);
   }, []);
   return (
