@@ -1,5 +1,6 @@
 import React from "react";
 import { View, StyleSheet, Image, Text, TouchableOpacity } from "react-native";
+import { Link } from 'expo-router';
 
 type Course = {
   id: string;
@@ -43,7 +44,8 @@ const AddCourse: React.FC = () => {
           <Text>Add Custom Courses</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.nextButton}>
-          <Text style={styles.nextButtonText}>Next</Text>
+        <Link push href="/home_Screen">Next</Link>
+       
         </TouchableOpacity>
       </View>
     </View>

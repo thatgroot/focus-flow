@@ -50,7 +50,7 @@ function RootLayoutNav() {
       <Stack>
         {/* <Stack.Screen name="(screens)" options={{ headerShown: false }} /> */}
         <Stack.Screen
-          name="(screens)"
+          name="(tabs)"
           options={{
             title: "Home Screen",
             headerShown:false,
