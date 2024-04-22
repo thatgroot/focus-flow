@@ -8,13 +8,47 @@ import {
   SafeAreaView,
   FlatList,
   Modal,
+  ScrollView
 } from "react-native";
 
 import { Calendar } from "react-native-calendars";
 import moment from "moment";
 import DayCard from "@/components/DayCard";
+import { TimerSection  } from "@/components/TimerSection";
+
+const DAYS = [
+  {
+    day: "Sun",
+    date: "15",
+  },
+  {
+    day: "Mon",
+    date: "16",
+  },
+  {
+    day: "Tue",
+    date: "17",
+  },
+  {
+    day: "we",
+    date: "18",
+  },
+  {
+    day: "Th",
+    date: "19",
+  },
+  {
+    day: "Fr",
+    date: "20",
+  },
+  {
+    day: "Fr",
+    date: "21",
+  },
+]
 
 const HomeScreen: React.FC = () => {
+
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(0);
@@ -41,7 +75,7 @@ const HomeScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <View style={styles.mainProfile}>
           <View>
             <Image
@@ -159,20 +193,7 @@ const HomeScreen: React.FC = () => {
           <FlatList
             horizontal
             pagingEnabled
-            data={[
-              {
-                day: "Sun",
-                date: "15",
-              },
-              {
-                day: "Mon",
-                date: "16",
-              },
-              {
-                day: "Tue",
-                date: "16",
-              },
-            ]} // Provide a single item array to FlatList
+            data={DAYS} // Provide a single item array to FlatList
             keyExtractor={() => "month"} // Unique key for month
             showsHorizontalScrollIndicator={false}
             renderItem={({ item, index }) => (
@@ -190,13 +211,28 @@ const HomeScreen: React.FC = () => {
             onMomentumScrollEnd={(event) => {
               const newIndex = Math.round(
                 event.nativeEvent.contentOffset.x /
-                  event.nativeEvent.layoutMeasurement.width
+                event.nativeEvent.layoutMeasurement.width
               );
               setCurrentMonthIndex(newIndex);
             }}
           />
         </View>
-      </View>
+        <View style={{
+          paddingVertical: 40,
+        }}>
+          <TimerSection
+            clock={require("@/assets/images/clock.png")}
+            users={[
+              require("@/assets/images/user1.png"),
+              require("@/assets/images/user2.png"),
+              require("@/assets/images/user3.png"),
+              require("@/assets/images/user4.png"),
+            ]}
+            image={require("@/assets/images/study_illustration.png")} // Adjust the path based on your project structure
+          />
+        </View>
+
+      </ScrollView>
     </SafeAreaView>
   );
 };

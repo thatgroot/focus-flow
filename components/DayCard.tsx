@@ -24,6 +24,8 @@ const DayCard: React.FC<Props> = ({ filled, active, dayOfWeek, date,onSelect }) 
       backgroundColor: filled ? "#8D99DE" : "#FFFFFF",
       borderColor: active ? "#8D99DE" : "#FFFFFF",
       borderWidth: 1,
+      marginHorizontal:3,
+      // marginLeft:20
     },
     dayOfWeekText: {
       flex: 0,
