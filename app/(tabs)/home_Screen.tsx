@@ -58,9 +58,9 @@ const home_Screen: React.FC = () => {
 
       days.push(
         <View style={ styles.maindayWeeks} key={i}>
-          <TouchableOpacity onPress={() => setPressedIndex(i)} style={[styles.BtnDayWeeks  ,{ borderColor: pressedIndex === i ? 'red' : 'blue'} ]}>
-            <Text style={{ fontSize: '12px', paddingLeft: '2px', color: pressedIndex === i ? '#4cb050' : '#818D93' }}>{dayOfWeek}</Text>
-            <Text style={{ fontSize: '12px', paddingTop: '5px', color: pressedIndex === i ? '#4cb050' : '#818D93' }}>{i}</Text>
+          <TouchableOpacity onPress={() => setPressedIndex(i)} style={[styles.BtnDayWeeks  ,{ backgroundColor: pressedIndex === i ? '#8D99DE' : 'white'}, { borderColor: pressedIndex === i ? 'white' : '#8D99DE'},]}>
+            <Text style={ [styles.dayOfWeek,{  color: pressedIndex === i ? 'white' : '#9AA5B5' }]}>{dayOfWeek}</Text>
+            <Text style={[styles.day,{ color: pressedIndex === i ? 'white' : 'black' }]}>{i}</Text>
 
           </TouchableOpacity>
         </View>
@@ -149,7 +149,7 @@ const home_Screen: React.FC = () => {
             keyExtractor={() => 'month'} // Unique key for month
             showsHorizontalScrollIndicator={false}
             renderItem={({ index }) => (
-              <View style={{ flexDirection: 'row', backgroundColor: '#ffffff', paddingHorizontal: 10, height: 120, alignItems: 'center' }}>
+              <View style={{ flexDirection: 'row', paddingHorizontal: 10, height: 120, alignItems: 'center' }}>
 
                 <View style={{ flexDirection: 'row', justifyContent: 'center' }}>{renderMonthDays(index)}</View>
               </View>
@@ -252,6 +252,24 @@ const styles = StyleSheet.create({
    flexDirection:'row' ,
    alignItems:'center'
 
+  },
+
+  dayOfWeek:{
+    color: "#353535",
+    fontWeight: "500",
+    lineHeight: 19.36,
+    fontSize: 12,
+    fontFamily: "Inter, sans-serif",
+    letterSpacing: 1, 
+  },
+  day:{
+    color: "#353535",
+    fontWeight: "400",
+    lineHeight: 19.36,
+    fontSize: 19,
+    fontFamily: "Inter, sans-serif",
+    letterSpacing: 1,
+    marginTop:10
   },
   BtnDayWeeks:{
        borderColor:'##8D99DE',
