@@ -1,14 +1,15 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 interface Props {
   filled: boolean; // Define possible background colors
   active: boolean; // Define possible border colors
   dayOfWeek: string;
   date: string | number;
+  onSelect: () => void;
 }
 
-const DayCard: React.FC<Props> = ({ filled, active, dayOfWeek, date }) => {
+const DayCard: React.FC<Props> = ({ filled, active, dayOfWeek, date,onSelect }) => {
   // Define dynamic styles based on props
   const styles = StyleSheet.create({
     container: {
@@ -39,10 +40,10 @@ const DayCard: React.FC<Props> = ({ filled, active, dayOfWeek, date }) => {
   });
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onSelect}>
       <Text style={styles.dayOfWeekText}>{dayOfWeek}</Text>
       <Text style={styles.dateText}>{date}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
