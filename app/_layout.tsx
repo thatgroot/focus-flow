@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import {
   SafeAreaProvider,
 } from "react-native-safe-area-context";
-import grouppage from "./grouppage";
+import grouppage from "./GroupPage";
 
 
 export {
@@ -70,9 +70,6 @@ function RootLayoutNav() {
           name="modal"
           options={{ presentation: "modal", header: () => <></> }}
         />
-          
-        
-        
       </Stack>
     </SafeAreaProvider>
   );
