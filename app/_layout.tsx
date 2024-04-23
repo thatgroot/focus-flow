@@ -70,6 +70,9 @@ function RootLayoutNav() {
           name="modal"
           options={{ presentation: "modal", header: () => <></> }}
         />
+          
+        
+        
       </Stack>
     </SafeAreaProvider>
   );

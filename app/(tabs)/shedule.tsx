@@ -5,7 +5,9 @@ import { Calendar } from 'react-native-calendars';
 import moment from 'moment';
 import { isAfter, getDate, isSameDay } from 'date-fns';
 import Timeline from 'react-native-timeline-flatlist';
-
+import ShareSchedule from "@/app/ShareSchedule";
+import { Schedules } from "@/components/Schedules";
+import { useRouter,useNavigation } from "expo-router";
 
 const shedule: React.FC = () => {
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
@@ -20,24 +22,25 @@ const shedule: React.FC = () => {
 
   const [data] = useState([
     { time: '09:00', items: [
-      { title: 'Event 1', description: 'Event 1 Description' },
-      { title: 'Event 2', description: 'Event 2 Description' }
+      { title: ['Break Fast'],time:['10 Mins'], due: [],bgColor:'rgba(255, 202, 101, 1)',icon:require('../../assets/icons/share.png')},
+      { title: ['Time to Commute'],time:['10 Mins'], due: [],bgColor:'rgba(154, 165, 181, 0.25)',icon:require('../../assets/icons/share.png') }
     ] },
     { time: '10:45', items: [
-      { title: 'Event 3', description: 'Event 3 Description' }
+      { title: ['Sociology | Lecture'],time:['2h 30 Mins'], due: [], bgColor:'rgba(254, 181, 166, 1)',icon:require('../../assets/icons/share.png') }
     ] },
     { time: '12:00', items: [
-      { title: 'Event 4', description: 'Event 4 Description' }
+      { title: ["Planned Study", "Phsycology", "Economics"],time:['Use : 2h 30m','Use : 2h 30m','Use : 2h 30m'], due: ['Due : Nov 20','Due : Nov 20','Due : Nov 20'],bgColor:'rgba(141, 153, 222, 1)',icon:require('../../assets/icons/share.png') }
     ] },
     { time: '14:00', items: [
-      { title: 'Event 5', description: 'Event 5 Description' }
+      { title: ['Time to Commute'],time:['10 Mins'], due: [],bgColor:'rgba(154, 165, 181, 0.25)',icon:require('../../assets/icons/share.png')}
     ] },
-    { time: '16:30', items: [
-      { title: 'Event 6', description: 'Event 6 Description' }
-    ] }
+    
   ]);
 
-  
+  const router = useRouter();
+  const navigation = useNavigation();
+
+ 
 
   const handleDayPress = (dateString: string) => {
     setSelectedDay(new Date(dateString));
@@ -183,33 +186,43 @@ const shedule: React.FC = () => {
           <Text style={styles.due}>Due:</Text>
           <Text style={styles.yearDay}>Friday April 18 2023</Text>
         </View>
-       <View style={styles.stepperStyle}>
+       {/* <View style={styles.stepperStyle}> */}
        <FlatList
+       showsVerticalScrollIndicator={false}
+
       data={data}
       keyExtractor={(item, index) => index.toString()}
       renderItem={({ item }) => (
-        <View style={{ marginBottom: 20,flexDirection:'row' }}>
-          <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>{item.time}</Text>
-          <View style={{backgroundColor:'red', width:5, borderRadius:10}} />
-          <View style={{backgroundColor:'green', width:30,height:30, borderRadius:100, position:'absolute', marginLeft:40,marginBottom:10}} />
-
+        <View style={{ marginBottom: 20, flexDirection: 'row', width:'100%', marginTop:20, }}>
+          <Text style={{ fontSize: 15, fontWeight: 'bold', marginBottom: 10 }}>{item.time}</Text>
+          <View style={{ justifyContent: 'center', alignItems: 'center', marginLeft: 5,  }}>
+            <View style={{ borderColor: '#8D99DE', borderWidth: 4, backgroundColor: '#FFFFFF', width: 18, height: 18, borderRadius: 100 }} />
+            <View style={{ backgroundColor: '#8D99DE', width: 5, height: 170, borderRadius: 10 }} />
+          </View>
           <FlatList
             data={item.items}
+            showsVerticalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
-              <View style={{ backgroundColor: '#eaeaea', padding: 10, marginBottom: 10 }}>
-                <Text style={{ fontSize: 16 }}>{item.title}</Text>
-                <Text style={{ fontSize: 14, color: 'gray' }}>{item.description}</Text>
-              </View>
+            
+              <Schedules item={item}/>
             )}
           />
         </View>
       )}
     />
-       </View>
-      
-       
+       {/* </View> */}
+    
       </View>
+      <View style={styles.bottomBtn}>
+        <Pressable style={styles.planBtn}>
+          <Text style={styles.planTxt}>Plan</Text>
+        </Pressable>
+        <Pressable style={styles.completedBtn}>
+          <Text style={styles.compeleteTxt}>Completed</Text>
+        </Pressable>
+      </View>
+       
     </SafeAreaView>
   );
 };
@@ -364,7 +377,48 @@ const styles = StyleSheet.create({
     marginLeft:4
   },
   stepperStyle:{
-    marginTop:30
+    marginTop:20
+  },
+  bottomBtn:{
+    flexDirection:'row',
+    position:'absolute',
+    bottom:0.1,
+    width:'100%',
+    // left:20,
+    justifyContent:'center',
+    backgroundColor:'#FFFFFF',
+    height:80,
+    alignItems:'center'
+  },
+  planBtn:{
+    width:139,
+    height:40,
+    borderRadius:100,
+    borderWidth:2,
+    justifyContent:'center',
+    alignItems:'center',
+    borderColor:'rgba(141, 153, 222, 1)'
+  },
+  completedBtn:{
+    width:193,
+    height:40,
+    borderRadius:100,
+    backgroundColor:'rgba(138, 151, 221, 1)',
+    justifyContent:'center',
+    alignItems:'center',
+    marginLeft:5
+  },
+  planTxt:{
+    fontSize:16,
+    fontWeight:'600',
+    lineHeight:19.36,
+    color:'rgba(141, 153, 222, 1)'
+  },
+  compeleteTxt:{
+    fontSize:16,
+    fontWeight:'600',
+    lineHeight:19.36,
+    color:'rgba(255, 255, 255, 1)'
   }
 
 });
