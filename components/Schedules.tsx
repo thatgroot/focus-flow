@@ -1,20 +1,27 @@
 import React from "react";
-import { View, Text, StyleSheet,Image, Pressable } from "react-native";
+import { View, Text, StyleSheet,Image, Pressable, TouchableOpacity } from "react-native";
+import { useRouter,useNavigation } from "expo-router";
 
-export const Schedules = ({item}) => {
+
+
+export const Schedules = ({item,}) => {
   console.log('dhjshsd',item)
+
+  const router = useRouter();
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       
       <View style={[styles.card, { backgroundColor: item?.bgColor ,gap:24,}]}>
-        {item.title?.map((subject, index) => (
+        {item?.title?.map((subject, index) => (
           <View key={index} style={{ ...styles.item, flexDirection: "column",gap:2 }}>
             <View style={styles.headerTitle}>
             <Text style={styles.subtitle}>{subject}</Text>
-            <Pressable>
-            <Image source={item.icon} style={styles.shareIcon} />
+            <TouchableOpacity onPress={() => {} }>
+            <Image source={item?.icon} style={styles.shareIcon} />
 
-            </Pressable>
+            </TouchableOpacity>
             </View>
             <View style={styles.subDetails}>
               <View style={styles.subDetail}>
@@ -24,7 +31,7 @@ export const Schedules = ({item}) => {
                     { backgroundColor: "rgba(0, 0, 0, 0.28)" },
                   ]}
                 >
-                  <Text style={styles.subDetailText}>{item.time[index]}</Text>
+                  <Text style={styles.subDetailText}>{item?.time[index]}</Text>
                 </View>
               </View>
               <View style={styles.subDetail}>
@@ -39,7 +46,7 @@ export const Schedules = ({item}) => {
 
                  
                       <Text style={[styles.subDetailText, { color: "#fff" }]}>
-                   {item.due[index]}
+                   {item?.due[index]}
                   </Text>
                    
                   

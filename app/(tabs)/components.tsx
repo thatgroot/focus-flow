@@ -33,9 +33,9 @@ import Reminder from "@/components/Reminder";
 import ModalWrapper from "@/components/ModalWrapper";
 import AddCourseModal from "@/components/AddCourseModal";
 import ReminderNotification from "@/components/ReminderNotification";
-import ShareSchedule from "@/components/ShareSchedule";
 import ShareSuccess from "@/components/ShareSuccess";
 import TaskCategories from "@/components/TaskCategories";
+import ShareSchedule from "@/components/ShareSchedule";
 
 const DATA: StudyGroupProps[] = [
   {
@@ -123,7 +123,7 @@ const SignInScreen = () => {
         <TaskCategories />
         <ShareSuccess />
 
-        <ShareSchedule />
+        <ShareSchedule/>
         <AddCourseModal isVisible={false} onClose={() => {}} />
 
         <ReminderNotification />

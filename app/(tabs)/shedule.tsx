@@ -5,9 +5,9 @@ import { Calendar } from 'react-native-calendars';
 import moment from 'moment';
 import { isAfter, getDate, isSameDay } from 'date-fns';
 import Timeline from 'react-native-timeline-flatlist';
-import ShareSchedule from "@/components/ShareSchedule";
+import ShareSchedule from "@/app/ShareSchedule";
 import { Schedules } from "@/components/Schedules";
-
+import { useRouter,useNavigation } from "expo-router";
 
 const shedule: React.FC = () => {
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
@@ -37,7 +37,9 @@ const shedule: React.FC = () => {
     
   ]);
 
-  
+  const router = useRouter();
+  const navigation = useNavigation();
+
  
 
   const handleDayPress = (dateString: string) => {
@@ -184,14 +186,14 @@ const shedule: React.FC = () => {
           <Text style={styles.due}>Due:</Text>
           <Text style={styles.yearDay}>Friday April 18 2023</Text>
         </View>
-       <View style={styles.stepperStyle}>
+       {/* <View style={styles.stepperStyle}> */}
        <FlatList
        showsVerticalScrollIndicator={false}
 
       data={data}
       keyExtractor={(item, index) => index.toString()}
       renderItem={({ item }) => (
-        <View style={{ marginBottom: 20, flexDirection: 'row', width:'100%' }}>
+        <View style={{ marginBottom: 20, flexDirection: 'row', width:'100%', marginTop:20, }}>
           <Text style={{ fontSize: 15, fontWeight: 'bold', marginBottom: 10 }}>{item.time}</Text>
           <View style={{ justifyContent: 'center', alignItems: 'center', marginLeft: 5,  }}>
             <View style={{ borderColor: '#8D99DE', borderWidth: 4, backgroundColor: '#FFFFFF', width: 18, height: 18, borderRadius: 100 }} />
@@ -209,10 +211,18 @@ const shedule: React.FC = () => {
         </View>
       )}
     />
-       </View>
-      
-       
+       {/* </View> */}
+    
       </View>
+      <View style={styles.bottomBtn}>
+        <Pressable style={styles.planBtn}>
+          <Text style={styles.planTxt}>Plan</Text>
+        </Pressable>
+        <Pressable style={styles.completedBtn}>
+          <Text style={styles.compeleteTxt}>Completed</Text>
+        </Pressable>
+      </View>
+       
     </SafeAreaView>
   );
 };
@@ -367,7 +377,48 @@ const styles = StyleSheet.create({
     marginLeft:4
   },
   stepperStyle:{
-    marginTop:30
+    marginTop:20
+  },
+  bottomBtn:{
+    flexDirection:'row',
+    position:'absolute',
+    bottom:0.1,
+    width:'100%',
+    // left:20,
+    justifyContent:'center',
+    backgroundColor:'#FFFFFF',
+    height:80,
+    alignItems:'center'
+  },
+  planBtn:{
+    width:139,
+    height:40,
+    borderRadius:100,
+    borderWidth:2,
+    justifyContent:'center',
+    alignItems:'center',
+    borderColor:'rgba(141, 153, 222, 1)'
+  },
+  completedBtn:{
+    width:193,
+    height:40,
+    borderRadius:100,
+    backgroundColor:'rgba(138, 151, 221, 1)',
+    justifyContent:'center',
+    alignItems:'center',
+    marginLeft:5
+  },
+  planTxt:{
+    fontSize:16,
+    fontWeight:'600',
+    lineHeight:19.36,
+    color:'rgba(141, 153, 222, 1)'
+  },
+  compeleteTxt:{
+    fontSize:16,
+    fontWeight:'600',
+    lineHeight:19.36,
+    color:'rgba(255, 255, 255, 1)'
   }
 
 });
