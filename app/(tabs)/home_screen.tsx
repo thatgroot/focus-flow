@@ -14,7 +14,9 @@ import {
 import { Calendar } from "react-native-calendars";
 import moment from "moment";
 import DayCard from "@/components/DayCard";
-import { TimerSection  } from "@/components/TimerSection";
+import { TimerSection } from "@/components/TimerSection";
+import TimeEntry from "@/components/TimeEntry";
+import ModalWrapper from "@/components/ModalWrapper";
 
 const DAYS = [
   {
@@ -58,6 +60,15 @@ const HomeScreen: React.FC = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<any | null>(null);
   const [markedDates, setMarkedDates] = useState<Date[]>([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const openModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+  };
 
   const handleDayPress = (dateString: string) => {
     const _date = new Date(dateString);
@@ -122,35 +133,15 @@ const HomeScreen: React.FC = () => {
             onRequestClose={() => setShowCalendar(false)}
           >
             <View
-              style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-                backgroundColor: "rgba(0,0,0,0.5)",
-              }}
+              style={styles.mainModal}
             >
               <View
-                style={{
-                  backgroundColor: "#ffffff",
-                  width: 300,
-                  justifyContent: "space-between",
-                  paddingVertical: 16,
-                  paddingHorizontal: 16,
-                  borderRadius: 30,
-                }}
+                style={styles.mainModalView}
               >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    paddingHorizontal: 16,
-                    paddingVertical: 8,
-                    marginBottom: 8,
-                  }}
-                >
-                  <Text style={{ fontWeight: "bold" }}>Select Date</Text>
+                <View >
+
                   <TouchableOpacity onPress={() => setShowCalendar(false)}>
-                    {/* <Image source={require('../../assets/cross.png')} style={{ width: 15, height: 15 }} /> */}
+                    <Image source={require('../../assets/images/cross.png')} style={styles.CrossIcon} />
                   </TouchableOpacity>
                 </View>
                 <Calendar
@@ -161,32 +152,17 @@ const HomeScreen: React.FC = () => {
                   markedDates={{
                     [moment(selectedDay).format("YYYY-MM-DD")]: {
                       selected: true,
-                      selectedColor: "#4cb050",
+                      selectedColor: "#8D99DE",
                     },
                   }}
                   theme={{
                     backgroundColor: "#ffffff",
                     calendarBackground: "#ffffff",
-                    arrowColor: "#4cb050",
-                    todayTextColor: "#4cb050",
+                    arrowColor: "#8D99DE",
+                    todayTextColor: "#8D99DE",
                   }}
                 />
-                <TouchableOpacity
-                  onPress={() => setShowCalendar(false)}
-                  style={{
-                    height: 40,
-                    alignSelf: "center",
-                    marginBottom: 8,
-                    marginTop: 8,
-                    borderRadius: 8,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: 150,
-                    backgroundColor: "#4cb050",
-                  }}
-                >
-                  <Text style={{ color: "#ffffff" }}>Confirm Date</Text>
-                </TouchableOpacity>
+             
               </View>
             </View>
           </Modal>
@@ -231,6 +207,24 @@ const HomeScreen: React.FC = () => {
             image={require("@/assets/images/study_illustration.png")} // Adjust the path based on your project structure
           />
         </View>
+        <View>
+          <Text style={styles.upcomingText}>Upcoming due dates</Text>
+          <TimeEntry
+            timestamp="NOV 10, 01:43 - 02:07"
+            duration="Study 24m 39s"
+            type="upcomming"
+            onPress={openModal}
+          />
+          <ModalWrapper isVisible={isModalVisible} onClose={closeModal} data="Date: Dec-27-2024" Time="Time: 09:00PM" opPressBtn={()=>alert(1234)}/>
+        </View>
+        <View style={{paddingVertical:36}}>
+          <Text style={styles.upcomingText}>Recent Group Sessions</Text>
+          <TimeEntry
+           timestamp="NOV 10, 01:43 - 02:07"
+           duration="Study 24m 39s"
+           type="recent"
+          />
+        </View>
 
       </ScrollView>
     </SafeAreaView>
@@ -269,6 +263,43 @@ const styles = StyleSheet.create({
   image: {
     width: 18,
     height: 18,
+  },
+  upcomingstyles:{
+    backgroundColor:'#13CE6640',
+    width:"100%",
+    height:75,
+    borderRadius:8,
+    paddingHorizontal:12,
+    paddingVertical:12,
+    justifyContent:'space-between',
+    flexDirection:'row'
+  },
+  upcomingText:{
+    color: "#353535",
+    fontWeight: "500",
+    lineHeight: 19.36,
+    fontSize: 16,
+    fontFamily: "Inter, sans-serif",
+    letterSpacing: 1,
+  },
+  upcomingday:{
+    color: "#5B5B5B",
+    fontWeight: "500",
+    lineHeight: 19.36,
+    fontSize: 13,
+    fontFamily: "Inter, sans-serif",
+    letterSpacing: 1,
+  },
+  upcomingWeeks:{
+   flexDirection:'row',
+   gap:10,
+  },
+  dot:{
+    backgroundColor:'#13CE66',
+    width:3.87,
+   
+    height:3.87,
+   
   },
   content: {
     justifyContent: "space-between",
@@ -320,6 +351,37 @@ const styles = StyleSheet.create({
     padding: 25,
     flexDirection: "row",
     justifyContent: "flex-start",
+  },
+  confirmStyles: {
+    height: 40,
+    alignSelf: "center",
+    marginBottom: 8,
+    marginTop: 8,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    width: 150,
+    backgroundColor: "#4cb050",
+  },
+
+  mainModal: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  mainModalView: {
+    backgroundColor: "#ffffff",
+    width: 300,
+    justifyContent: "space-between",
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderRadius: 30,
+  },
+  CrossIcon: {
+    width: 15,
+    height: 15
+    , alignSelf: 'flex-end'
   },
   maindayWeeks: {
     flexDirection: "row",
