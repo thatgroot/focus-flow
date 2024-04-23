@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 12,
     width: "100%",
-    maxWidth: 325,
+    // maxWidth: 325,
     borderRadius: 12,
   },
   contentContainer: {
