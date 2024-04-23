@@ -2,10 +2,13 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
+
 import { useEffect } from "react";
 import {
   SafeAreaProvider,
 } from "react-native-safe-area-context";
+import grouppage from "./grouppage";
+
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -47,12 +50,19 @@ export default function RootLayout() {
 function RootLayoutNav() {
   return (
     <SafeAreaProvider>
-      <Stack>
+      <Stack screenOptions={{headerShown:false}}>
         {/* <Stack.Screen name="(screens)" options={{ headerShown: false }} /> */}
         <Stack.Screen
           name="(tabs)"
           options={{
             title: "Home screen",
+            headerShown:false,
+          }}
+        />
+        <Stack.Screen
+          name="grouppage "
+          options={{
+            
             headerShown:false,
           }}
         />

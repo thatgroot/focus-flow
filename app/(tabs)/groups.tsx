@@ -16,6 +16,7 @@ import {
 import { EvilIcons } from '@expo/vector-icons';
 import { StudyGroup } from "@/components/StudyGroup";
 import { FeaturedGroup } from "@/components/FeaturedGroup";
+import { Link, useNavigation, useRouter } from "expo-router";
 const DATA: StudyGroupProps[] = [
   {
     gradient: ["#9AA5B5", "#9AA5B5"],
@@ -70,7 +71,8 @@ const DATA: StudyGroupProps[] = [
 
 const groups: React.FC = () => {
 
-
+  const router = useRouter();
+  const navigation = useNavigation();
 
 
  
@@ -81,11 +83,17 @@ const groups: React.FC = () => {
         <Image style={styles.iconleft} source={require('../../assets/images/iconleft.png')} />
         <View style={styles.MainHeading}>
           <Text style={styles.heading}>Your Groups</Text>
-          <TouchableOpacity style={styles.plusBtn}>
+          <TouchableOpacity style={styles.plusBtn} 
+                  onPress={() => router.push("/GroupPage")}
+
+           >
+             
+             
 
             <Image style={styles.iconleft} source={require('../../assets/images/plus.png')} />
-
+            
             <Text style={[styles.heading,styles.btnTxt]}>Create</Text>
+            
 
           </TouchableOpacity>
         </View>
@@ -98,9 +106,9 @@ const groups: React.FC = () => {
         <FlatList
           data={DATA}
           renderItem={({ item }) => (
-            <View style={{ margin: 6,  marginTop:20}}>
+            <TouchableOpacity style={{ margin: 6,  marginTop:20}}  onPress={() => router.push("/GroupPage")}>
               <StudyGroup {...item} />
-            </View>
+            </TouchableOpacity>
           )}
           keyExtractor={(item) => item.gradient.toString()} // Replace with unique identifier
           numColumns={2}
@@ -118,10 +126,6 @@ const groups: React.FC = () => {
           numColumns={2}
         />
         
-
-
-
-
 
       </ScrollView>
     </SafeAreaView>
