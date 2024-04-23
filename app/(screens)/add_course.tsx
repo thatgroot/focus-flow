@@ -44,7 +44,7 @@ const AddCourse: React.FC = () => {
           <Text>Add Custom Courses</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.nextButton}>
-        <Link push href="/home_Screen">Next</Link>
+        <Link push href="/groups">Next</Link>
        
         </TouchableOpacity>
       </View>

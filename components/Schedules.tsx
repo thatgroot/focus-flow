@@ -1,41 +1,21 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet,Image, Pressable } from "react-native";
 
-export const Schedules = () => {
+export const Schedules = ({item}) => {
+  console.log('dhjshsd',item)
   return (
     <View style={styles.container}>
-      <View style={[styles.card, { backgroundColor: "#feb5a6" }]}>
-        <View style={styles.item}>
-          <View style={styles.iconContainer}>
-            <Text style={styles.iconText}>3</Text>
-          </View>
-          <Text style={styles.title}>Sociology | Lecture</Text>
-        </View>
-        <View style={styles.details}>
-          <Text style={styles.detailText}>2h 30 Mins</Text>
-        </View>
-      </View>
-
-      <View style={[styles.card, { backgroundColor: "#9aa5b525" }]}>
-        <View style={styles.item}>
-          <View style={styles.iconContainer}>
-            <Text style={styles.iconText}>3</Text>
-          </View>
-          <Text style={[styles.title, { color: "#353535" }]}>
-            Sociology | Lecture
-          </Text>
-        </View>
-        <View style={styles.details}>
-          <Text style={[styles.detailText, { color: "#353535" }]}>
-            2h 30 Mins
-          </Text>
-        </View>
-      </View>
-
-      <View style={[styles.card, { backgroundColor: "#8d99de" ,gap:24,}]}>
-        {["Planned Study", "Phsycology", "Economics"].map((subject, index) => (
+      
+      <View style={[styles.card, { backgroundColor: item?.bgColor ,gap:24,}]}>
+        {item.title?.map((subject, index) => (
           <View key={index} style={{ ...styles.item, flexDirection: "column",gap:2 }}>
+            <View style={styles.headerTitle}>
             <Text style={styles.subtitle}>{subject}</Text>
+            <Pressable>
+            <Image source={item.icon} style={styles.shareIcon} />
+
+            </Pressable>
+            </View>
             <View style={styles.subDetails}>
               <View style={styles.subDetail}>
                 <View
@@ -44,20 +24,28 @@ export const Schedules = () => {
                     { backgroundColor: "rgba(0, 0, 0, 0.28)" },
                   ]}
                 >
-                  <Text style={styles.subDetailText}>Use: 2h 30m</Text>
+                  <Text style={styles.subDetailText}>{item.time[index]}</Text>
                 </View>
               </View>
               <View style={styles.subDetail}>
-                <View
+               {
+                 item.due[index] && (
+                  <View
                   style={[
                     styles.subDetailBox,
                     { backgroundColor: "#e3485020" },
                   ]}
                 >
-                  <Text style={[styles.subDetailText, { color: "#fff" }]}>
-                    Due: Nov 20
+
+                 
+                      <Text style={[styles.subDetailText, { color: "#fff" }]}>
+                   {item.due[index]}
                   </Text>
+                   
+                  
                 </View>
+                 )
+               }
               </View>
             </View>
           </View>
@@ -85,7 +73,7 @@ const styles = StyleSheet.create({
     flexShrink: 0,
     padding: 10,
     borderRadius: 10,
-    width: "100%",
+    width: "90%",
     marginBottom: 10,
   },
   item: {
@@ -163,4 +151,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "white",
   },
+  shareIcon:{
+    width:22,
+    height:24,
+    tintColor:'rgba(255, 255, 255, 1)',
+    marginRight:30
+  },
+  headerTitle:{
+    flexDirection:'row',
+    justifyContent:'space-between'
+  }
 });
