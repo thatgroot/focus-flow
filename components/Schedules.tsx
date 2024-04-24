@@ -4,8 +4,8 @@ import { useRouter,useNavigation } from "expo-router";
 
 
 
-export const Schedules = ({item,}) => {
-  console.log('dhjshsd',item)
+export const Schedules = ({item,open}) => {
+  console.log('dhjshsd',item,)
 
   const router = useRouter();
   const navigation = useNavigation();
@@ -18,7 +18,7 @@ export const Schedules = ({item,}) => {
           <View key={index} style={{ ...styles.item, flexDirection: "column",gap:2 }}>
             <View style={styles.headerTitle}>
             <Text style={styles.subtitle}>{subject}</Text>
-            <TouchableOpacity onPress={() => {} }>
+            <TouchableOpacity onPress={() => open }>
             <Image source={item?.icon} style={styles.shareIcon} />
 
             </TouchableOpacity>

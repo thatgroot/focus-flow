@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 import { View, StyleSheet, Text, TouchableOpacity, SafeAreaView, FlatList, Modal, Image, Pressable} from "react-native";
 
 import { Calendar } from 'react-native-calendars';
 import moment from 'moment';
 import { isAfter, getDate, isSameDay } from 'date-fns';
-import Timeline from 'react-native-timeline-flatlist';
-import ShareSchedule from "@/app/ShareSchedule";
+
 import { Schedules } from "@/components/Schedules";
 import { useRouter,useNavigation } from "expo-router";
+import ShareSchedule from "@/components/ShareSchedule";
+
+
 
 const shedule: React.FC = () => {
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
@@ -39,9 +41,12 @@ const shedule: React.FC = () => {
 
   const router = useRouter();
   const navigation = useNavigation();
+  const modalizeRef = useRef(null);
+  const onOpen = () => {
+    modalizeRef.current?.open();
+  };
 
  
-
   const handleDayPress = (dateString: string) => {
     setSelectedDay(new Date(dateString));
     // setSelectedDay(selectedDay);
@@ -205,7 +210,7 @@ const shedule: React.FC = () => {
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
             
-              <Schedules item={item}/>
+              <Schedules item={item} open={open()} />
             )}
           />
         </View>
@@ -222,7 +227,7 @@ const shedule: React.FC = () => {
           <Text style={styles.compeleteTxt}>Completed</Text>
         </Pressable>
       </View>
-       
+      
     </SafeAreaView>
   );
 };
