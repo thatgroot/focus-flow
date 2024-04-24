@@ -1,14 +1,14 @@
-import React from "react";
-import { View, Text, StyleSheet,Image, Pressable, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet,Image, Pressable, TouchableOpacity,Modal } from "react-native";
 import { useRouter,useNavigation } from "expo-router";
 
 
 
-export const Schedules = ({item,open}) => {
+export const Schedules = ({item}) => {
   console.log('dhjshsd',item,)
 
-  const router = useRouter();
-  const navigation = useNavigation();
+   
+  
 
   return (
     <View style={styles.container}>
@@ -18,7 +18,7 @@ export const Schedules = ({item,open}) => {
           <View key={index} style={{ ...styles.item, flexDirection: "column",gap:2 }}>
             <View style={styles.headerTitle}>
             <Text style={styles.subtitle}>{subject}</Text>
-            <TouchableOpacity onPress={() => open }>
+            <TouchableOpacity onPress={() =>{} }>
             <Image source={item?.icon} style={styles.shareIcon} />
 
             </TouchableOpacity>
@@ -58,6 +58,7 @@ export const Schedules = ({item,open}) => {
           </View>
         ))}
       </View>
+      
     </View>
   );
 };
@@ -167,5 +168,6 @@ const styles = StyleSheet.create({
   headerTitle:{
     flexDirection:'row',
     justifyContent:'space-between'
-  }
+  },
+ 
 });

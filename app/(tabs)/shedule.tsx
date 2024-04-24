@@ -8,7 +8,7 @@ import { isAfter, getDate, isSameDay } from 'date-fns';
 import { Schedules } from "@/components/Schedules";
 import { useRouter,useNavigation } from "expo-router";
 import ShareSchedule from "@/components/ShareSchedule";
-
+import Button from '../../elements/Button';
 
 
 const shedule: React.FC = () => {
@@ -17,7 +17,7 @@ const shedule: React.FC = () => {
   const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(0);
 
   const [pressedIndex, setPressedIndex] = useState<number | null>(null);
-
+  const [Isvisible,setVisible] = useState(false)
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<any | null>(null);
   const [markedDates, setMarkedDates] = useState<Date[]>([]);
@@ -210,17 +210,46 @@ const shedule: React.FC = () => {
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
             
-              <Schedules item={item} open={open()} />
+              <Schedules item={item}  />
             )}
           />
         </View>
       )}
     />
        {/* </View> */}
+
+       <Modal
+        animationType="slide"
+        transparent={true}
+        visible={Isvisible}
+        onRequestClose={() => {
+          
+          setVisible(!Isvisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <TouchableOpacity onPress={() => setVisible(!Isvisible)} style={styles.closeBtn} >
+            <Image source={require('../../assets/icons/close.png')}  style={styles.closeBtn}/>
+
+            </TouchableOpacity>
+           <TouchableOpacity style={styles.button} >
+      <Text style={styles.text}>Class</Text>
+    </TouchableOpacity>
+    <TouchableOpacity style={[styles.button,{backgroundColor:'#FEB5A6'}]} >
+      <Text style={[styles.text]}>Task</Text>
+    </TouchableOpacity>
+
+        <TouchableOpacity style={styles.footerTxt} onPress={() => setVisible(!Isvisible)}>
+        <Text style={styles.gotItTxt}>GOT IT</Text>
+        </TouchableOpacity>
+          </View>
+          
+        </View>
+      </Modal>
     
       </View>
       <View style={styles.bottomBtn}>
-        <Pressable style={styles.planBtn}>
+        <Pressable style={styles.planBtn} onPress={() => setVisible(!Isvisible)}>
           <Text style={styles.planTxt}>Plan</Text>
         </Pressable>
         <Pressable style={styles.completedBtn}>
@@ -424,6 +453,73 @@ const styles = StyleSheet.create({
     fontWeight:'600',
     lineHeight:19.36,
     color:'rgba(255, 255, 255, 1)'
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    width:350,
+    height:400,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    width: 215,
+    height: 50,
+    borderRadius: 20,
+    marginBottom:10,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 40,
+    backgroundColor: "#8a97dd",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
+    elevation: 6,
+  },
+  text: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#fff",
+  },
+  closeBtn:{
+    width:22,
+    height:22,
+    alignSelf:'flex-end'
+  },
+  gotItTxt:{
+    fontWeight:'700',
+    fontSize:12,
+    lineHeight:14.52,
+    letterSpacing:1,
+    color:'#3366FF',
+    marginTop:20,
+    
+  },
+  footerTxt:{
+    flex:1,
+    width:'50%',
+    justifyContent:'flex-end',
+    alignItems:'flex-end',
+    marginLeft:20,
   }
 
 });
