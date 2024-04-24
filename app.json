@@ -12,6 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -31,6 +32,7 @@
     },
     "plugins": [
       "expo-router"
+     
     ],
     "experiments": {
       "typedRoutes": true

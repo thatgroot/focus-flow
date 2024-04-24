@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     lineHeight: 19.36,
     fontSize: 16,
-    fontFamily: "Inter, sans-serif",
+    fontFamily: "regular",
     letterSpacing: 1,
   },
   upcomingday:{
@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     lineHeight: 19.36,
     fontSize: 13,
-    fontFamily: "Inter, sans-serif",
+    fontFamily: "regular",
     letterSpacing: 1,
   },
   upcomingWeeks:{
@@ -315,7 +315,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     lineHeight: 19.36,
     fontSize: 15,
-    fontFamily: "Inter, sans-serif",
+    fontFamily: "regular",
     letterSpacing: 1,
   },
 
@@ -419,7 +419,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 20,
     marginRight: 8,
-    fontFamily: "Inter, sans-serif",
+    fontFamily: "bold",
   },
 });
 

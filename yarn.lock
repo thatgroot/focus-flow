@@ -1866,6 +1866,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@nonam4/react-native-bottom-sheet@^2.2.4":
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/@nonam4/react-native-bottom-sheet/-/react-native-bottom-sheet-2.2.4.tgz#bdf5ef5f16109fb5b420e06f45ea9cbeb8c4940c"
+  integrity sha512-ajyLZ6ZXUvQtnvReyLBeDbxcEq9CQkcloNi04QNYo4Lpg2WJIrxXAygAL1y219DzRp1wB7a5oQEQ4KoVci6Z/w==
+
 "@npmcli/fs@^1.0.0":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@npmcli/fs/-/fs-1.1.1.tgz#72f719fe935e687c56a4faecf3c03d06ba593257"
@@ -6769,6 +6774,11 @@ react-native-calendars@^1.1304.1:
     xdate "^0.8.0"
   optionalDependencies:
     moment "^2.29.4"
+
+react-native-modalize@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-modalize/-/react-native-modalize-2.1.1.tgz#dcb67d208f4c5bdc76f45075e727be43fd008561"
+  integrity sha512-4/7EZWsrUqAAkkAVEnOsSdpAPQaEBewX7TvwFuzgvGDzxKpq3O58I9SnSeU8QtG/r91XYHJNaU5dAuDrcLjUaQ==
 
 react-native-progress-steps@^1.3.4:
   version "1.3.4"
