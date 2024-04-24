@@ -195,6 +195,8 @@ const HomeScreen: React.FC = () => {
         </View>
         <View style={{
           paddingVertical: 40,
+          alignItems:'center',
+          justifyContent:'center'
         }}>
           <TimerSection
             clock={require("@/assets/images/clock.png")}
