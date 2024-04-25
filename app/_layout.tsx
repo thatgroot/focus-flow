@@ -54,7 +54,7 @@ function RootLayoutNav() {
   return (
     <SafeAreaProvider>
       <Stack screenOptions={{headerShown:false}}>
-        {/* <Stack.Screen name="(screens)" options={{ headerShown: false }} /> */}
+        <Stack.Screen name="(screens)" options={{ headerShown: false }} />
         <Stack.Screen
           name="(tabs)"
           options={{
@@ -63,7 +63,7 @@ function RootLayoutNav() {
           }}
         />
         <Stack.Screen
-          name="grouppage "
+          name="grouppage"
           options={{
             
             headerShown:false,
