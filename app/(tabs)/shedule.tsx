@@ -9,6 +9,7 @@ import { Schedules } from "@/components/Schedules";
 import { useRouter,useNavigation } from "expo-router";
 import ShareSchedule from "@/components/ShareSchedule";
 import Button from '../../elements/Button';
+import { Modalize } from 'react-native-modalize';
 
 
 const shedule: React.FC = () => {
