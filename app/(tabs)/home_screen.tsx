@@ -319,7 +319,7 @@ const styles = StyleSheet.create({
 
   headingSub: {
     color: "#9AA5B5",
-    fontSize: 14,
+    fontSize: 14, 
     lineHeight: 19.36,
     letterSpacing: 1,
   },

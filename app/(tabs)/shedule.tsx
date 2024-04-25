@@ -232,7 +232,7 @@ const shedule: React.FC = () => {
             <Image source={require('../../assets/icons/close.png')}  style={styles.closeBtn}/>
 
             </TouchableOpacity>
-           <TouchableOpacity style={styles.button} >
+           <TouchableOpacity style={styles.button} onPress={() => router.push('/(screens)/addToPlanner') } >
       <Text style={styles.text}>Class</Text>
     </TouchableOpacity>
     <TouchableOpacity style={[styles.button,{backgroundColor:'#FEB5A6'}]} >

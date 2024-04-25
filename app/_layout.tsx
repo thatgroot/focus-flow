@@ -63,7 +63,14 @@ function RootLayoutNav() {
           }}
         />
         <Stack.Screen
-          name="grouppage "
+          name="grouppage"
+          options={{
+            
+            headerShown:false,
+          }}
+        />
+         <Stack.Screen
+          name="addToPlanner"
           options={{
             
             headerShown:false,
