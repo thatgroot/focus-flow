@@ -58,7 +58,7 @@ function RootLayoutNav() {
         <Stack.Screen
           name="(tabs)"
           options={{
-            title: "shedule",
+            title: "home_screen",
             headerShown:false,
           }}
         />
