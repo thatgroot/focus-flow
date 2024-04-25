@@ -49,7 +49,7 @@ const DAYS = [
   },
 ]
 
-const HomeScreen: React.FC = () => {
+const home_screen: React.FC = () => {
 
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
@@ -423,4 +423,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default home_screen;
