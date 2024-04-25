@@ -49,7 +49,7 @@ const DAYS = [
   },
 ]
 
-const HomeScreen: React.FC = () => {
+const home_screen: React.FC = () => {
 
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
@@ -195,6 +195,8 @@ const HomeScreen: React.FC = () => {
         </View>
         <View style={{
           paddingVertical: 40,
+          alignItems:'center',
+          justifyContent:'center'
         }}>
           <TimerSection
             clock={require("@/assets/images/clock.png")}
@@ -421,4 +423,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default home_screen;
