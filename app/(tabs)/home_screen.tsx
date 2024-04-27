@@ -17,6 +17,8 @@ import DayCard from "@/components/DayCard";
 import { TimerSection } from "@/components/TimerSection";
 import TimeEntry from "@/components/TimeEntry";
 import ModalWrapper from "@/components/ModalWrapper";
+import AddCourseModal from "@/components/AddCourseModal";
+import AddCourseReminder from "@/components/AddCourseReminder";
 
 const DAYS = [
   {
@@ -217,7 +219,8 @@ const home_screen: React.FC = () => {
             type="upcomming"
             onPress={openModal}
           />
-          <ModalWrapper isVisible={isModalVisible} onClose={closeModal} data="Date: Dec-27-2024" Time="Time: 09:00PM" opPressBtn={()=>alert(1234)}/>
+          
+          <AddCourseReminder isVisible={isModalVisible} onClose={closeModal} />
         </View>
         <View style={{paddingVertical:36}}>
           <Text style={styles.upcomingText}>Recent Group Sessions</Text>

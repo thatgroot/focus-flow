@@ -1,6 +1,23 @@
-import React from "react";
-import { View, StyleSheet, Image, Text, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  Modal,
+} from "react-native";
+import LabeledInput from "./InputField";
+import ModalWrapper from "./ModalWrapper";
+import Reminder from "./Reminder";
 
+
+interface AddCourseReminder {
+  isVisible: boolean;
+  onClose: () => void;
+}
 type InfoProps = {
   label: string;
   value: string;
@@ -12,14 +29,18 @@ const Info: React.FC<InfoProps> = ({ label, value }) => (
   </View>
 );
 
-const Reminder: React.FC = () => {
+const AddCourseReminder: React.FC<AddCourseModalProps> = ({
+  isVisible,
+  onClose,
+}) => {
   const infoData = [
     { label: "Date", value: "Dec-27-2024" },
     { label: "Time", value: "09:00PM" },
   ];
 
   return (
-    <View style={styles.container}>
+    <ModalWrapper isVisible={isVisible} onClose={onClose}>
+       <View style={styles.container}>
        <Image style={styles.mainbell} source={require('../assets/images/schoolbell.png')} />
       <View style={styles.subContainer}>
         <Text style={styles.titleText}>Reminder</Text>
@@ -32,10 +53,12 @@ const Reminder: React.FC = () => {
       {infoData.map((item, index) => (
         <Info key={index} label={item.label} value={item.value} />
       ))}
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={onClose}>
         <Text style={styles.buttonText}>GOT IT</Text>
       </TouchableOpacity>
     </View>
+    
+    </ModalWrapper>
   );
 };
 
@@ -103,4 +126,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Reminder;
+export default AddCourseReminder;
