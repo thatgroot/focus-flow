@@ -67,14 +67,14 @@ const styles = StyleSheet.create({
   headingText: {
     color: "#353535",
     textAlign: "center",
-    fontFamily: "Inter",
+    fontFamily: "Inter-Regular",
     marginTop: 27,
-    fontWeight: "bold",
+    fontFamily: 'Inter-Bold',
   },
   subHeadingText: {
     color: "#8D99DE",
     textAlign: "center",
-    fontFamily: "Inter",
+    fontFamily: "Inter-Regular",
     marginTop: 27,
     fontWeight: "600",
   },
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     color: "#000",
     alignSelf: "stretch",
     marginTop: 27,
-    fontFamily: "Inter",
+    fontFamily: "Inter-Regular",
     fontSize: 14,
     fontWeight: "400",
   },
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   },
   shareButtonText: {
     color: "#8D99DE",
-    fontFamily: "Inter",
+    fontFamily: "Inter-Regular",
     fontWeight: "600",
   },
   notNowButton: {
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
   },
   notNowButtonText: {
     color: "#FFF",
-    fontFamily: "Inter",
+    fontFamily: "Inter-Regular",
     fontWeight: "600",
   },
 });

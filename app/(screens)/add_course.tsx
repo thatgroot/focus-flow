@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, Image, Text, TouchableOpacity } from "react-native";
-import { Link } from 'expo-router';
+import { Link } from "expo-router";
 
 type Course = {
   id: string;
@@ -34,7 +34,7 @@ const AddCourse: React.FC = () => {
       </View>
       <View style={styles.content}>
         <Text style={styles.heading}>Add Courses</Text>
-        {courses.map(course => (
+        {courses.map((course) => (
           <CourseCard key={course.id} course={course} />
         ))}
       </View>
@@ -44,8 +44,7 @@ const AddCourse: React.FC = () => {
           <Text>Add Custom Courses</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.nextButton}>
-        <Link replace href="/home_Screen">Next</Link>
-       
+          <Link href={"/home_screen"}>Next</Link>
         </TouchableOpacity>
       </View>
     </View>
@@ -60,8 +59,8 @@ const styles = StyleSheet.create({
     display: "flex",
     width: "100%",
     flexDirection: "column",
-    marginHorizontal:"auto",
-    marginVertical:0,
+    marginHorizontal: "auto",
+    marginVertical: 0,
     padding: 20,
   },
   header: {
@@ -87,7 +86,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontWeight: "700",
     fontSize: 20,
-    fontFamily: "Inter, sans-serif",
+    fontFamily: "Inter-Bold",
   },
   courseCard: {
     alignItems: "stretch",
@@ -100,7 +99,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   courseIcon: {
- borderRadius: 100,
+    borderRadius: 100,
     borderColor: "rgba(154, 165, 181, 1)",
     borderWidth: 2,
     height: 24,
@@ -110,9 +109,8 @@ const styles = StyleSheet.create({
   courseTitle: {
     color: "#353535",
     textAlign: "center",
-    fontWeight: "500",
+    fontFamily: "Inter-Medium",
     fontSize: 16,
-    fontFamily: "Inter, sans-serif",
   },
   footer: {
     justifyContent: "center",
@@ -128,7 +126,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 20,
     marginRight: 8,
-    fontFamily: "Inter, sans-serif",
+    fontFamily: "Inter-Bold",
   },
   nextButton: {
     backgroundColor: "#8A97DD",
@@ -140,7 +138,7 @@ const styles = StyleSheet.create({
     color: "#FFF",
     fontWeight: "600",
     fontSize: 16,
-    fontFamily: "Inter, sans-serif",
+    fontFamily: "Inter-Bold",
   },
 });
 

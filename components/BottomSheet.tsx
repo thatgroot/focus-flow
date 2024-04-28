@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   },
   shareText: {
     flex: 0,
-    fontWeight: "bold",
+    fontFamily: 'Inter-Bold',
     fontSize: 16,
     color: "#8d99de",
   },
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   },
   copyLinkText: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: 'Inter-Bold',
     textAlign: "center",
     color: "#8d99de",
   },

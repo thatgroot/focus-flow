@@ -68,12 +68,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontFamily: 'Inter-Bold',
     color: '#8D99DE',
   },
   description: {
     fontSize: 12,
-    fontWeight: 'normal',
+    fontFamily: 'Inter-Regular',
     color: '#5B5B5B',
   },
   statusContainer: {
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: 14,
-    fontWeight: 'bold',
+    fontFamily: 'Inter-Bold',
     color: '#13CE66',
   },
   spentTimeContainer: {
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   },
   spentTimeText: {
     fontSize: 12,
-    fontWeight: 'bold',
+    fontFamily: 'Inter-Bold',
     color: '#FFCA65',
     textAlign: 'right',
   },

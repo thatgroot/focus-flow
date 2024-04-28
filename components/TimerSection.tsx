@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 15,
-    fontWeight: "bold",
+    fontFamily: 'Inter-Bold',
     color: "#fff",
     textAlign: "left",
   },

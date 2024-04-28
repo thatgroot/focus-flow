@@ -1,27 +1,36 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet,Image, Pressable, TouchableOpacity,Modal } from "react-native";
-import { useRouter,useNavigation } from "expo-router";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Pressable,
+  TouchableOpacity,
+  Modal,
+} from "react-native";
+import { useRouter, useNavigation } from "expo-router";
 
-
-
-export const Schedules = ({item}) => {
-  console.log('dhjshsd',item,)
-
-   
-  
-
+export const Schedules = ({
+  item,
+}: {
+  item: {
+    title: string[];
+    time: string[];
+    due: string[];
+    bgColor: string;
+    icon: any;
+  };
+}) => {
   return (
     <View style={styles.container}>
-      
-      <View style={[styles.card, { backgroundColor: item?.bgColor ,gap:24,}]}>
-        {item?.title?.map((subject, index) => (
-          <View key={index} style={{ ...styles.item, flexDirection: "column",gap:2 }}>
+      <View style={[styles.card, { backgroundColor: item?.bgColor, gap: 12 }]}>
+        {item?.title?.map((subject: string, index: number) => (
+          <View key={index} style={{ ...styles.item, }}>
             <View style={styles.headerTitle}>
-            <Text style={styles.subtitle}>{subject}</Text>
-            <TouchableOpacity onPress={() =>{} }>
-            <Image source={item?.icon} style={styles.shareIcon} />
-
-            </TouchableOpacity>
+              <Text style={styles.subtitle}>{subject}</Text>
+              <TouchableOpacity onPress={() => {}}>
+                <Image source={item?.icon} style={styles.shareIcon} />
+              </TouchableOpacity>
             </View>
             <View style={styles.subDetails}>
               <View style={styles.subDetail}>
@@ -35,30 +44,23 @@ export const Schedules = ({item}) => {
                 </View>
               </View>
               <View style={styles.subDetail}>
-               {
-                 item.due[index] && (
+                {item.due[index] && (
                   <View
-                  style={[
-                    styles.subDetailBox,
-                    { backgroundColor: "#e3485020" },
-                  ]}
-                >
-
-                 
-                      <Text style={[styles.subDetailText, { color: "#fff" }]}>
-                   {item?.due[index]}
-                  </Text>
-                   
-                  
-                </View>
-                 )
-               }
+                    style={[
+                      styles.subDetailBox,
+                      { backgroundColor: "#e3485020" },
+                    ]}
+                  >
+                    <Text style={[styles.subDetailText, { color: "#fff" }]}>
+                      {item?.due[index]}
+                    </Text>
+                  </View>
+                )}
               </View>
             </View>
           </View>
         ))}
       </View>
-      
     </View>
   );
 };
@@ -69,33 +71,26 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    flexGrow: 0,
-    flexShrink: 0,
-    padding: 10,
   },
   card: {
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    flexGrow: 0,
-    flexShrink: 0,
     padding: 10,
     borderRadius: 10,
-    width: "90%",
     marginBottom: 10,
+    alignSelf: "stretch",
   },
   item: {
-    flexDirection: "row",
     justifyContent: "flex-start",
-    minWidth:275,
-    gap:12,
+    flexDirection: "column",
+    alignSelf: "stretch",
+    gap: 2,
   },
   iconContainer: {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    flexGrow: 0,
-    flexShrink: 0,
     height: 25,
     width: 25,
     borderRadius: 1000,
@@ -103,12 +98,12 @@ const styles = StyleSheet.create({
   },
   iconText: {
     fontSize: 14,
-    fontWeight: "bold",
+    fontFamily: "Inter-Bold",
     color: "white",
   },
   title: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: "Inter-Bold",
     color: "white",
     flexShrink: 1,
   },
@@ -116,8 +111,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    flexGrow: 0,
-    flexShrink: 0,
   },
   detailText: {
     fontSize: 12,
@@ -127,14 +120,13 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "flex-start",
-    flexGrow: 0,
-    flexShrink: 0,
+
     width: "100%",
   },
 
   subtitle: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: "Inter-Bold",
     color: "#fff",
     marginBottom: 10,
   },
@@ -159,15 +151,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "white",
   },
-  shareIcon:{
-    width:22,
-    height:24,
-    tintColor:'rgba(255, 255, 255, 1)',
-    marginRight:30
+  shareIcon: {
+    width: 22,
+    height: 24,
   },
-  headerTitle:{
-    flexDirection:'row',
-    justifyContent:'space-between'
+  headerTitle: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
- 
 });

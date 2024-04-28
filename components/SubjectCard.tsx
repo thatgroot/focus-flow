@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontFamily: 'Inter-Bold',
     textAlign: "left",
     color: "white",
   },
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     flexGrow: 0,
     flexShrink: 0,
     fontSize: 12,
-    fontWeight: "bold",
+    fontFamily: 'Inter-Bold',
     textAlign: "left",
   },
   subItemDetails: {
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   },
   subItemText: {
     fontSize: 14,
-    fontWeight: "normal",
+    fontFamily: "Inter-Regular",
     textAlign: "left",
   },
 });

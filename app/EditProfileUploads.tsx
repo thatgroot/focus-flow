@@ -57,7 +57,7 @@ const EditProfileUploads: React.FC = () => {
                 <Text style={[styles.heading, styles.ManageAccout]}>Edit Profile</Text>
 
 
-               
+
                 <View style={styles.mainsection}>
                     <View style={styles.ProfileMain}>
                         {
@@ -69,27 +69,27 @@ const EditProfileUploads: React.FC = () => {
                             <Text style={styles.heading}>Theodore Handle</Text>
                             <Text style={[styles.heading, styles.headingSub]}>@username</Text>
                         </View>
-                        
+
 
 
 
                     </View>
                     <TouchableOpacity onPress={() => router.push("/EditProfileUploads")}>
-                            <Image style={styles.ProfileEdit} source={require('../assets/images/Icon.png')} />
+                            <Image style={styles.ProfileEdit} source={require('../assets/images/icon.png')} />
                         </TouchableOpacity>
-                        
+
                 </View>
                 <TouchableOpacity onPress={pickImage} style={{marginTop:10}}>
                            <Text style={styles.uploadText}>Upload</Text>
                         </TouchableOpacity>
-                        
-               
+
+
 
                 <TouchableOpacity style={styles.btn}>
                     <Text style={[styles.heading, styles.BtnText]}>Save Changes</Text>
                 </TouchableOpacity>
 
-                
+
 
 
 
@@ -116,10 +116,9 @@ const styles = StyleSheet.create({
     },
     heading: {
         color: "rgba(53, 53, 53, 1)",
-        fontWeight: "700",
-        lineHeight: 24.2,
+        fontFamily: "Inter-Bold",
+        lineHeight: 24,
         fontSize: 16,
-        fontFamily: "Inter, sans-serif",
         letterSpacing: 1,
     },
     uploadText:{
@@ -153,7 +152,7 @@ const styles = StyleSheet.create({
     headingSub: {
         color: "rgba(119, 131, 143, 1)",
         fontSize: 14,
-        lineHeight: 19.36,
+        lineHeight: 20,
         letterSpacing: 1,
     },
     Arrow: {

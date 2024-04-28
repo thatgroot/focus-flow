@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Text, StyleSheet, View, ImageSourcePropType } from "react-native";
 import { Image } from "expo-image";
-import { FontSize, FontFamily, Color, Padding, Border } from "../GlobalStyles";
+import { FontSize, FontFamily, Color, Padding, Border } from "../styles/GlobalStyles";
 
 export type PasswordInputType = {
   password?: string;

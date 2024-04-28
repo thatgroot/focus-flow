@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     lineHeight: 24.2,
     fontSize: 20,
-    fontFamily: "Inter, sans-serif",
+    fontFamily: "Inter-Bold",
     letterSpacing: 1,
   },
 
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     lineHeight: 16.94,
     fontSize: 14,
-    fontFamily: "Inter, sans-serif",
+    fontFamily: "Inter-Regular",
     letterSpacing: 1,
   },
   plusBtn: {
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     lineHeight: 24.2,
     fontSize: 20,
-    fontFamily: "Inter, sans-serif",
+    fontFamily: "Inter-Bold",
     marginTop: 30
   },
   subheading: {
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     lineHeight: 16.94,
     fontSize: 14,
-    fontFamily: "Inter, sans-serif",
+    fontFamily: "Inter-Regular",
 
 
   }

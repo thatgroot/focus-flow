@@ -22,7 +22,7 @@ export default function ButtonLink() {
 const styles = StyleSheet.create({
   plus: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontFamily: 'Inter-Bold',
     textAlign: "center",
     color: "#8d99de",
   },

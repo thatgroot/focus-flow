@@ -1,9 +1,11 @@
 import LabeledInput from "@/components/InputField";
 import Button from "@/elements/Button";
+import { useRouter } from "expo-router";
 import React from "react";
 import { ScrollView, View, Text, Image, StyleSheet } from "react-native";
 
 const Signup = () => {
+  const router = useRouter();
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -40,7 +42,12 @@ const Signup = () => {
             </View>
           </View>
           <View style={styles.buttonContainer}>
-            <Button text="Sign In" />
+            <Button
+              onPress={() => {
+                router.push("/home_screen");
+              }}
+              text="Sign In"
+            />
             <View style={styles.alternateAction}>
               <Text style={styles.alternateText1}>
                 Already have an Account ?
@@ -74,7 +81,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontFamily: 'Inter-Bold',
     textAlign: "center",
   },
   description: {
@@ -84,7 +91,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     alignSelf: "stretch",
-    gap:12,
+    gap: 12,
   },
   checkboxContainer: {
     justifyContent: "space-between",

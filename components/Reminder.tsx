@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#FFF",
     alignItems: "center",
-    
+
     paddingHorizontal: 24,
   },
   mainbell: {
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     color: "#27272A",
-    fontWeight: "bold",
+    fontFamily: 'Inter-Bold',
     fontSize: 20,
   },
   descriptionText: {

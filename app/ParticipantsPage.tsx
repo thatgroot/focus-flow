@@ -178,10 +178,9 @@ const styles = StyleSheet.create({
     },
     heading: {
         color: "#8D99DE",
-        fontWeight: "700",
-        lineHeight: 24.2,
+               fontFamily: "Inter-Bold",
+        lineHeight: 24,
         fontSize: 20,
-        fontFamily: "Inter, sans-serif",
         letterSpacing: 1,
     },
     boxView: {
@@ -200,9 +199,9 @@ const styles = StyleSheet.create({
     headingsub: {
         color: "rgba(255, 255, 255, 1)",
         fontWeight: "600",
-        lineHeight: 26.63,
+        lineHeight: 26,
         fontSize: 22,
-        fontFamily: "Inter, sans-serif",
+        fontFamily: "Inter-Bold",
         textAlign: 'center'
     },
     headingWeeks: {
@@ -211,7 +210,7 @@ const styles = StyleSheet.create({
         fontWeight: "400",
         lineHeight: 26,
         fontSize: 12,
-        fontFamily: "Inter, sans-serif",
+        fontFamily: "Inter-Regular",
         textAlign: 'center'
     },
     mainWeeks: {
@@ -223,7 +222,7 @@ const styles = StyleSheet.create({
         marginVertical: 12,
         borderRadius: 7,
         // justifyContent: 'center',
-    
+
         flexDirection:'row',
         alignItems:'center',
         gap:10
@@ -240,25 +239,22 @@ const styles = StyleSheet.create({
     },
     idView:{
         color: "rgba(154, 165, 181, 1)",
-        fontWeight: "500",
         lineHeight: 26,
         fontSize: 20,
-
+        fontFamily: "Inter-Medium",
     },
     stylesName:{
         color: "rgba(92, 92, 92, 1)",
-        fontWeight: "500",
+        fontFamily: "Inter-Medium",
         lineHeight: 18.15,
         fontSize: 15,
-        fontFamily: "Inter, sans-serif",
-    
+
     },
     stylesTime:{
         color: "rgba(255, 202, 101, 1)",
-        fontWeight: "500",
         lineHeight: 19.15,
         fontSize: 16,
-        fontFamily: "Inter, sans-serif",
+        fontFamily: "Inter-Medium",
         marginTop:4
     }
 

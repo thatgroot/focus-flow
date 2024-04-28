@@ -49,8 +49,8 @@ const liveNowPage: React.FC = () => {
                     </View>
 
                 </View>
-               
-                
+
+
 
                <View style={styles.images}>
 
@@ -69,14 +69,14 @@ const liveNowPage: React.FC = () => {
         </View>
         <Text style={styles.subheading}>Focus Mode</Text>
         <View style={styles.mainlive}>
-        
+
                 <TouchableOpacity style={styles.btnLive}  onPress={() => router.push("/ParticipantsPage")}>
                     <View style={styles.dotlive}>
                         <View style={styles.dotlivesub}></View>
                     </View>
                     <Text style={styles.livestyles}>61 live Now</Text>
                 </TouchableOpacity>
-                
+
                 </View>
                 <View>
                     <Text style={styles.headingTime}>00:24:39</Text>
@@ -116,29 +116,25 @@ const styles = StyleSheet.create({
     },
     heading: {
         color: "#8D99DE",
-        fontWeight: "700",
-        lineHeight: 24.2,
+               fontFamily: "Inter-Bold",
+        lineHeight: 24,
         fontSize: 20,
-        fontFamily: "Inter, sans-serif",
         letterSpacing: 1,
     },
     subheading:{
         color: "rgba(53, 53, 53, 1)",
-        fontWeight: "700",
-        lineHeight: 24.2,
+        fontFamily: "Inter-Bold",
+        lineHeight: 24,
         fontSize: 16,
-        fontFamily: "Inter, sans-serif",
         letterSpacing: 1,
         textAlign:'center',
         marginTop:20
     },
     headingTime:{
-       
+
         color: "rgba(53, 53, 53, 1)",
-        fontWeight: "500",
-        
+        fontFamily: "Inter-Medium",
         fontSize: 32,
-        fontFamily: "Inter, sans-serif",
         letterSpacing: 1,
         textAlign:'center',
         marginTop:20
@@ -149,10 +145,9 @@ const styles = StyleSheet.create({
 
     headingCaster:{
         color: "rgba(53, 53, 53, 1)",
-        fontWeight: "700",
-        lineHeight: 24.2,
+               fontFamily: "Inter-Bold",
+        lineHeight: 24,
         fontSize: 20,
-        fontFamily: "Inter, sans-serif",
 
     },
     boxDays:{
@@ -226,9 +221,9 @@ const styles = StyleSheet.create({
     livestyles:{
         color: "rgba(241, 137, 124, 1)",
         fontWeight: "400",
-        lineHeight: 24.2,
+        lineHeight: 24,
         fontSize: 16,
-        fontFamily: "Inter, sans-serif",
+        fontFamily: "Inter-Regular",
     },
     btnView:{
           width:40.24,
@@ -255,10 +250,10 @@ const styles = StyleSheet.create({
      marginTop:30,
      marginBottom:50
     }
-   
-  
-    
-   
+
+
+
+
 
 
 

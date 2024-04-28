@@ -30,13 +30,13 @@ const DayCard: React.FC<Props> = ({ filled, active, dayOfWeek, date,onSelect }) 
     dayOfWeekText: {
       flex: 0,
       fontSize: 12,
-      fontWeight: "bold",
+      fontFamily: 'Inter-Bold',
       color: !active && !filled ? "#9AA5B5" : active && !filled ? "#9AA5B5": "white",
     },
     dateText: {
       flex: 0,
       fontSize: 20,
-      fontWeight: "bold",
+      fontFamily: 'Inter-Bold',
       color: !active && !filled ? "#353535" : active && !filled ? "#353535": "white",
     },
   });

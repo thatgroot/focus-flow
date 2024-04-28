@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   },
   duration: {
     fontSize: 19,
-    fontWeight: "bold",
+    fontFamily: 'Inter-Bold',
   },
 });
 

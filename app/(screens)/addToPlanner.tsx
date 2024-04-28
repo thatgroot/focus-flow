@@ -39,10 +39,12 @@ const addToPlanner = () => {
 
   const modalizeRef = useRef(null);
   const onOpen = () => {
+    // @ts-ignore
     modalizeRef.current?.open();
   };
 
   const close = () => {
+    // @ts-ignore
     modalizeRef.current?.close();
   }
 
@@ -51,11 +53,11 @@ const addToPlanner = () => {
     <View style={styles.header}>
       <Image source={require('../../assets/icons/back.png')} style={styles.backBtn}/>
       <Text style={styles.headerTxt}>Add to Planner</Text>
-     
+
     </View>
     <ScrollView>
 
-   
+
     <View style={styles.mainContainer}>
       <CheckboxGroup onChange={handleCheckboxChange}>
             {["Pscychology", "Physiology","Physiologys","Biology", "Physics", "Mathematics"].map(
@@ -73,14 +75,11 @@ const addToPlanner = () => {
       </View>
       <View style={styles.btn}>
       <Button text='Schedule' onPress={onOpen} />
-  
+
       </View>
       </ScrollView>
       <Modalize
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
         modalHeight={570}
-        
         ref={modalizeRef}
         handleStyle={{
           marginTop: 30,
@@ -96,10 +95,10 @@ const addToPlanner = () => {
         <View style={[styles.header2,{marginTop:20,marginLeft:0}]}>
             <TouchableOpacity onPress={() => close() }>
             <Image source={require('../../assets/icons/back.png')} style={styles.backBtn}/>
-      
+
             </TouchableOpacity>
       <Text style={styles.headerTxt}>Schedule a Class</Text>
-     
+
     </View>
     <View style={styles.dropDownlistContainer}>
     <SelectDropdown
@@ -114,12 +113,12 @@ const addToPlanner = () => {
                         setSelectedTimeName(selectedItem.TimeName)
                         return selectedItem.TimeName;
                       }}
-                     
+
                       rowTextForSelection={(item, index) => {
                         // Return the specific property you want to display for each item
                         return item.TimeName;
                       }}
-                     
+
                      buttonStyle={styles.dropDownlist}
                     />
 
@@ -129,11 +128,11 @@ const addToPlanner = () => {
                       <View style={styles.searchSection}>
                      <TextInput placeholder='Start Date' style={styles.inputTime} />
                      <Image source={require('../../assets/icons/calenderIcon.png')} style={{padding:10,width:30,height:30, marginRight:20,marginTop:10}} />
-                      
+
                       </View>
                     </View>
     </View>
-    
+
 
         </View>
 
@@ -160,7 +159,7 @@ const styles = StyleSheet.create({
        fontWeight:'700',
        fontSize:20,
        lineHeight:24,
-       fontFamily:'bold',
+       fontFamily:'Inter-Bold',
        color:'#8D99DE'
      },
      backBtn:{
@@ -172,7 +171,7 @@ const styles = StyleSheet.create({
       // justifyContent:'center',
       alignItems:'center',
       marginTop:30
-      
+
 
      },
      btn:{
@@ -185,8 +184,8 @@ const styles = StyleSheet.create({
      paddingVertical:34,
       marginTop: 5,
       width:'100%',
-   
-  
+
+
     },
     dropDownlist:{
       borderWidth: 1,
@@ -196,7 +195,7 @@ const styles = StyleSheet.create({
       backgroundColor:"#FAFAFA",
       borderRadius:100,
       marginTop:20
-      
+
   },
   header2:{
     flexDirection:'row',
@@ -204,7 +203,7 @@ const styles = StyleSheet.create({
     marginTop:40,
     // justifyContent:'center',
     alignItems:'center',
-  
+
    },
    dropDownlistContainer:{
      width:'100%',

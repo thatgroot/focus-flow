@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     height: 20,
   },
   categoryText: {
-    fontWeight: "500",
+    fontFamily: "Inter-Medium",
   },
   button: {
     backgroundColor: "#007AFF",

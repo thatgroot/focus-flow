@@ -49,11 +49,11 @@ const settings: React.FC = () => {
 
           </View>
           <TouchableOpacity onPress={() => router.push("/EditProfileUploads")}>
-          <Image style={styles.ProfileEdit} source={require('../../assets/images/Icon.png')} />
+          <Image style={styles.ProfileEdit} source={require('../../assets/images/icon.png')} />
           </TouchableOpacity>
         </View>
-        <Text style={styles.headingTimer}>Timer Settings</Text>
 
+        <Text style={styles.headingTimer}>Timer Settings</Text>
         <View style={styles.btnView}>
           <Text style={styles.headingTimerON}>Timer ON</Text>
 
@@ -165,10 +165,9 @@ const styles = StyleSheet.create({
   },
   heading: {
     color: "rgba(30, 32, 34, 1)",
-    fontWeight: "500",
     lineHeight: 24.2,
     fontSize: 14,
-    fontFamily: "Inter, sans-serif",
+    fontFamily: "Inter-Medium",
     letterSpacing: 1,
   },
   btnView: {
@@ -183,7 +182,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     lineHeight: 19,
     fontSize: 16,
-    fontFamily: "Inter, sans-serif",
+    fontFamily: "Inter-Bold",
     letterSpacing: 1,
     marginTop: 40
   },
@@ -221,26 +220,26 @@ elevation: 5,
   userIcon:{
    width:14,
    height:14,
-   
+
   },
 
 
   headingTimerON: {
     color: "rgba(53, 53, 53, 0.61)",
-    fontWeight: "500",
+    fontFamily:"medium",
     lineHeight: 16.94,
     fontSize: 14,
   },
   headingEdit:{
     color: "rgba(53, 53, 53, 0.61)",
-    fontWeight: "500",
+    fontFamily: "Inter-Medium",
     lineHeight: 16.94,
     fontSize: 16
   },
   headingSub: {
     color: "rgba(119, 131, 143, 1)",
     fontSize: 14,
-    lineHeight: 19.36,
+    lineHeight: 20,
     letterSpacing: 1,
   },
   Arrow:{

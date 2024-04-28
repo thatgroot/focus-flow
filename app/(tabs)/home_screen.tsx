@@ -51,7 +51,7 @@ const DAYS = [
   },
 ]
 
-const home_screen: React.FC = () => {
+const HomeScreen: React.FC = () => {
 
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
@@ -164,7 +164,7 @@ const home_screen: React.FC = () => {
                     todayTextColor: "#8D99DE",
                   }}
                 />
-             
+
               </View>
             </View>
           </Modal>
@@ -172,7 +172,7 @@ const home_screen: React.FC = () => {
             horizontal
             pagingEnabled
             data={DAYS} // Provide a single item array to FlatList
-            keyExtractor={() => "month"} // Unique key for month
+            keyExtractor={({day,date},index) => `${day}_${date}_${index}`} // Unique key for month
             showsHorizontalScrollIndicator={false}
             renderItem={({ item, index }) => (
               <DayCard
@@ -219,7 +219,7 @@ const home_screen: React.FC = () => {
             type="upcomming"
             onPress={openModal}
           />
-          
+
           <AddCourseReminder isVisible={isModalVisible} onClose={closeModal} />
         </View>
         <View style={{paddingVertical:36}}>
@@ -281,18 +281,16 @@ const styles = StyleSheet.create({
   },
   upcomingText:{
     color: "#353535",
-    fontWeight: "500",
-    lineHeight: 19.36,
+    lineHeight: 20,
     fontSize: 16,
-    fontFamily: "regular",
+    fontFamily: "Inter-Medium",
     letterSpacing: 1,
   },
   upcomingday:{
     color: "#5B5B5B",
-    fontWeight: "500",
-    lineHeight: 19.36,
+    lineHeight: 20,
     fontSize: 13,
-    fontFamily: "regular",
+    fontFamily: "Inter-Medium",
     letterSpacing: 1,
   },
   upcomingWeeks:{
@@ -302,9 +300,9 @@ const styles = StyleSheet.create({
   dot:{
     backgroundColor:'#13CE66',
     width:3.87,
-   
+
     height:3.87,
-   
+
   },
   content: {
     justifyContent: "space-between",
@@ -315,17 +313,16 @@ const styles = StyleSheet.create({
   },
   heading: {
     color: "#353535",
-    fontWeight: "500",
-    lineHeight: 19.36,
+    lineHeight: 20,
     fontSize: 15,
-    fontFamily: "regular",
+    fontFamily: "Inter-Medium",
     letterSpacing: 1,
   },
 
   headingSub: {
     color: "#9AA5B5",
-    fontSize: 14, 
-    lineHeight: 19.36,
+    fontSize: 14,
+    lineHeight: 20,
     letterSpacing: 1,
   },
   mainCalendar: {
@@ -410,20 +407,13 @@ const styles = StyleSheet.create({
     width: 24,
     marginRight: 12,
   },
-  // courseTitle: {
-  //   color: "#353535",
-  //   textAlign: "center",
-  //   fontWeight: "500",
-  //   fontSize: 16,
-  //   fontFamily: "Inter, sans-serif",
-  // },
 
   addButtonText: {
     fontWeight: "600",
     fontSize: 20,
     marginRight: 8,
-    fontFamily: "bold",
+    fontFamily: "Inter-Bold",
   },
 });
 
-export default home_screen;
+export default HomeScreen;

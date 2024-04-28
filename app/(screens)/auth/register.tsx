@@ -1,14 +1,15 @@
 import LabeledInput from "@/components/InputField";
 import Button from "@/elements/Button";
 import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 const Signup = () => {
+  const router = useRouter();
+
   return (
     <ScrollView>
-      <View
-        style={{ flex: 1, gap: 18, paddingVertical: 48}}
-      >
+      <View style={{ flex: 1, gap: 18, paddingVertical: 48 }}>
         <Image
           style={{
             width: "100%",
@@ -19,7 +20,7 @@ const Signup = () => {
         <View
           style={{
             gap: 56,
-            paddingHorizontal: 18
+            paddingHorizontal: 18,
           }}
         >
           <View style={{ gap: 24, alignItems: "center" }}>
@@ -76,7 +77,12 @@ const Signup = () => {
               gap: 24,
             }}
           >
-            <Button text="Signup" />
+            <Button
+              onPress={() => {
+                router.push("/auth/signin");
+              }}
+              text="Signup"
+            />
             <View style={styles.alternateAction}>
               <Text style={styles.text1}>Already have an Account ?</Text>
               <Text style={styles.text2}>Sign In</Text>
@@ -91,7 +97,7 @@ const Signup = () => {
 const styles = StyleSheet.create({
   title: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontFamily: 'Inter-Bold',
     textAlign: "left",
     color: "#8c99de",
   },

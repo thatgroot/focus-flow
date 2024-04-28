@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router";
 import { Image } from "expo-image";
-import { Button, Text, View } from "react-native";
+import { View } from "react-native";
 
 const TabsLayout = () => {
   return (

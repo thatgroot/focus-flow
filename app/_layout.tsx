@@ -7,7 +7,6 @@ import { useEffect } from "react";
 import {
   SafeAreaProvider,
 } from "react-native-safe-area-context";
-import grouppage from "./GroupPage";
 
 
 export {
@@ -17,7 +16,7 @@ export {
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: "(screens)",
+  initialRouteName: "(tabs)",
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -25,10 +24,11 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    regular: require("../assets/fonts/Inter-Regular.ttf"),
-    bold: require("../assets/fonts/Inter-Bold.ttf"),
-    light: require("../assets/fonts/Inter-Light.ttf"),
-    medium: require("../assets/fonts/Inter-Medium.ttf"),
+    "Inter-Light": require("../assets/fonts/Inter-Light.ttf"),
+    "Inter-Regular": require("../assets/fonts/Inter-Regular.ttf"),
+    "Inter-Medium": require("../assets/fonts/Inter-Medium.ttf"),
+    "Inter-Bold": require("../assets/fonts/Inter-Bold.ttf"),
+    "Inter-SemiBold": require("../assets/fonts/Inter-SemiBold.ttf"),
     ...FontAwesome.font,
   });
 
@@ -57,14 +57,11 @@ function RootLayoutNav() {
         {/* <Stack.Screen name="(screens)" options={{ headerShown: false }} /> */}
         <Stack.Screen
           name="(tabs)"
-          
           options={{
             title: "home_screen",
             headerShown:false,
           }}
         />
-        
-     
         <Stack.Screen
           name="modal"
           options={{ presentation: "modal", header: () => <></> }}

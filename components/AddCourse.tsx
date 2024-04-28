@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     color: "white",
-    fontWeight: "bold",
+    fontFamily: 'Inter-Bold',
     textAlign: "center",
   },
   modalText: {

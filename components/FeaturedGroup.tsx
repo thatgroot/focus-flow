@@ -14,7 +14,7 @@ export const FeaturedGroup: React.FC<StudyGroupProps> = ({
 }) => {
   return (
     <View
-     
+
       style={styles.container}
     >
         <View style={styles.innerContainer}>
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "space-between",
     backgroundColor:'white',
-   
+
     alignItems: "center",
     height: 148,
     maxWidth: 185,
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   },
   countText: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: 'Inter-Bold',
     color: "rgba(154, 165, 181, 1)",
   },
 });

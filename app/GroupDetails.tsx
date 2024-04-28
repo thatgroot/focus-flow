@@ -26,7 +26,7 @@ const TimeList = [
       id: 3,
       TimeName:'40 minutes'
     },
-  
+
   ];
 
 import { Link, useNavigation, useRouter } from "expo-router";
@@ -75,25 +75,25 @@ const GroupDetails: React.FC = () => {
                     <View style={{margin:20}}/>
                     <Text style={[styles.StylesTitle, styles.BioStyles]}>Add Time</Text>
                     <View style={{margin:10}}/>
-                   
+
                     <SelectDropdown
                       data={TimeList}
                       onSelect={(selectedItem, index) => {
                         console.warn(selectedItem);
                       }}
-                 
+
                       defaultButtonText={  selectedTimeName || '20 minutes' }
                       buttonTextAfterSelection={(selectedItem, index) => {
                         // Return the specific property you want to display after selection
                         setSelectedTimeName(selectedItem.TimeName)
                         return selectedItem.TimeName;
                       }}
-                     
+
                       rowTextForSelection={(item, index) => {
                         // Return the specific property you want to display for each item
                         return item.TimeName;
                       }}
-                     
+
                      buttonStyle={styles.dropDownlist}
                     />
 
@@ -135,18 +135,16 @@ const styles = StyleSheet.create({
     },
     heading: {
         color: "#8D99DE",
-        fontWeight: "700",
-        lineHeight: 24.2,
+               fontFamily: "Inter-Bold",
+        lineHeight: 24,
         fontSize: 20,
-        fontFamily: "Inter, sans-serif",
         letterSpacing: 1,
     },
     StylesTitle: {
         color: "rgba(53, 53, 53, 1)",
-        fontWeight: "500",
-        lineHeight: 19.36,
+        lineHeight: 20,
         fontSize: 16,
-        fontFamily: "Inter, sans-serif",
+        fontFamily: "Inter-Medium",
         letterSpacing: 1,
         marginLeft: 10
 
@@ -175,9 +173,9 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         paddingHorizontal:20,
         paddingTop:20
-       
-        
-      
+
+
+
     },
     TextInput: {
         flex: 1,
@@ -195,8 +193,8 @@ const styles = StyleSheet.create({
         marginRight:20,
         marginTop:2,
         color: "rgba(154, 165, 181, 1)",
-        fontWeight: "500",
-        lineHeight: 19.36,
+        fontFamily: "Inter-Medium",
+        lineHeight: 20,
         fontSize: 14,
     },
     dropDownlist:{

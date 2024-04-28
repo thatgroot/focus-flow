@@ -31,10 +31,10 @@ const EditProfile: React.FC = () => {
                     <TouchableOpacity onPress={() => router.back()}>
                     <Image style={styles.LeftIcon} source={require('../assets/images/iconleft.png')} />
                     </TouchableOpacity>
-                 
+
 
                         <Text style={styles.heading}>Settings</Text>
-                    
+
                     <View />
                 </View>
                 <Text style={[styles.heading,styles.ManageAccout]}>Manage Account</Text>
@@ -44,7 +44,7 @@ const EditProfile: React.FC = () => {
 
                         <TextInput placeholder="teebaapp123@gmail.com" style={styles.TextInput} placeholderTextColor={'#9AA5B5'} />
                         <TouchableOpacity>
-                        <Image style={styles.ProfileEdit} source={require('../assets/images/Icon.png')} />
+                        <Image style={styles.ProfileEdit} source={require('../assets/images/icon.png')} />
                         </TouchableOpacity>
                     </View>
                     </View>
@@ -54,7 +54,7 @@ const EditProfile: React.FC = () => {
 
                         <TextInput placeholder="Password" style={styles.TextInput} placeholderTextColor={'#9AA5B5'} />
                         <TouchableOpacity>
-                        <Image style={styles.ProfileEdit} source={require('../assets/images/Icon.png')} />
+                        <Image style={styles.ProfileEdit} source={require('../assets/images/icon.png')} />
                         </TouchableOpacity>
                     </View>
                     </View>
@@ -62,9 +62,9 @@ const EditProfile: React.FC = () => {
                     <TouchableOpacity style={styles.btn}>
                         <Text style={[styles.heading,styles.BtnText]}>Save Changes</Text>
                     </TouchableOpacity>
-               
-                
-               
+
+
+
 
 
 
@@ -88,10 +88,9 @@ const styles = StyleSheet.create({
     },
     heading: {
         color: "rgba(53, 53, 53, 1)",
-        fontWeight: "700",
-        lineHeight: 24.2,
+        fontFamily: "Inter-Bold",
+        lineHeight: 24,
         fontSize: 16,
-        fontFamily: "Inter, sans-serif",
         letterSpacing: 1,
     },
     BtnText:{
@@ -108,9 +107,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         gap: 10
     },
-    
 
-    
+
+
     mainView: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -118,10 +117,9 @@ const styles = StyleSheet.create({
     },
     StylesTitle: {
         color: "rgba(53, 53, 53, 1)",
-        fontWeight: "500",
-        lineHeight: 19.36,
+        lineHeight: 20,
         fontSize: 16,
-        fontFamily: "Inter, sans-serif",
+        fontFamily: "Inter-Medium",
         letterSpacing: 1,
         marginLeft: 10
 
@@ -141,16 +139,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 20,
         marginTop:16
-        
+
     },
-   
+
     TextInput: {
         flex: 1,
         color: '#9AA5B5',
         fontSize: 16,
         fontWeight: '300'
     },
-  
+
     btn:{
         width:196,
         height:50,
@@ -160,9 +158,9 @@ const styles = StyleSheet.create({
         borderRadius:100,
         marginTop:90,
         alignSelf:'center'
-    
+
     },
- 
+
 
 
 

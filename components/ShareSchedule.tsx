@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     color: "#000",
     marginTop: 10,
     fontSize: 14,
-    fontFamily: "Inter",
+    fontFamily: "Inter-Regular",
   },
   dateContainer: {
     marginTop: 15,
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   dateTitle: {
     fontSize: 16,
     color: "#353535",
-    fontFamily: "Inter_bold",
+    fontFamily: "Inter-Bold",
   },
   dateSelection: {
     flexDirection: "row",
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   timeTitle: {
     fontSize: 16,
     color: "#353535",
-    fontFamily: "Inter_bold",
+    fontFamily: "Inter-Bold",
   },
   timeSelectionRow: {
     flexDirection: "row",
@@ -112,14 +112,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   dividerText: {
-    fontFamily: "Inter",
+    fontFamily: "Inter-Regular",
     backgroundColor: "#8A97DD",
     color: "transparent",
     alignSelf: "center",
   },
   fullScheduleText: {
     color: "#353535",
-    fontFamily: "Inter",
+    fontFamily: "Inter-Regular",
     marginTop: 10,
   },
 });

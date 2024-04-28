@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   },
   subtitleText: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontFamily: 'Inter-Bold',
     color: "white",
   },
   infoContainer: {
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   },
   countText: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: 'Inter-Bold',
     color: "white",
   },
 });

@@ -295,7 +295,7 @@ const SignInScreen = () => {
             />
           ))}
         </View>
-        <Schedules />
+        {/* <Schedules /> */}
         <Users
           users={[
             require("@/assets/images/user1.png"),
@@ -388,7 +388,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontFamily: 'Inter-Bold',
     color: "#8c99de",
     marginBottom: 12,
   },
@@ -428,7 +428,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: 'Inter-Bold',
     color: "#fff",
   },
   signUpContainer: {
@@ -441,7 +441,7 @@ const styles = StyleSheet.create({
   },
   signUpLink: {
     fontSize: 14,
-    fontWeight: "bold",
+    fontFamily: 'Inter-Bold',
     color: "#8c99de",
     marginLeft: 5,
   },

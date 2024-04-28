@@ -47,7 +47,7 @@ const grouppage: React.FC = () => {
                     </View>
 
                 </View>
-               
+
                 <View style={styles.mainlive}>
                 <TouchableOpacity style={styles.btnLive}>
                     <View style={styles.dotlive}>
@@ -55,7 +55,7 @@ const grouppage: React.FC = () => {
                     </View>
                     <Text style={styles.livestyles}>61 live Now</Text>
                 </TouchableOpacity>
-                
+
                 </View>
 
                 <TouchableOpacity style={styles.btn}   onPress={() => router.push("/liveNowPage")}>
@@ -88,10 +88,9 @@ const styles = StyleSheet.create({
     },
     heading: {
         color: "#8D99DE",
-        fontWeight: "700",
-        lineHeight: 24.2,
+               fontFamily: "Inter-Bold",
+        lineHeight: 24,
         fontSize: 20,
-        fontFamily: "Inter, sans-serif",
         letterSpacing: 1,
     },
     daytext:{
@@ -100,10 +99,9 @@ const styles = StyleSheet.create({
 
     headingCaster:{
         color: "rgba(53, 53, 53, 1)",
-        fontWeight: "700",
-        lineHeight: 24.2,
+               fontFamily: "Inter-Bold",
+        lineHeight: 24,
         fontSize: 20,
-        fontFamily: "Inter, sans-serif",
 
     },
     boxDays:{
@@ -172,28 +170,28 @@ const styles = StyleSheet.create({
     livestyles:{
         color: "rgba(19, 206, 102, 1) ",
         fontWeight: "400",
-        lineHeight: 24.2,
+        lineHeight: 24,
         fontSize: 16,
-        fontFamily: "Inter, sans-serif",
+        fontFamily: "Inter-Regular",
     },
     joinStyles:{
         color: "rgba(255, 255, 255, 1)",
         fontWeight: "600",
-        lineHeight: 19.36,
+        lineHeight: 20,
         fontSize: 16,
-        fontFamily: "Inter, sans-serif",
+        fontFamily: "Inter-Bold",
     },
     LeaderboardStyles:{
         color: "rgba(141, 153, 222, 1)",
         fontWeight: "600",
-        lineHeight: 19.36,
+        lineHeight: 20,
         fontSize: 16,
-        fontFamily: "Inter, sans-serif",
+        fontFamily: "Inter-Bold",
     },
     LeaveStyles:{
         color: "rgba(227, 72, 80, 1)",
         fontWeight: "600",
-        lineHeight: 19.36,
+        lineHeight: 20,
         fontSize: 16,
         marginTop:40,
         textAlign:'center'
@@ -216,7 +214,7 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         borderRadius:100,
         marginTop:72
-       
+
     }
 
 

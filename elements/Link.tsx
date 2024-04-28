@@ -17,7 +17,7 @@ export default function Link({text,onPress}: Props) {
 const styles = StyleSheet.create({
   text: {
     fontSize: 14,
-    fontWeight: "bold",
+    fontFamily: 'Inter-Bold',
     color: "#8c99de",
     marginLeft: 5,
   },
