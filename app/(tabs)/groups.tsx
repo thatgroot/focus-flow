@@ -9,14 +9,14 @@ import {
   FlatList,
   Modal,
   ScrollView,
-  TextInput
-
+  TextInput,
 } from "react-native";
 
-import { EvilIcons } from '@expo/vector-icons';
+import { EvilIcons } from "@expo/vector-icons";
 import { StudyGroup } from "@/components/StudyGroup";
 import { FeaturedGroup } from "@/components/FeaturedGroup";
 import { Link, useNavigation, useRouter } from "expo-router";
+import Button from "@/elements/Button";
 const DATA: StudyGroupProps[] = [
   {
     gradient: ["#9AA5B5", "#9AA5B5"],
@@ -68,65 +68,98 @@ const DATA: StudyGroupProps[] = [
   },
 ];
 
-
 const groups: React.FC = () => {
-
   const router = useRouter();
   const navigation = useNavigation();
-
-
-
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={styles.container}>
-        <Image style={styles.iconleft} source={require('../../assets/images/iconleft.png')} />
+        <Image
+          style={styles.iconleft}
+          source={require("../../assets/images/iconleft.png")}
+        />
         <View style={styles.MainHeading}>
           <Text style={styles.heading}>Your Groups</Text>
-          <TouchableOpacity style={styles.plusBtn}
+          <TouchableOpacity
+            style={styles.plusBtn}
             onPress={() => router.push("/GroupDetails")}
-
           >
-
-
-
-            <Image style={styles.iconleft} source={require('../../assets/images/plus.png')} />
+            <Image
+              style={styles.iconleft}
+              source={require("../../assets/images/plus.png")}
+            />
 
             <Text style={[styles.heading, styles.btnTxt]}>Create</Text>
-
-
           </TouchableOpacity>
         </View>
         <View style={styles.mainSearch}>
           <EvilIcons name="search" size={24} color="#9AA5B5" />
-          <TextInput placeholder="Search a group by name " style={styles.TextInput} placeholderTextColor={'#9AA5B5'} />
+          <TextInput
+            placeholder="Search a group by name "
+            style={styles.TextInput}
+            placeholderTextColor={"#9AA5B5"}
+          />
         </View>
-        <Text style={styles.headingGroups}>Joined groups(4)</Text>
-        <Text style={styles.subheading}>The groups that you have joined.</Text>
-        <FlatList
-          data={DATA}
-          renderItem={({ item }) => (
-            <TouchableOpacity style={{ margin: 6, marginTop: 20 }} onPress={() => router.push("/GroupPage")}>
-              <StudyGroup {...item} />
-            </TouchableOpacity>
-          )}
-          keyExtractor={(item) => item.gradient.toString()} // Replace with unique identifier
-          numColumns={2}
-        />
-        <Text style={styles.headingGroups}>Featured Groups</Text>
-        <Text style={styles.subheading}>Top trending Study groups.</Text>
-        <FlatList
-          data={DATA}
-          renderItem={({ item }) => (
-            <View style={{ margin: 6, marginTop: 20 }}>
-              <FeaturedGroup {...item} />
-            </View>
-          )}
-          keyExtractor={(item) => item.gradient.toString()} // Replace with unique identifier
-          numColumns={2}
-        />
+        <View
+          style={{
+            gap: 18,
+          }}
+        >
+          <View
+            style={{
+              gap: 4,
+            }}
+          >
+            <Text style={styles.headingGroups}>Joined groups(4)</Text>
+            <Text style={styles.subheading}>
+              The groups that you have joined.
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              justifyContent: "space-between",
+              rowGap: 12,
+            }}
+          >
+            {DATA.map((item, index) => (
+              <TouchableOpacity key={index} onPress={() => router.push("/GroupPage")}>
+                <StudyGroup {...item} />
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
 
-
+        <View
+          style={{
+            gap: 18,
+          }}
+        >
+          <View
+            style={{
+              gap: 4,
+            }}
+          >
+            <Text style={styles.headingGroups}>Featured Groups</Text>
+            <Text style={styles.subheading}>Top trending Study groups.</Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              justifyContent: "space-between",
+              rowGap: 12,
+            }}
+          >
+            {DATA.map((item, index) => (
+              <TouchableOpacity  key={index} onPress={() => router.push("/GroupPage")}>
+                <FeaturedGroup {...item} />
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -142,13 +175,13 @@ const styles = StyleSheet.create({
   },
   iconleft: {
     width: 18,
-    height: 18
+    height: 18,
   },
   MainHeading: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginVertical: 28
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginVertical: 28,
   },
   heading: {
     color: "#8D99DE",
@@ -168,34 +201,31 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   plusBtn: {
-    backgroundColor: '#8A97DD',
-    flexDirection: 'row',
-    justifyContent: 'center',
+    backgroundColor: "#8A97DD",
+    flexDirection: "row",
+    justifyContent: "center",
     gap: 10,
     width: 95,
     height: 40,
     borderRadius: 100,
-    alignItems: 'center'
+    alignItems: "center",
   },
   mainSearch: {
     borderWidth: 1,
-    borderColor: '#9AA5B5',
+    borderColor: "#9AA5B5",
     width: "100%",
     height: 52.5,
     borderRadius: 100,
-    justifyContent: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
+    justifyContent: "center",
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 20,
-
-
-
   },
   TextInput: {
     flex: 1,
-    color: '#9AA5B5',
+    color: "#9AA5B5",
     fontSize: 16,
-    fontWeight: '300'
+    fontWeight: "300",
   },
   headingGroups: {
     color: "#353535",
@@ -203,7 +233,7 @@ const styles = StyleSheet.create({
     lineHeight: 24.2,
     fontSize: 20,
     fontFamily: "Inter-Bold",
-    marginTop: 30
+    marginTop: 30,
   },
   subheading: {
     color: "#9AA5B5",
@@ -212,12 +242,7 @@ const styles = StyleSheet.create({
     lineHeight: 16.94,
     fontSize: 14,
     fontFamily: "Inter-Regular",
-
-
-  }
-
-
-
+  },
 });
 
 export default groups;

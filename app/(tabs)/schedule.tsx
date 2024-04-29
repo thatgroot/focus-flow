@@ -1,4 +1,4 @@
-import React, { useState,useRef } from "react";
+import React, { useState, useRef } from "react";
 import {
   View,
   StyleSheet,
@@ -9,7 +9,7 @@ import {
   Modal,
   Image,
   Pressable,
-  ScrollView
+  ScrollView,
 } from "react-native";
 
 import { Calendar } from "react-native-calendars";
@@ -17,10 +17,9 @@ import moment from "moment";
 
 import { Schedules } from "@/components/Schedules";
 import { useRouter } from "expo-router";
-import TaskCategoriesModal from '@/components/TaskCategoriesModal';
+import TaskCategoriesModal from "@/components/TaskCategoriesModal";
 
-
-const shedule: React.FC = () => {
+const schedule: React.FC = () => {
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(0);
@@ -91,7 +90,6 @@ const shedule: React.FC = () => {
 
   const modalizeRefTask = useRef(null);
 
-
   const onOpenTask = () => {
     // @ts-ignore
     modalizeRefTask.current?.open();
@@ -99,8 +97,7 @@ const shedule: React.FC = () => {
   const closeTask = () => {
     // @ts-ignore
     modalizeRefTask.current?.close();
-  }
-
+  };
 
   const router = useRouter();
 
@@ -176,7 +173,7 @@ const shedule: React.FC = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <View style={styles.mainProfile}>
           <View>
             <Text style={[styles.headingSub]}>Schedule</Text>
@@ -305,7 +302,7 @@ const shedule: React.FC = () => {
             onMomentumScrollEnd={(event) => {
               const newIndex = Math.round(
                 event.nativeEvent.contentOffset.x /
-                event.nativeEvent.layoutMeasurement.width
+                  event.nativeEvent.layoutMeasurement.width
               );
               setCurrentMonthIndex(newIndex);
             }}
@@ -321,71 +318,71 @@ const shedule: React.FC = () => {
             <Text style={styles.due}>Due:</Text>
             <Text style={styles.yearDay}>Friday April 18 2023</Text>
           </View>
+          <View style={{
+            gap:0,
+            paddingBottom:200,
+          }}>
 
-
-          <ScrollView style={{ marginBottom: 330 }} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
-            {data.map((item, index) => (
-              <View
-                key={index} // Adding a unique key to each rendered item
+          {data.map((item, index) => (
+            <View
+              key={index} // Adding a unique key to each rendered item
+              style={{
+                flexDirection: "row",
+                width: "100%",
+                gap: 12,
+              }}
+            >
+              <Text
                 style={{
-                  flexDirection: "row",
-                  width: "100%",
-                  gap: 12,
-                  padding: 0,
+                  fontSize: 15,
+                  width: 48,
+                  fontFamily: "Inter-Bold",
                 }}
               >
-                <Text
-                  style={{
-                    fontSize: 15,
-                    width: 48,
-                    fontFamily: "Inter-Bold",
-                  }}
-                >
-                  {item.time}
-                </Text>
+                {item.time}
+              </Text>
+              <View
+                style={{
+                  alignItems: "center",
+                }}
+              >
                 <View
                   style={{
-                    alignItems: "center",
+                    borderColor: "#8D99DE",
+                    borderWidth: 4,
+                    backgroundColor: "#FFFFFF",
+                    width: 18,
+                    height: 18,
+                    borderRadius: 100,
+                    marginTop:-4
                   }}
-                >
-                  <View
-                    style={{
-                      borderColor: "#8D99DE",
-                      borderWidth: 4,
-                      backgroundColor: "#FFFFFF",
-                      width: 18,
-                      height: 18,
-                      borderRadius: 100,
-                    }}
-                  />
-                  <View
-                    style={{
-                      backgroundColor: "#8D99DE",
-                      width: 5,
-                      flex: 1,
-                    }}
-                  />
-                </View>
-                <FlatList
-                  data={item.items}
-                  style={{
-                    flex: 1,
-                    gap: 2,
-                    paddingBottom: 24,
-
-                  }}
-                  showsVerticalScrollIndicator={false}
-                  showsHorizontalScrollIndicator={false}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({ item }) => <Schedules item={item} />}
                 />
+                <View
+                  style={{
+                    backgroundColor: "#8D99DE",
+                    width: 5,
+                    flex: 1,
+                    borderEndEndRadius:24,
+                    borderEndStartRadius:24,
 
-
+                  }}
+                />
               </View>
-
-            ))}
-          </ScrollView>
-
+              <View
+                style={{
+                  flex: 1,
+                  gap: 2,
+                  flexDirection:"column",
+                  paddingBottom:18,
+                }}
+              >
+                {item.items.map((item, index) => (
+                  <Schedules item={item} key={`${item.title}_${item.time}_${index}`} />
+                ))}
+              </View>
+            </View>
+          ))}
+          </View>
         </View>
 
         <Modal
@@ -410,17 +407,17 @@ const shedule: React.FC = () => {
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => {
-                  setVisible(false)
-                  router.push("/(screens)/addToPlanner")
+                  setVisible(false);
+                  router.push("/(screens)/addToPlanner");
                 }}
               >
                 <Text style={styles.text}>Class</Text>
               </TouchableOpacity>
               <TouchableOpacity
-              onPress={() => {
-                setVisible(!Isvisible)
-                onOpenTask()
-              }}
+                onPress={() => {
+                  setVisible(!Isvisible);
+                  onOpenTask();
+                }}
                 style={[styles.button, { backgroundColor: "#FEB5A6" }]}
               >
                 <Text style={[styles.text]}>Task</Text>
@@ -435,7 +432,7 @@ const shedule: React.FC = () => {
             </View>
           </View>
         </Modal>
-      </View>
+      </ScrollView>
       <View style={styles.bottomBtn}>
         <Pressable
           style={styles.planBtn}
@@ -448,8 +445,7 @@ const shedule: React.FC = () => {
         </Pressable>
       </View>
 
-      <TaskCategoriesModal visible={modalizeRefTask}   onClose={closeTask} />
-
+      <TaskCategoriesModal visible={modalizeRefTask} onClose={closeTask} />
     </SafeAreaView>
   );
 };
@@ -458,9 +454,10 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#FAFAFA",
     width: "100%",
-    height: "100%",
+    flex:1,
     paddingHorizontal: 22,
-    paddingVertical: 22,
+    paddingTop:24,
+    paddingBottom:200
   },
 
   mainProfile: {
@@ -707,4 +704,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default shedule;
+export default schedule;

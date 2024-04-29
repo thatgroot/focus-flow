@@ -54,12 +54,12 @@ const TaskCategoriesModal = ({visible,onClose}) => {
     // @ts-ignore
     modalizeRefShareRFF.current?.open();
   };
- 
+
   const closeShare = () => {
     // @ts-ignore
     modalizeRefShareRFF.current?.close();
   }
- 
+
   const onOpenSuccess = () => {
     // @ts-ignore
     modalizeRefSuccessRff.current?.open();
@@ -85,7 +85,7 @@ const TaskCategoriesModal = ({visible,onClose}) => {
 
 
     <View style={[styles.modalView]}>
-      
+
 
     <TaskCategories onClose={onClose} onOpen={onOpen} />
 
@@ -141,15 +141,15 @@ const TaskCategoriesModal = ({visible,onClose}) => {
             <TextInput placeholder='Type the note here...' style={styles.textArea} />
 
             <View style={styles.containerDate}>
-             
-              <Inputs txt='Start Date' icon={require('../assets/icons/calenderIcon.png')} isTime={false}  />
-              <Inputs txt='End Date' icon={require('../assets/icons/calenderIcon.png')} isTime={false}  />
+
+              <Inputs placeholder='Start Date' icon={require('../assets/icons/calenderIcon.png')} isTime={false}  />
+              <Inputs placeholder='End Date' icon={require('../assets/icons/calenderIcon.png')} isTime={false}  />
 
             </View>
             <View style={styles.containerDate}>
-             
-             <Inputs txt='Start Time' icon={require('../assets/icons/IconTime.png')} isTime={true} />
-             <Inputs txt='End Time' icon={require('../assets/icons/IconTime.png')} isTime={true} />
+
+             <Inputs placeholder='Start Time' icon={require('../assets/icons/IconTime.png')} isTime={true} />
+             <Inputs placeholder='End Time' icon={require('../assets/icons/IconTime.png')} isTime={true} />
 
            </View>
           </View>
@@ -177,7 +177,7 @@ const TaskCategoriesModal = ({visible,onClose}) => {
 
 
         <View style={[styles.modalView]}>
-          
+
 
          <BottomSheet onBack={closeShare} />
         </View>
@@ -198,7 +198,7 @@ const TaskCategoriesModal = ({visible,onClose}) => {
 
 
         <View style={styles.modalView}>
-          
+
 
          <ShareSuccess onclose={closeSuccess} share={onOpenShare} />
         </View>
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-Bold',
     color: '#8D99DE'
   },
-  
+
   dropDownlist: {
     borderWidth: 1,
     borderColor: 'rgba(154, 165, 181, 1)',
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
   textArea: {
     fontSize: 15,
     lineHeight: 20,
-    fontFamily: 'regular',
+    fontFamily: "Inter-Regular",
     borderWidth: 1,
     borderColor: '#9AA5B5',
     width: 308,
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontWeight: '500'
   },
-  
+
   containerDate:{
     flexDirection:'row',
     justifyContent:'space-between',

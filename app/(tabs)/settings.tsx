@@ -226,7 +226,7 @@ elevation: 5,
 
   headingTimerON: {
     color: "rgba(53, 53, 53, 0.61)",
-    fontFamily:"medium",
+    fontFamily:"Inter-Medium",
     lineHeight: 16.94,
     fontSize: 14,
   },

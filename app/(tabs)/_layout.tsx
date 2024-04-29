@@ -37,7 +37,7 @@ const TabsLayout = () => {
         }}
       />
       <Tabs.Screen
-        name="shedule"
+        name="schedule"
         options={{
           title: "Schedule",
           tabBarIcon: ({ color, focused }) => (
