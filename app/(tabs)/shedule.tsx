@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 import {
   View,
   StyleSheet,
@@ -16,6 +16,8 @@ import moment from "moment";
 
 import { Schedules } from "@/components/Schedules";
 import { useRouter } from "expo-router";
+import TaskCategoriesModal from '@/components/TaskCategoriesModal';
+
 
 const shedule: React.FC = () => {
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
@@ -85,6 +87,19 @@ const shedule: React.FC = () => {
       ],
     },
   ]);
+
+  const modalizeRefTask = useRef(null);
+
+
+  const onOpenTask = () => {
+    // @ts-ignore
+    modalizeRefTask.current?.open();
+  };
+  const closeTask = () => {
+    // @ts-ignore
+    modalizeRefTask.current?.close();
+  }
+
 
   const router = useRouter();
 
@@ -396,6 +411,10 @@ const shedule: React.FC = () => {
                 <Text style={styles.text}>Class</Text>
               </TouchableOpacity>
               <TouchableOpacity
+              onPress={() => {
+                setVisible(!Isvisible)
+                onOpenTask()
+              }}
                 style={[styles.button, { backgroundColor: "#FEB5A6" }]}
               >
                 <Text style={[styles.text]}>Task</Text>
@@ -422,6 +441,9 @@ const shedule: React.FC = () => {
           <Text style={styles.compeleteTxt}>Completed</Text>
         </Pressable>
       </View>
+
+      <TaskCategoriesModal visible={modalizeRefTask} onClose={closeTask} />
+
     </SafeAreaView>
   );
 };

@@ -11,7 +11,6 @@ import ShareSuccess from '@/components/ShareSuccess';
 import BottomSheet from '@/components/BottomSheet';
 
 
-
 const TimeList = [
   {
     id: 1,
@@ -43,11 +42,12 @@ const addToPlanner = () => {
   const modalizeRefSuccess = useRef(null);
   const modalizeRefShare = useRef(null);
 
+
   const onOpenShare = () => {
     // @ts-ignore
     modalizeRefShare.current?.open();
   };
-
+ 
   const closeShare = () => {
     // @ts-ignore
     modalizeRefShare.current?.close();
@@ -214,6 +214,7 @@ const addToPlanner = () => {
 
 
       </Modalize>
+
 
     </SafeAreaView>
   )

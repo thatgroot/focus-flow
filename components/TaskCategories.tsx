@@ -14,7 +14,7 @@ const TaskCategory: React.FC<CategoryProps> = ({ title, iconUri, backgroundColor
   </View>
 );
 
-const TaskCategories: React.FC = () => {
+const TaskCategories: React.FC = ({onClose}) => {
   const categories = [
     { title: '📗 Study', iconUri: 'iconUriHere', backgroundColor: 'rgba(141, 153, 222, 1)' },
     { title: '💤 Sleep', iconUri: 'iconUriHere', backgroundColor: 'rgba(255, 202, 101, 0.47)' },
@@ -31,7 +31,10 @@ const TaskCategories: React.FC = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.headerContainer}>
-        <Image resizeMethod="auto" source={{ uri: "headerIconUri" }} style={styles.headerIcon} />
+        <TouchableOpacity onPress={() => onClose() } >
+        <Image resizeMethod="auto" source={require('../assets/icons/back.png')} style={styles.headerIcon} />
+
+        </TouchableOpacity>
         <Text style={styles.headerText}>Schedule a Task</Text>
       </View>
       <View style={styles.contentContainer}>
@@ -48,7 +51,7 @@ const TaskCategories: React.FC = () => {
           />
         ))}
       </View>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity onPress={() => onclose} style={styles.button}>
         <Text style={styles.buttonText}>Schedule</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -57,12 +60,13 @@ const TaskCategories: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 24,
+    padding: 10,
   },
   headerContainer: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 24,
+    gap:20
   },
   headerIcon: {
     width: 24,
