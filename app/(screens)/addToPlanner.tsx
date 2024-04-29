@@ -209,7 +209,7 @@ const addToPlanner = () => {
         <View style={[styles.modalView]}>
           
 
-         <BottomSheet/>
+         <BottomSheet onBack={closeShare} />
         </View>
 
 
