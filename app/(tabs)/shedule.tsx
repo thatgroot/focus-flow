@@ -9,6 +9,7 @@ import {
   Modal,
   Image,
   Pressable,
+  ScrollView
 } from "react-native";
 
 import { Calendar } from "react-native-calendars";
@@ -304,7 +305,7 @@ const shedule: React.FC = () => {
             onMomentumScrollEnd={(event) => {
               const newIndex = Math.round(
                 event.nativeEvent.contentOffset.x /
-                  event.nativeEvent.layoutMeasurement.width
+                event.nativeEvent.layoutMeasurement.width
               );
               setCurrentMonthIndex(newIndex);
             }}
@@ -321,12 +322,11 @@ const shedule: React.FC = () => {
             <Text style={styles.yearDay}>Friday April 18 2023</Text>
           </View>
 
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={data}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item, index }) => (
+
+          <ScrollView style={{ marginBottom: 330 }} showsHorizontalScrollIndicator={false}>
+            {data.map((item, index) => (
               <View
+                key={index} // Adding a unique key to each rendered item
                 style={{
                   flexDirection: "row",
                   width: "100%",
@@ -372,14 +372,19 @@ const shedule: React.FC = () => {
                     flex: 1,
                     gap: 2,
                     paddingBottom: 24,
+
                   }}
                   showsVerticalScrollIndicator={false}
                   keyExtractor={(item, index) => index.toString()}
                   renderItem={({ item }) => <Schedules item={item} />}
                 />
+
+
               </View>
-            )}
-          />
+
+            ))}
+          </ScrollView>
+
         </View>
 
         <Modal
