@@ -14,7 +14,7 @@ const TaskCategory: React.FC<CategoryProps> = ({ title, iconUri, backgroundColor
   </View>
 );
 
-const TaskCategories: React.FC = ({onClose}) => {
+const TaskCategories: React.FC = ({onClose,onOpen}) => {
   const categories = [
     { title: '📗 Study', iconUri: 'iconUriHere', backgroundColor: 'rgba(141, 153, 222, 1)' },
     { title: '💤 Sleep', iconUri: 'iconUriHere', backgroundColor: 'rgba(255, 202, 101, 0.47)' },
@@ -51,7 +51,10 @@ const TaskCategories: React.FC = ({onClose}) => {
           />
         ))}
       </View>
-      <TouchableOpacity onPress={() => onClose()} style={styles.button}>
+      <TouchableOpacity onPress={() => {
+        onClose()
+        onOpen()
+      }} style={styles.button}>
         <Text style={styles.buttonText}>Schedule</Text>
       </TouchableOpacity>
     </ScrollView>

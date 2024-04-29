@@ -52,24 +52,26 @@ const addToPlanner = () => {
     // @ts-ignore
     modalizeRefShare.current?.close();
   }
-  const onOpen = () => {
-    // @ts-ignore
-    modalizeRef.current?.open();
-  };
-
+ 
   const onOpenSuccess = () => {
     // @ts-ignore
     modalizeRefSuccess.current?.open();
   };
+  const closeSuccess = () => {
+    // @ts-ignore
+    modalizeRefSuccess.current?.close();
+  }
   const close = () => {
     // @ts-ignore
     onOpenSuccess()
     modalizeRef.current?.close();
   }
-  const closeSuccess = () => {
+  const onOpen = () => {
     // @ts-ignore
-    modalizeRefSuccess.current?.close();
-  }
+    modalizeRef.current?.open();
+  };
+
+  
 
   return (
     <SafeAreaView style={{ flex: 1, }}>

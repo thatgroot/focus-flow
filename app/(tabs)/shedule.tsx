@@ -448,7 +448,7 @@ const shedule: React.FC = () => {
         </Pressable>
       </View>
 
-      <TaskCategoriesModal visible={modalizeRefTask} onClose={closeTask} />
+      <TaskCategoriesModal visible={modalizeRefTask}   onClose={closeTask} />
 
     </SafeAreaView>
   );
