@@ -388,7 +388,10 @@ const shedule: React.FC = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => router.push("/(screens)/addToPlanner")}
+                onPress={() => {
+                  setVisible(false)
+                  router.push("/(screens)/addToPlanner")
+                }}
               >
                 <Text style={styles.text}>Class</Text>
               </TouchableOpacity>

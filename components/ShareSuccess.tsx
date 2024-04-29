@@ -22,9 +22,9 @@ const ScreenSection: React.FC<ScreenSectionProps> = ({ textContents }) => (
   </>
 );
 
-const ShareSuccess: React.FC = () => {
+const ShareSuccess: React.FC = ({onclose,share}) => {
   const congratulationTexts = [
-    { content: "Congratulations!", style: styles.headingText },
+  
     { content: "Class Scheduled!", style: styles.headingText },
     { content: "Share your Schedule", style: styles.subHeadingText },
     { content: "You can always share your schedule!", style: styles.infoText },
@@ -33,12 +33,18 @@ const ShareSuccess: React.FC = () => {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
+        <Text style={styles.headingText}>Congratulations!</Text>
+      <Image resizeMode="contain" source={require('../assets/icons/approve.png')} style={styles.mainImage} />
+         
         <ScreenSection textContents={congratulationTexts} />
-        <Image resizeMode="contain" source={{ uri: "your_image_uri_here" }} style={styles.mainImage} />
-        <TouchableOpacity style={styles.shareButton}>
+
+        <TouchableOpacity onPress={() => {
+          onclose()
+          share()
+        } } style={styles.shareButton}>
           <Text style={styles.shareButtonText}>Share</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.notNowButton}>
+        <TouchableOpacity onPress={() => onclose() } style={styles.notNowButton}>
           <Text style={styles.notNowButtonText}>Not Now</Text>
         </TouchableOpacity>
       </View>
