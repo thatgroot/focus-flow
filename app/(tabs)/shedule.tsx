@@ -323,7 +323,7 @@ const shedule: React.FC = () => {
           </View>
 
 
-          <ScrollView style={{ marginBottom: 330 }} showsHorizontalScrollIndicator={false}>
+          <ScrollView style={{ marginBottom: 330 }} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
             {data.map((item, index) => (
               <View
                 key={index} // Adding a unique key to each rendered item
@@ -375,6 +375,7 @@ const shedule: React.FC = () => {
 
                   }}
                   showsVerticalScrollIndicator={false}
+                  showsHorizontalScrollIndicator={false}
                   keyExtractor={(item, index) => index.toString()}
                   renderItem={({ item }) => <Schedules item={item} />}
                 />

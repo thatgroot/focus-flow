@@ -51,7 +51,7 @@ const TaskCategories: React.FC = ({onClose}) => {
           />
         ))}
       </View>
-      <TouchableOpacity onPress={() => onclose} style={styles.button}>
+      <TouchableOpacity onPress={() => onClose()} style={styles.button}>
         <Text style={styles.buttonText}>Schedule</Text>
       </TouchableOpacity>
     </ScrollView>
