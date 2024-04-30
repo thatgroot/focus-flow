@@ -37,7 +37,7 @@ import ShareSuccess from "@/components/ShareSuccess";
 import TaskCategories from "@/components/TaskCategories";
 import ShareSchedule from "@/components/ShareSchedule";
 
-const DATA: StudyGroupProps[] = [
+const DATA = [
   {
     gradient: ["#9AA5B5", "#9AA5B5"],
     type: "Study",
@@ -327,6 +327,7 @@ const SignInScreen = () => {
 
         <View style={styles.inputContainer}>
           <LabeledInput
+          inputState="inactive"
             label="Email"
             placeholder="Enter your email"
             inputType="email"
@@ -368,7 +369,7 @@ const SignInScreen = () => {
             paddingBottom: 96,
           }}
         >
-          <Button text="Sign In" onPress={() => {}} />
+          <Button disabled text="Sign In" onPress={() => {}} />
           <View style={styles.signUpContainer}>
             <Text style={styles.signUpText}>Don’t have an Account?</Text>
             <Link onPress={() => {}} text="Sign Up" />

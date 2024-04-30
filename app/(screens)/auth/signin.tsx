@@ -1,11 +1,19 @@
 import LabeledInput from "@/components/InputField";
 import Button from "@/elements/Button";
 import { useRouter } from "expo-router";
-import React from "react";
-import { ScrollView, View, Text, Image, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { ScrollView, View, Text, Image, StyleSheet, Alert } from "react-native";
+import { signin } from "@/utils/auth";
 
 const Signup = () => {
   const router = useRouter();
+  const [data, setData] = useState<{
+    email: string;
+    password: string;
+  }>({
+    email: "",
+    password: "",
+  });
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -24,14 +32,22 @@ const Signup = () => {
             label="Enter Email"
             placeholder="teebaapp123@gmail.com"
             inputType="email"
+            inputState="inactive"
             error="Invalid Email. Try another one"
+            onChangeText={(text: string) => {
+              setData({ ...data, email: text });
+            }}
           />
           <View style={styles.inputContainer}>
             <LabeledInput
               label="Enter Password"
               placeholder="Password"
               inputType="password"
+              inputState="inactive"
               error=""
+              onChangeText={(text: string) => {
+                setData({ ...data, password: text });
+              }}
             />
             <View style={styles.checkboxContainer}>
               <View style={styles.checkboxContent}>
@@ -42,9 +58,17 @@ const Signup = () => {
             </View>
           </View>
           <View style={styles.buttonContainer}>
+
             <Button
-              onPress={() => {
-                router.push("/home_screen");
+              disabled={false}
+              onPress={async () => {
+                await signin({ ...data }).then(({ error, message }) => {
+                  if (error) {
+                    Alert.alert(message);
+                  } else {
+                    router.push("/home_screen");
+                  }
+                });
               }}
               text="Sign In"
             />
@@ -81,7 +105,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontFamily: 'Inter-Bold',
+    fontFamily: "Inter-Bold",
     textAlign: "center",
   },
   description: {

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "424080342310",
+    "project_id": "focus-flow-app",
+    "storage_bucket": "focus-flow-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:424080342310:android:10c1ec41d69eeb5b3455e7",
+        "android_client_info": {
+          "package_name": "com.focusflow.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoTPlQHiEUtHmhKfXc4eAJZV6Hsvb798Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,11 +1,40 @@
 import LabeledInput from "@/components/InputField";
 import Button from "@/elements/Button";
+import Link from "@/elements/Link";
+import { register } from "@/utils/auth";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-
+import { useState } from "react";
+import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "@/utils/firebase";
 const Signup = () => {
   const router = useRouter();
+
+  const [data, setData] = useState<{
+    name: string;
+    email: string;
+    password: string;
+  }>({
+    name: "",
+    email: "",
+    password: "",
+  });
+  const [matching, setMatching] = useState(false);
+
+  const onHandleSignup = async () => {
+    try {
+      register({ ...data }).then(({ error, message }) => {
+        if (error) {
+          Alert.alert(message);
+        } else {
+          router.push("/auth/signin");
+        }
+      });
+    } catch (error: any) {
+      Alert.alert(error.message);
+    }
+  };
 
   return (
     <ScrollView>
@@ -47,6 +76,10 @@ const Signup = () => {
               placeholder="Full Name"
               inputType="text"
               error="Name is require!"
+              inputState="inactive"
+              onChangeText={(text) => {
+                setData({ ...data, name: text });
+              }}
             />
 
             <LabeledInput
@@ -54,6 +87,10 @@ const Signup = () => {
               placeholder="teebaapp123@gmail.com"
               inputType="email"
               error="Invalid Email. Try another one"
+              inputState="inactive"
+              onChangeText={(text) => {
+                setData({ ...data, email: text });
+              }}
             />
 
             <LabeledInput
@@ -61,13 +98,21 @@ const Signup = () => {
               placeholder="Password"
               inputType="password"
               error=""
+              inputState="inactive"
+              onChangeText={(text) => {
+                setData({ ...data, password: text });
+              }}
             />
 
             <LabeledInput
               label="Confirm Password"
               placeholder="Confirm Password"
               inputType="password"
-              error=""
+              error={!matching ? "Passwords do not match." : ""}
+              inputState={!matching ? "invalid" : "valid"}
+              onChangeText={(text) => {
+                setMatching(text === data.password);
+              }}
             />
           </View>
 
@@ -78,15 +123,16 @@ const Signup = () => {
             }}
           >
             <Button
+              disabled={!matching}
+              onPress={onHandleSignup}
+              text="Signup"
+            />
+            <Link
+              text="Sign in"
               onPress={() => {
                 router.push("/auth/signin");
               }}
-              text="Signup"
             />
-            <View style={styles.alternateAction}>
-              <Text style={styles.text1}>Already have an Account ?</Text>
-              <Text style={styles.text2}>Sign In</Text>
-            </View>
           </View>
         </View>
       </View>
@@ -97,7 +143,7 @@ const Signup = () => {
 const styles = StyleSheet.create({
   title: {
     fontSize: 20,
-    fontFamily: 'Inter-Bold',
+    fontFamily: "Inter-Bold",
     textAlign: "left",
     color: "#8c99de",
   },

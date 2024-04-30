@@ -9,11 +9,16 @@ import {
 interface Props {
   text: string;
   onPress?: ((event: GestureResponderEvent) => void) | undefined;
+  disabled: boolean;
 }
 
-export default function Button({ text, onPress }: Props) {
+export default function Button({ text, onPress, disabled }: Props) {
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
+    <TouchableOpacity
+      disabled={disabled}
+      style={styles.button}
+      onPress={onPress}
+    >
       <Text style={styles.text}>{text}</Text>
     </TouchableOpacity>
   );
@@ -39,7 +44,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Inter-Bold',
+    fontFamily: "Inter-Bold",
     color: "#fff",
   },
 });

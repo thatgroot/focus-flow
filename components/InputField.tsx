@@ -20,6 +20,7 @@ interface Props {
   inputType: "email" | "password" | "text" | "number";
   error: string;
   onChangeText?: ((text: string) => void) | undefined;
+  inputState: "active" | "invalid" | "valid" | "inactive"
 }
 
 export default function LabeledInput({
@@ -28,12 +29,12 @@ export default function LabeledInput({
   inputType,
   error,
   onChangeText,
+  inputState,
 }: Props) {
   const [text, setText] = useState("");
-  const [inputState, setInputState] = useState<
-    "active" | "invalid" | "valid" | "inactive"
-  >("inactive");
 
+
+  const [compat, setCompat] = useState<"invalid" | "valid" |  "inactive">("inactive");
   const handleChangeText = (inputText: string) => {
     setText(inputText);
     if (onChangeText) onChangeText(inputText);
@@ -41,7 +42,7 @@ export default function LabeledInput({
   };
 
   const validateInput = (inputText: string) => {
-    setInputState(inputRegex[inputType].test(inputText) ? "valid" : "invalid");
+    setCompat(inputRegex[inputType].test(inputText) ? "valid" : "invalid");
   };
 
   return (
@@ -50,14 +51,12 @@ export default function LabeledInput({
       <View
         style={{
           ...styles.inputContainer,
-          borderColor: stateBorderColor[inputState],
+          borderColor: stateBorderColor[compat],
         }}
       >
         <TextInput
           style={styles.input}
           onChangeText={handleChangeText}
-          onFocus={() => setInputState("active")} // Set isFocused to true when TextInput is focused
-          onBlur={() => setInputState("inactive")} // Set isFocused to false when TextInput loses focus
           placeholder={placeholder}
           keyboardType={
             inputType === "number" ? "numeric" : "default" // Set keyboardType based on inputType
