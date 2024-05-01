@@ -15,12 +15,13 @@ const Checkbox: React.FC<CheckboxProps> = ({
   isChecked,
   onPress,
 }) => {
-  const handleToggle = () => {
-    onPress(label, isRadio);
-  };
-
   return (
-    <TouchableOpacity style={styles.container} onPress={handleToggle}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => {
+        onPress(label, isRadio);
+      }}
+    >
       {isChecked ? (
         <Image
           style={{

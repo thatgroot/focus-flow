@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -9,44 +9,44 @@ import {
   FlatList,
   Modal,
   ScrollView,
-} from "react-native";
+} from 'react-native';
 
-import { Calendar } from "react-native-calendars";
-import moment from "moment";
-import DayCard from "@/components/DayCard";
-import { TimerSection } from "@/components/TimerSection";
-import TimeEntry from "@/components/TimeEntry";
-import AddCourseReminder from "@/components/AddCourseReminder";
-import { getDueDates } from "@/utils/crud";
+import { Calendar } from 'react-native-calendars';
+import moment from 'moment';
+import DayCard from '@/components/DayCard';
+import { TimerSection } from '@/components/TimerSection';
+import TimeEntry from '@/components/TimeEntry';
+import AddCourseReminder from '@/components/AddCourseReminder';
+import { getDueDates } from '@/utils/crud';
 
 const DAYS = [
   {
-    day: "Sun",
-    date: "15",
+    day: 'Sun',
+    date: '15',
   },
   {
-    day: "Mon",
-    date: "16",
+    day: 'Mon',
+    date: '16',
   },
   {
-    day: "Tue",
-    date: "17",
+    day: 'Tue',
+    date: '17',
   },
   {
-    day: "we",
-    date: "18",
+    day: 'we',
+    date: '18',
   },
   {
-    day: "Th",
-    date: "19",
+    day: 'Th',
+    date: '19',
   },
   {
-    day: "Fr",
-    date: "20",
+    day: 'Fr',
+    date: '20',
   },
   {
-    day: "Fr",
-    date: "21",
+    day: 'Fr',
+    date: '21',
   },
 ];
 
@@ -94,7 +94,7 @@ const HomeScreen: React.FC = () => {
     getDueDates().then(({ classes, tasks, sessions }) => {
       setSessions(sessions);
       setDueDates({
-        classes ,
+        classes,
         tasks,
       });
     });
@@ -108,7 +108,7 @@ const HomeScreen: React.FC = () => {
           <View>
             <Image
               style={styles.profileImage}
-              source={require("../../assets/images/Image.png")}
+              source={require('../../assets/images/Image.png')}
             />
           </View>
           <View>
@@ -128,7 +128,7 @@ const HomeScreen: React.FC = () => {
             <TouchableOpacity onPress={() => setShowCalendar(true)}>
               <Image
                 style={styles.CalendarIcon}
-                source={require("../../assets/images/icon8.png")}
+                source={require('../../assets/images/icon8.png')}
               />
             </TouchableOpacity>
           </View>
@@ -136,25 +136,29 @@ const HomeScreen: React.FC = () => {
 
         <View style={styles.mainImage}>
           <Image
-            resizeMode="cover"
+            resizeMode='cover'
             style={styles.bgImage}
-            source={require("../../assets/images/bg.png")}
+            source={require('../../assets/images/bg.png')}
           />
         </View>
 
         <View>
           <Modal
             visible={showCalendar}
-            animationType="slide"
+            animationType='slide'
             transparent={true}
             onRequestClose={() => setShowCalendar(false)}
           >
             <View style={styles.mainModal}>
               <View style={styles.mainModalView}>
-                <View>
+                <View
+                  style={{
+                    marginBottom: 24,
+                  }}
+                >
                   <TouchableOpacity onPress={() => setShowCalendar(false)}>
                     <Image
-                      source={require("../../assets/images/cross.png")}
+                      source={require('../../assets/images/cross.png')}
                       style={styles.CrossIcon}
                     />
                   </TouchableOpacity>
@@ -162,19 +166,18 @@ const HomeScreen: React.FC = () => {
                 <Calendar
                   onDayPress={(day) => {
                     handleDayPress(day.dateString);
-                    // setShowCalendar(false);
                   }}
                   markedDates={{
-                    [moment(selectedDay).format("YYYY-MM-DD")]: {
+                    [moment(selectedDay).format('YYYY-MM-DD')]: {
                       selected: true,
-                      selectedColor: "#8D99DE",
+                      selectedColor: '#8D99DE',
                     },
                   }}
                   theme={{
-                    backgroundColor: "#ffffff",
-                    calendarBackground: "#ffffff",
-                    arrowColor: "#8D99DE",
-                    todayTextColor: "#8D99DE",
+                    backgroundColor: '#ffffff',
+                    calendarBackground: '#ffffff',
+                    arrowColor: '#8D99DE',
+                    todayTextColor: '#8D99DE',
                   }}
                 />
               </View>
@@ -200,7 +203,7 @@ const HomeScreen: React.FC = () => {
             onMomentumScrollEnd={(event) => {
               const newIndex = Math.round(
                 event.nativeEvent.contentOffset.x /
-                  event.nativeEvent.layoutMeasurement.width
+                  event.nativeEvent.layoutMeasurement.width,
               );
               setCurrentMonthIndex(newIndex);
             }}
@@ -209,19 +212,19 @@ const HomeScreen: React.FC = () => {
         <View
           style={{
             paddingVertical: 40,
-            alignItems: "center",
-            justifyContent: "center",
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
           <TimerSection
-            clock={require("@/assets/images/clock.png")}
+            clock={require('@/assets/images/clock.png')}
             users={[
-              require("@/assets/images/user1.png"),
-              require("@/assets/images/user2.png"),
-              require("@/assets/images/user3.png"),
-              require("@/assets/images/user4.png"),
+              require('@/assets/images/user1.png'),
+              require('@/assets/images/user2.png'),
+              require('@/assets/images/user3.png'),
+              require('@/assets/images/user4.png'),
             ]}
-            image={require("@/assets/images/study_illustration.png")} // Adjust the path based on your project structure
+            image={require('@/assets/images/study_illustration.png')} // Adjust the path based on your project structure
           />
         </View>
         <View
@@ -244,8 +247,8 @@ const HomeScreen: React.FC = () => {
                 <TimeEntry
                   key={`${task.subject}_${index}`}
                   timestamp={task.endDate.toDateString()}
-                  duration="Study 24m 39s"
-                  type="upcomming"
+                  duration='Study 24m 39s'
+                  type='upcomming'
                   onPress={openModal}
                 />
               ))}
@@ -269,9 +272,9 @@ const HomeScreen: React.FC = () => {
               {sessions.map((session, index) => (
                 <TimeEntry
                   key={`${session.group}_${index}`}
-                  timestamp={`${+session.milliseconds / 1000/60} minutes`}
-                  duration="Study 24m 39s"
-                  type="recent"
+                  timestamp={`${+session.milliseconds / 1000 / 60} minutes`}
+                  duration='Study 24m 39s'
+                  type='recent'
                   onPress={openModal}
                 />
               ))}
@@ -285,15 +288,15 @@ const HomeScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#FAFAFA",
-    width: "100%",
-    height: "100%",
+    backgroundColor: '#FAFAFA',
+    width: '100%',
+    height: '100%',
     paddingHorizontal: 22,
     paddingVertical: 22,
   },
 
   mainProfile: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 10,
   },
   dayCard: {},
@@ -307,74 +310,74 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   header: {
-    justifyContent: "center",
-    alignItems: "flex-start",
-    display: "flex",
-    flexDirection: "column",
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    display: 'flex',
+    flexDirection: 'column',
   },
   image: {
     width: 18,
     height: 18,
   },
   upcomingstyles: {
-    backgroundColor: "#13CE6640",
-    width: "100%",
+    backgroundColor: '#13CE6640',
+    width: '100%',
     height: 75,
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 12,
-    justifyContent: "space-between",
-    flexDirection: "row",
+    justifyContent: 'space-between',
+    flexDirection: 'row',
   },
   upcomingText: {
-    color: "#353535",
+    color: '#353535',
     lineHeight: 20,
     fontSize: 16,
-    fontFamily: "Inter-Medium",
+    fontFamily: 'Inter-Medium',
     letterSpacing: 1,
   },
   upcomingday: {
-    color: "#5B5B5B",
+    color: '#5B5B5B',
     lineHeight: 20,
     fontSize: 13,
-    fontFamily: "Inter-Medium",
+    fontFamily: 'Inter-Medium',
     letterSpacing: 1,
   },
   upcomingWeeks: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 10,
   },
   dot: {
-    backgroundColor: "#13CE66",
+    backgroundColor: '#13CE66',
     width: 3.87,
 
     height: 3.87,
   },
   content: {
-    justifyContent: "space-between",
-    alignItems: "stretch",
-    display: "flex",
+    justifyContent: 'space-between',
+    alignItems: 'stretch',
+    display: 'flex',
     marginTop: 28,
-    flexDirection: "column",
+    flexDirection: 'column',
   },
   heading: {
-    color: "#353535",
+    color: '#353535',
     lineHeight: 20,
     fontSize: 15,
-    fontFamily: "Inter-Medium",
+    fontFamily: 'Inter-Medium',
     letterSpacing: 1,
   },
 
   headingSub: {
-    color: "#9AA5B5",
+    color: '#9AA5B5',
     fontSize: 14,
     lineHeight: 20,
     letterSpacing: 1,
   },
   mainCalendar: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginTop: 20,
   },
   CalendarIcon: {
@@ -382,8 +385,8 @@ const styles = StyleSheet.create({
     width: 38,
   },
   mainImage: {
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingVertical: 20,
   },
   bgImage: {
@@ -391,37 +394,37 @@ const styles = StyleSheet.create({
     height: 169,
   },
   courseCard: {
-    alignItems: "stretch",
+    alignItems: 'stretch',
     borderRadius: 12,
-    backgroundColor: "#FFF",
-    display: "flex",
+    backgroundColor: '#FFF',
+    display: 'flex',
     marginTop: 16,
     padding: 25,
-    flexDirection: "row",
-    justifyContent: "flex-start",
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
   },
   confirmStyles: {
     height: 40,
-    alignSelf: "center",
+    alignSelf: 'center',
     marginBottom: 8,
     marginTop: 8,
     borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     width: 150,
-    backgroundColor: "#4cb050",
+    backgroundColor: '#4cb050',
   },
 
   mainModal: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   mainModalView: {
-    backgroundColor: "#ffffff",
+    backgroundColor: '#ffffff',
     width: 300,
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderRadius: 30,
@@ -429,25 +432,25 @@ const styles = StyleSheet.create({
   CrossIcon: {
     width: 15,
     height: 15,
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
   },
   maindayWeeks: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   BtnDayWeeks: {
-    borderColor: "##8D99DE",
+    borderColor: '##8D99DE',
     borderWidth: 1,
     marginLeft: 10,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 7,
     width: 50,
     height: 80,
   },
   courseIcon: {
     borderRadius: 100,
-    borderColor: "rgba(154, 165, 181, 1)",
+    borderColor: 'rgba(154, 165, 181, 1)',
     borderWidth: 2,
     height: 24,
     width: 24,
@@ -455,10 +458,10 @@ const styles = StyleSheet.create({
   },
 
   addButtonText: {
-    fontWeight: "600",
+    fontWeight: '600',
     fontSize: 20,
     marginRight: 8,
-    fontFamily: "Inter-Bold",
+    fontFamily: 'Inter-Bold',
   },
 });
 

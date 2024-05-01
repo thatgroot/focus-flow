@@ -1,10 +1,6 @@
-type WithOmitPath = Omit<CreateDocumentType, "path">;
+type WithOmitPath = Omit<CreateDocumentType, 'path'>;
 // Enum for recurrence types
-enum Recurrence {
-  Daily = "daily",
-  Weekly = "weekly",
-  Monthly = "monthly",
-}
+type Recurrence = 'daily' | 'weekly' | 'monthly';
 
 interface CreateDocumentTypScaffold {
   onSuccess: (id: string) => void;
@@ -22,7 +18,7 @@ interface Subject {
 // - schedule -> uid ->  type, course, tags, period, notes, date{start,end}, time{start,end},completed
 interface Schedule {
   entity: {
-    type: "class" | "task";
+    type: 'class' | 'task';
     name: string;
     course: string;
   };
@@ -62,7 +58,7 @@ interface Group {
   bio: string;
   time: {
     value: number;
-    unit: "minutes" | "hours";
+    unit: 'minutes' | 'hours';
   };
 }
 
@@ -90,18 +86,19 @@ interface Tag {
 interface ScheduleItem {
   subject: string;
   startDate: Date;
+  note: string | undefined;
   endDate: Date;
   startTime: {
     hour: number;
     minutes: number;
-    unit: "am" | "pm";
+    unit: 'am' | 'pm';
   };
   endTime: {
     hour: number;
     minutes: number;
-    unit: "am" | "pm";
+    unit: 'am' | 'pm';
   };
-  schedule: "daily" | "monthly" | "weekly"; // This will be a common property for both Task and Class
+  schedule: Recurrence; // This will be a common property for both Task and Class
   dayOfWeek?: number; // Optional for weekly schedule
 }
 // Interface for task data
@@ -110,8 +107,7 @@ interface Task extends ScheduleItem {
   completionStatus: boolean;
 }
 
-interface Class extends ScheduleItem {
-}
+interface Class extends ScheduleItem {}
 // Interface for group member data
 interface GroupMember {
   uid: string;
