@@ -3,12 +3,17 @@ import { Image } from "expo-image";
 import { StyleSheet, Text, View } from "react-native";
 import { Color, FontFamily, FontSize, Border } from "@/styles/GlobalStyles";
 import { router, useNavigation } from "expo-router";
+import { currentUID } from "@/utils/auth";
 
 const Splash = () => {
   React.useEffect(() => {
     // go to (auth/signin)
     setTimeout(() => {
-      router.replace("/(screens)/auth/register");
+     if(!currentUID()){
+      router.replace("/(screens)/auth/signin");
+     }else {
+      router.replace("/home_screen");
+     }
     }, 1000);
   }, []);
   return (

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -8,7 +8,7 @@ import {
   SafeAreaView,
   FlatList,
   Modal,
-  ScrollView
+  ScrollView,
 } from "react-native";
 
 import { Calendar } from "react-native-calendars";
@@ -16,9 +16,8 @@ import moment from "moment";
 import DayCard from "@/components/DayCard";
 import { TimerSection } from "@/components/TimerSection";
 import TimeEntry from "@/components/TimeEntry";
-import ModalWrapper from "@/components/ModalWrapper";
-import AddCourseModal from "@/components/AddCourseModal";
 import AddCourseReminder from "@/components/AddCourseReminder";
+import { getDueDates } from "@/utils/crud";
 
 const DAYS = [
   {
@@ -49,21 +48,26 @@ const DAYS = [
     day: "Fr",
     date: "21",
   },
-]
+];
 
 const HomeScreen: React.FC = () => {
-
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(0);
 
   const [activeDay, setActiveDay] = useState<number | null>(null);
 
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [selectedItem, setSelectedItem] = useState<any | null>(null);
   const [markedDates, setMarkedDates] = useState<Date[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
+  const [sessions, setSessions] = useState<GroupSession[]>([]);
+  const [dueDates, setDueDates] = useState<{
+    classes: Class[];
+    tasks: Task[];
+  }>({
+    classes: [],
+    tasks: [],
+  });
   const openModal = () => {
     setIsModalVisible(true);
   };
@@ -85,6 +89,17 @@ const HomeScreen: React.FC = () => {
       setMarkedDates([...markedDates, _date]);
     }
   };
+
+  useEffect(() => {
+    getDueDates().then(({ classes, tasks, sessions }) => {
+      setSessions(sessions);
+      setDueDates({
+        classes ,
+        tasks,
+      });
+    });
+    return () => {};
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -134,16 +149,14 @@ const HomeScreen: React.FC = () => {
             transparent={true}
             onRequestClose={() => setShowCalendar(false)}
           >
-            <View
-              style={styles.mainModal}
-            >
-              <View
-                style={styles.mainModalView}
-              >
-                <View >
-
+            <View style={styles.mainModal}>
+              <View style={styles.mainModalView}>
+                <View>
                   <TouchableOpacity onPress={() => setShowCalendar(false)}>
-                    <Image source={require('../../assets/images/cross.png')} style={styles.CrossIcon} />
+                    <Image
+                      source={require("../../assets/images/cross.png")}
+                      style={styles.CrossIcon}
+                    />
                   </TouchableOpacity>
                 </View>
                 <Calendar
@@ -164,7 +177,6 @@ const HomeScreen: React.FC = () => {
                     todayTextColor: "#8D99DE",
                   }}
                 />
-
               </View>
             </View>
           </Modal>
@@ -172,7 +184,7 @@ const HomeScreen: React.FC = () => {
             horizontal
             pagingEnabled
             data={DAYS} // Provide a single item array to FlatList
-            keyExtractor={({day,date},index) => `${day}_${date}_${index}`} // Unique key for month
+            keyExtractor={({ day, date }, index) => `${day}_${date}_${index}`} // Unique key for month
             showsHorizontalScrollIndicator={false}
             renderItem={({ item, index }) => (
               <DayCard
@@ -185,21 +197,22 @@ const HomeScreen: React.FC = () => {
                 }}
               />
             )}
-
             onMomentumScrollEnd={(event) => {
               const newIndex = Math.round(
                 event.nativeEvent.contentOffset.x /
-                event.nativeEvent.layoutMeasurement.width
+                  event.nativeEvent.layoutMeasurement.width
               );
               setCurrentMonthIndex(newIndex);
             }}
           />
         </View>
-        <View style={{
-          paddingVertical: 40,
-          alignItems:'center',
-          justifyContent:'center'
-        }}>
+        <View
+          style={{
+            paddingVertical: 40,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <TimerSection
             clock={require("@/assets/images/clock.png")}
             users={[
@@ -211,26 +224,60 @@ const HomeScreen: React.FC = () => {
             image={require("@/assets/images/study_illustration.png")} // Adjust the path based on your project structure
           />
         </View>
-        <View>
-          <Text style={styles.upcomingText}>Upcoming due dates</Text>
-          <TimeEntry
-            timestamp="NOV 10, 01:43 - 02:07"
-            duration="Study 24m 39s"
-            type="upcomming"
-            onPress={openModal}
-          />
-
-          <AddCourseReminder isVisible={isModalVisible} onClose={closeModal} />
+        <View
+          style={{
+            gap: 24,
+          }}
+        >
+          <View
+            style={{
+              gap: 18,
+            }}
+          >
+            <Text style={styles.upcomingText}>Upcoming due dates</Text>
+            <View
+              style={{
+                gap: 8,
+              }}
+            >
+              {dueDates.tasks.map((task, index) => (
+                <TimeEntry
+                  key={`${task.subject}_${index}`}
+                  timestamp={task.endDate.toDateString()}
+                  duration="Study 24m 39s"
+                  type="upcomming"
+                  onPress={openModal}
+                />
+              ))}
+            </View>
+            <AddCourseReminder
+              isVisible={isModalVisible}
+              onClose={closeModal}
+            />
+          </View>
+          <View
+            style={{
+              gap: 12,
+            }}
+          >
+            <Text style={styles.upcomingText}>Recent Group Sessions</Text>
+            <View
+              style={{
+                gap: 8,
+              }}
+            >
+              {sessions.map((session, index) => (
+                <TimeEntry
+                  key={`${session.group}_${index}`}
+                  timestamp={`${+session.milliseconds / 1000/60} minutes`}
+                  duration="Study 24m 39s"
+                  type="recent"
+                  onPress={openModal}
+                />
+              ))}
+            </View>
+          </View>
         </View>
-        <View style={{paddingVertical:36}}>
-          <Text style={styles.upcomingText}>Recent Group Sessions</Text>
-          <TimeEntry
-           timestamp="NOV 10, 01:43 - 02:07"
-           duration="Study 24m 39s"
-           type="recent"
-          />
-        </View>
-
       </ScrollView>
     </SafeAreaView>
   );
@@ -269,40 +316,39 @@ const styles = StyleSheet.create({
     width: 18,
     height: 18,
   },
-  upcomingstyles:{
-    backgroundColor:'#13CE6640',
-    width:"100%",
-    height:75,
-    borderRadius:8,
-    paddingHorizontal:12,
-    paddingVertical:12,
-    justifyContent:'space-between',
-    flexDirection:'row'
+  upcomingstyles: {
+    backgroundColor: "#13CE6640",
+    width: "100%",
+    height: 75,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    justifyContent: "space-between",
+    flexDirection: "row",
   },
-  upcomingText:{
+  upcomingText: {
     color: "#353535",
     lineHeight: 20,
     fontSize: 16,
     fontFamily: "Inter-Medium",
     letterSpacing: 1,
   },
-  upcomingday:{
+  upcomingday: {
     color: "#5B5B5B",
     lineHeight: 20,
     fontSize: 13,
     fontFamily: "Inter-Medium",
     letterSpacing: 1,
   },
-  upcomingWeeks:{
-   flexDirection:'row',
-   gap:10,
+  upcomingWeeks: {
+    flexDirection: "row",
+    gap: 10,
   },
-  dot:{
-    backgroundColor:'#13CE66',
-    width:3.87,
+  dot: {
+    backgroundColor: "#13CE66",
+    width: 3.87,
 
-    height:3.87,
-
+    height: 3.87,
   },
   content: {
     justifyContent: "space-between",
@@ -382,8 +428,8 @@ const styles = StyleSheet.create({
   },
   CrossIcon: {
     width: 15,
-    height: 15
-    , alignSelf: 'flex-end'
+    height: 15,
+    alignSelf: "flex-end",
   },
   maindayWeeks: {
     flexDirection: "row",

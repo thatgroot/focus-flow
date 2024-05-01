@@ -1,33 +1,35 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
   StyleSheet,
   Image,
-  Pressable,
   TouchableOpacity,
-  Modal,
 } from "react-native";
-import { useRouter, useNavigation } from "expo-router";
 
 export const Schedules = ({
   item,
 }: {
   item: {
-    title: string[];
-    time: string[];
-    due: string[];
-    bgColor: string;
+    title: string;
+    time: string;
+    due: string;
+    bgColor:
+      | "rgba(255, 202, 101, 1)"
+      | "rgba(154, 165, 181, 0.25)"
+      | "rgba(254, 181, 166, 1)"
+      | "rgba(141, 153, 222, 1)"
+      | "rgba(154, 165, 181, 0.25)";
+
     icon: any;
   };
 }) => {
   return (
     <View style={styles.container}>
       <View style={[styles.card, { backgroundColor: item?.bgColor, gap: 12 }]}>
-        {item?.title?.map((subject: string, index: number) => (
-          <View key={index} style={{ ...styles.item, }}>
+          <View style={{ ...styles.item }}>
             <View style={styles.headerTitle}>
-              <Text style={styles.subtitle}>{subject}</Text>
+              <Text style={styles.subtitle}>{item.title}</Text>
               <TouchableOpacity onPress={() => {}}>
                 <Image source={item?.icon} style={styles.shareIcon} />
               </TouchableOpacity>
@@ -40,11 +42,11 @@ export const Schedules = ({
                     { backgroundColor: "rgba(0, 0, 0, 0.28)" },
                   ]}
                 >
-                  <Text style={styles.subDetailText}>{item?.time[index]}</Text>
+                  <Text style={styles.subDetailText}>{item?.time}</Text>
                 </View>
               </View>
               <View style={styles.subDetail}>
-                {item.due[index] && (
+                {item.due && (
                   <View
                     style={[
                       styles.subDetailBox,
@@ -52,14 +54,13 @@ export const Schedules = ({
                     ]}
                   >
                     <Text style={[styles.subDetailText, { color: "#fff" }]}>
-                      {item?.due[index]}
+                      {item?.due}
                     </Text>
                   </View>
                 )}
               </View>
             </View>
           </View>
-        ))}
       </View>
     </View>
   );

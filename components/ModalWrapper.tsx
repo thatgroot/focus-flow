@@ -11,25 +11,17 @@ import {
 } from "react-native";
 import LabeledInput from "./InputField";
 
-interface AddCourseModalProps {
+interface ModalWrapperProps {
   isVisible: boolean;
   onClose: () => void;
   children?: React.ReactNode;
 } // Optional children prop using React.ReactNode type
 
-const AddCourseModal: React.FC<AddCourseModalProps> = ({
+const ModalWrapper: React.FC<ModalWrapperProps> = ({
   isVisible,
   onClose,
   children,
 }) => {
-  const [courseName, setCourseName] = useState<string>("");
-
-  const handleAddPress = () => {
-    Alert.alert("Course Added", `The course "${courseName}" has been added.`);
-    setCourseName("");
-    onClose(); // Call the onClose callback after adding the course
-  };
-
   return (
     <Modal visible={isVisible} onRequestClose={onClose} transparent={true}>
       <View style={styles.modalView}>
@@ -63,4 +55,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddCourseModal;
+export default ModalWrapper;

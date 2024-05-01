@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -18,6 +18,8 @@ import moment from "moment";
 import { Schedules } from "@/components/Schedules";
 import { useRouter } from "expo-router";
 import TaskCategoriesModal from "@/components/TaskCategoriesModal";
+import ModalWrapper from "@/components/ModalWrapper";
+import { arrangeByStartTime, getDueDates } from "@/utils/crud";
 
 const schedule: React.FC = () => {
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
@@ -30,63 +32,12 @@ const schedule: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<any | null>(null);
   const [markedDates, setMarkedDates] = useState<Date[]>([]);
 
-  const [data] = useState([
+  const [data, setData] = useState<
     {
-      time: "09:00",
-      items: [
-        {
-          title: ["Break Fast"],
-          time: ["10 Mins"],
-          due: [],
-          bgColor: "rgba(255, 202, 101, 1)",
-          icon: require("../../assets/icons/share.png"),
-        },
-        {
-          title: ["Time to Commute"],
-          time: ["10 Mins"],
-          due: [],
-          bgColor: "rgba(154, 165, 181, 0.25)",
-          icon: require("../../assets/icons/share.png"),
-        },
-      ],
-    },
-    {
-      time: "10:45",
-      items: [
-        {
-          title: ["Sociology | Lecture"],
-          time: ["2h 30 Mins"],
-          due: [],
-          bgColor: "rgba(254, 181, 166, 1)",
-          icon: require("../../assets/icons/share.png"),
-        },
-      ],
-    },
-    {
-      time: "12:00",
-      items: [
-        {
-          title: ["Planned Study", "Phsycology", "Economics"],
-          time: ["Use : 2h 30m", "Use : 2h 30m", "Use : 2h 30m"],
-          due: ["Due : Nov 20", "Due : Nov 20", "Due : Nov 20"],
-          bgColor: "rgba(141, 153, 222, 1)",
-          icon: require("../../assets/icons/share.png"),
-        },
-      ],
-    },
-    {
-      time: "14:00",
-      items: [
-        {
-          title: ["Time to Commute"],
-          time: ["10 Mins"],
-          due: [],
-          bgColor: "rgba(154, 165, 181, 0.25)",
-          icon: require("../../assets/icons/share.png"),
-        },
-      ],
-    },
-  ]);
+      time: string;
+      items: (Task | Class)[];
+    }[]
+  >([]);
 
   const modalizeRefTask = useRef(null);
 
@@ -170,6 +121,15 @@ const schedule: React.FC = () => {
 
     return days;
   };
+
+  useEffect(() => {
+    getDueDates().then(({ classes, tasks, sessions }) => {
+      const arranged = arrangeByStartTime({ classes, tasks });
+      setData(arranged);
+    });
+
+    return () => {};
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -308,7 +268,6 @@ const schedule: React.FC = () => {
             }}
           />
         </View>
-        {/* <View style={styles.stepperStyle}> */}
         <View
           style={{
             gap: 32,
@@ -318,92 +277,105 @@ const schedule: React.FC = () => {
             <Text style={styles.due}>Due:</Text>
             <Text style={styles.yearDay}>Friday April 18 2023</Text>
           </View>
-          <View style={{
-            gap:0,
-            paddingBottom:200,
-          }}>
-
-          {data.map((item, index) => (
-            <View
-              key={index} // Adding a unique key to each rendered item
-              style={{
-                flexDirection: "row",
-                width: "100%",
-                gap: 12,
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 15,
-                  width: 48,
-                  fontFamily: "Inter-Bold",
-                }}
-              >
-                {item.time}
-              </Text>
+          <View
+            style={{
+              gap: 0,
+              paddingBottom: 200,
+            }}
+          >
+            {data.map((item, index) => (
               <View
+                key={index} // Adding a unique key to each rendered item
                 style={{
-                  alignItems: "center",
+                  flexDirection: "row",
+                  width: "100%",
+                  gap: 12,
                 }}
               >
-                <View
+                <Text
                   style={{
-                    borderColor: "#8D99DE",
-                    borderWidth: 4,
-                    backgroundColor: "#FFFFFF",
-                    width: 18,
-                    height: 18,
-                    borderRadius: 100,
-                    marginTop:-4
+                    fontSize: 15,
+                    width: 48,
+                    fontFamily: "Inter-Bold",
                   }}
-                />
+                >
+                  {item.time}
+                </Text>
                 <View
                   style={{
-                    backgroundColor: "#8D99DE",
-                    width: 5,
+                    alignItems: "center",
+                  }}
+                >
+                  <View
+                    style={{
+                      borderColor: "#8D99DE",
+                      borderWidth: 4,
+                      backgroundColor: "#FFFFFF",
+                      width: 18,
+                      height: 18,
+                      borderRadius: 100,
+                      marginTop: -4,
+                    }}
+                  />
+                  <View
+                    style={{
+                      backgroundColor: "#8D99DE",
+                      width: 5,
+                      flex: 1,
+                      borderEndEndRadius: 24,
+                      borderEndStartRadius: 24,
+                    }}
+                  />
+                </View>
+                <View
+                  style={{
                     flex: 1,
-                    borderEndEndRadius:24,
-                    borderEndStartRadius:24,
-
+                    gap: 2,
+                    flexDirection: "column",
+                    paddingBottom: 18,
                   }}
-                />
+                >
+                  {item.items.map((item, index) => (
+                    <Schedules
+                      item={{
+                        title: item.subject,
+                        due: item.endDate.toDateString(),
+                        bgColor: "rgba(254, 181, 166, 1)",
+                        icon: require("../../assets/icons/share.png"),
+                        time: item.endTime.minutes.toString(),
+                      }}
+                      key={`${
+                        item.subject
+                      }_${item.endDate.toDateString()}_${index}`}
+                    />
+                  ))}
+                </View>
               </View>
-              <View
-                style={{
-                  flex: 1,
-                  gap: 2,
-                  flexDirection:"column",
-                  paddingBottom:18,
-                }}
-              >
-                {item.items.map((item, index) => (
-                  <Schedules item={item} key={`${item.title}_${item.time}_${index}`} />
-                ))}
-              </View>
-            </View>
-          ))}
+            ))}
           </View>
         </View>
 
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={Isvisible}
-          onRequestClose={() => {
+        <ModalWrapper
+          isVisible={Isvisible}
+          onClose={() => {
             setVisible(!Isvisible);
           }}
         >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <TouchableOpacity
-                onPress={() => setVisible(!Isvisible)}
+          <View style={{ height: 460 }}>
+            <TouchableOpacity onPress={() => setVisible(!Isvisible)}>
+              <Image
+                source={require("../../assets/icons/close.png")}
                 style={styles.closeBtn}
-              >
-                <Image
-                  source={require("../../assets/icons/close.png")}
-                  style={styles.closeBtn}
-                />
-              </TouchableOpacity>
+              />
+            </TouchableOpacity>
+            <View
+              style={{
+                alignItems: "center",
+                gap: 24,
+                flex: 1,
+                justifyContent: "center",
+              }}
+            >
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => {
@@ -422,16 +394,9 @@ const schedule: React.FC = () => {
               >
                 <Text style={[styles.text]}>Task</Text>
               </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.footerTxt}
-                onPress={() => setVisible(!Isvisible)}
-              >
-                <Text style={styles.gotItTxt}>GOT IT</Text>
-              </TouchableOpacity>
             </View>
           </View>
-        </Modal>
+        </ModalWrapper>
       </ScrollView>
       <View style={styles.bottomBtn}>
         <Pressable
@@ -454,10 +419,10 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#FAFAFA",
     width: "100%",
-    flex:1,
+    flex: 1,
     paddingHorizontal: 22,
-    paddingTop:24,
-    paddingBottom:200
+    paddingTop: 24,
+    paddingBottom: 200,
   },
 
   mainProfile: {
@@ -662,11 +627,10 @@ const styles = StyleSheet.create({
   button: {
     width: 215,
     height: 50,
-    borderRadius: 20,
+    borderRadius: 25,
     marginBottom: 10,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 40,
     backgroundColor: "#8a97dd",
     shadowColor: "#000",
     shadowOffset: {
@@ -683,8 +647,8 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   closeBtn: {
-    width: 22,
-    height: 22,
+    width: 18,
+    height: 18,
     alignSelf: "flex-end",
   },
   gotItTxt: {

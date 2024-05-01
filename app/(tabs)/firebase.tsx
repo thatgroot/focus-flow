@@ -1,43 +1,8 @@
-import { Image } from "expo-image";
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  FlatList,
-  LayoutAnimation,
-  Alert,
-} from "react-native";
-import LabeledInput from "@/components/InputField";
-import Checkbox from "@/components/CheckBox";
-import CheckboxGroup from "@/components/CheckBoxGroup";
-import BottomSheet from "@/components/BottomSheet";
+import { View, StyleSheet, ScrollView, Alert } from "react-native";
 import Button from "@/elements/Button";
-import Link from "@/elements/Link";
-import TimeEntry from "@/components/TimeEntry";
-import DayCard from "@/components/DayCard";
-import { TimerSection } from "@/components/TimerSection";
-import { BottomNav } from "@/components/BottomNav";
-import { Schedules } from "@/components/Schedules";
-import { SubjectCard } from "@/components/SubjectCard";
-import { CompletedTask } from "@/components/CompletedTask";
-import { Users } from "@/components/Users";
-import { StudyGroup } from "@/components/StudyGroup";
-import { CircularImageWithOverlays } from "@/components/CircularImageWithOverlays";
-import { calculateAngle, calculatePosition } from "@/utils";
 import { theme } from "@/styles/theme";
-import Today from "@/components/Today";
-import Reminder from "@/components/Reminder";
-import ModalWrapper from "@/components/ModalWrapper";
-import AddCourseModal from "@/components/AddCourseModal";
-import ReminderNotification from "@/components/ReminderNotification";
-import ShareSuccess from "@/components/ShareSuccess";
-import TaskCategories from "@/components/TaskCategories";
-import ShareSchedule from "@/components/ShareSchedule";
-import { CourseController, ScheduleController } from "@/utils/init";
+import { controllers, getDueDates } from "@/utils/crud";
 
 const DATA = [
   {
@@ -107,12 +72,12 @@ const SignInScreen = () => {
         <Button
           disabled={false}
           onPress={async () => {
-            await CourseController.add({
+            await controllers.course.add({
               data: { name: "Biology" },
-              onError: (error) => {
+              onError: (error: string) => {
                 Alert.alert(error);
               },
-              onSuccess: (id) => {
+              onSuccess: (id: string) => {
                 Alert.alert(id);
               },
             });
@@ -123,37 +88,242 @@ const SignInScreen = () => {
         <Button
           disabled={false}
           onPress={async () => {
-            await ScheduleController.add({
-              data: {
-                entity: {
-                  type: "task",
-                  name: "Write a report",
-                  course: "abc123",
-                },
-                tags: ["work", "important"],
-                notes: "Gather data from marketing and sales teams by EOD",
-                period: {
-                  value: 1,
-                  unit: "day",
-                },
-                date: {
-                  start: new Date("2024-05-01"),
-                  end: new Date("2024-05-01"),
-                },
-                time: {
-                  start: 9,
-                  end: 17,
-                },
-              },
-              onError: (error) => {
+            await controllers.course.update({
+              id: "8mrMTUjlGGSSCAgOy268QO3IwE92",
+              data: { name: "Physics" },
+              onError: (error: string) => {
                 Alert.alert(error);
               },
-              onSuccess: (id) => {
+              onSuccess: (id: string) => {
                 Alert.alert(id);
               },
             });
           }}
-          text="Create Dummy Schedule"
+          text="Update Dummy Course"
+        />
+
+        <Button
+          disabled={false}
+          onPress={async () => {
+            await controllers.class.add({
+              data: {
+                subject: "Math Homework",
+                startDate: new Date("2024-05-01T00:00:00.000Z"),
+                endDate: new Date("2024-05-01T23:59:59.999Z"),
+                startTime: {
+                  hour: 6,
+                  minutes: 30,
+                  unit: "pm",
+                }, // 8:00 AM
+                endTime: {
+                  hour: 8,
+                  minutes: 30,
+                  unit: "pm",
+                }, // 8:00 AM
+                schedule: "daily",
+              },
+              onSuccess: (id) => {
+                Alert.alert(id);
+              },
+              onError: (error) => {
+                Alert.alert(error);
+              },
+            });
+          }}
+          text="Create Class"
+        />
+
+        <Button
+          disabled={false}
+          onPress={async () => {
+            await controllers.class.update({
+              id: "Acgyo3JB60wOBqrSRgZC",
+              data: {
+                subject: "Biology Homework",
+                startDate: new Date("2024-05-01T00:00:00.000Z"),
+                endDate: new Date("2024-05-01T23:59:59.999Z"),
+                startTime: {
+                  hour: 7,
+                  minutes: 30,
+                  unit: "pm",
+                }, // 8:00 AM
+                endTime: {
+                  hour: 9,
+                  minutes: 30,
+                  unit: "pm",
+                }, // 8:00 AM
+                schedule: "daily",
+              },
+              onSuccess: (id) => {
+                Alert.alert(id);
+              },
+              onError: (error) => {
+                Alert.alert(error);
+              },
+            });
+          }}
+          text="Update Class"
+        />
+
+        <Button
+          disabled={false}
+          onPress={async () => {
+            await controllers.task.add({
+              data: {
+                subject: "Math Homework",
+                tags: ["math", "homework"],
+                startDate: new Date("2024-05-01T00:00:00.000Z"),
+                endDate: new Date("2024-05-01T23:59:59.999Z"),
+                startTime: {
+                  hour: 6,
+                  minutes: 30,
+                  unit: "pm",
+                }, // 8:00 AM
+                endTime: {
+                  hour: 8,
+                  minutes: 30,
+                  unit: "pm",
+                }, // 8:00 AM
+                schedule: "daily",
+                completionStatus: false,
+              },
+              onSuccess: (id) => {
+                Alert.alert(id);
+              },
+              onError: (error) => {
+                Alert.alert(error);
+              },
+            });
+          }}
+          text="Create Task"
+        />
+
+        <Button
+          disabled={false}
+          onPress={async () => {
+            await controllers.task.update({
+              id: "GMl1X8NhrtpkAs6AjIp3",
+              data: {
+                subject: "Math Homework",
+                tags: ["math", "homework"],
+                startDate: new Date("2024-05-01T00:00:00.000Z"),
+                endDate: new Date("2024-05-01T23:59:59.999Z"),
+                startTime: {
+                  hour: 7,
+                  minutes: 30,
+                  unit: "am",
+                }, // 8:00 AM
+                endTime: {
+                  hour: 8,
+                  minutes: 30,
+                  unit: "am",
+                }, // 8:00 AM
+                schedule: "weekly",
+                completionStatus: false,
+              },
+              onSuccess: () => {
+                Alert.alert("updated");
+              },
+              onError: (error) => {
+                Alert.alert(error);
+              },
+            });
+          }}
+          text="Update Task"
+        />
+
+        <Button
+          disabled={false}
+          onPress={async () => {
+            const data = await getDueDates();
+            const tasks = data.tasks;
+            const classes = data.classes;
+            console.log(tasks[0].subject);
+            console.log(classes.at(0), data.classes);
+          }}
+          text="Get Schedules"
+        />
+
+        <Button
+          disabled={false}
+          onPress={async () => {
+            await controllers.group.add({
+              data: {
+                title: "Bio Group",
+                bio: "just a group",
+                time: {
+                  unit: "hours",
+                  value: 1,
+                },
+              },
+              onError(error) {
+                Alert.alert(error);
+              },
+              onSuccess(error) {
+                Alert.alert(error);
+              },
+            });
+          }}
+          text="Create Group"
+        />
+
+        <Button
+          disabled={false}
+          onPress={async () => {
+            await controllers.group.update({
+              id: "x",
+              data: {
+                title: "Math Group",
+                bio: "just a group",
+                time: {
+                  unit: "hours",
+                  value: 1,
+                },
+              },
+              onSuccess: () => {
+                Alert.alert("updated");
+              },
+              onError: (error) => {
+                Alert.alert(error);
+              },
+            });
+          }}
+          text="Update Group"
+        />
+
+        <Button
+          disabled={false}
+          onPress={async () => {
+            await controllers.group.join({
+              id: "lUu472b6sU193YlEO7ZV",
+              onSuccess: (id) => {
+                Alert.alert(id);
+              },
+              onError: (error) => {
+                Alert.alert(error);
+              },
+            });
+          }}
+          text="Join Group"
+        />
+
+        <Button
+          disabled={false}
+          onPress={async () => {
+            await controllers.group.sessions.add({
+              data: {
+                group: "lUu472b6sU193YlEO7ZV",
+                milliseconds: 3600 * 1000,
+              },
+              onError(error) {
+                Alert.alert(error);
+              },
+              onSuccess(error) {
+                Alert.alert(error);
+              },
+            });
+          }}
+          text="Create Session"
         />
       </View>
     </ScrollView>

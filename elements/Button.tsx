@@ -12,7 +12,7 @@ interface Props {
   disabled: boolean;
 }
 
-export default function Button({ text, onPress, disabled }: Props) {
+export default function Button({ text, onPress, disabled=false }: Props) {
   return (
     <TouchableOpacity
       disabled={disabled}

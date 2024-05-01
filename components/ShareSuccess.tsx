@@ -1,5 +1,12 @@
-import React from 'react';
-import { View, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
+import React from "react";
+import {
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  TouchableOpacity,
+  GestureResponderEvent,
+} from "react-native";
 
 interface TextProps {
   content: string;
@@ -17,14 +24,23 @@ interface ScreenSectionProps {
 const ScreenSection: React.FC<ScreenSectionProps> = ({ textContents }) => (
   <>
     {textContents.map((textItem, index) => (
-      <CustomText key={index} content={textItem.content} style={textItem.style} />
+      <CustomText
+        key={index}
+        content={textItem.content}
+        style={textItem.style}
+      />
     ))}
   </>
 );
 
-const ShareSuccess: React.FC = ({onclose,share}) => {
+const ShareSuccess = ({
+  onClose,
+  share,
+}: {
+  onClose: () => void;
+  share: () => void;
+}) => {
   const congratulationTexts = [
-  
     { content: "Class Scheduled!", style: styles.headingText },
     { content: "Share your Schedule", style: styles.subHeadingText },
     { content: "You can always share your schedule!", style: styles.infoText },
@@ -34,17 +50,24 @@ const ShareSuccess: React.FC = ({onclose,share}) => {
     <View style={styles.container}>
       <View style={styles.card}>
         <Text style={styles.headingText}>Congratulations!</Text>
-      <Image resizeMode="contain" source={require('../assets/icons/approve.png')} style={styles.mainImage} />
-         
+        <Image
+          resizeMode="contain"
+          source={require("../assets/icons/approve.png")}
+          style={styles.mainImage}
+        />
+
         <ScreenSection textContents={congratulationTexts} />
 
-        <TouchableOpacity onPress={() => {
-          onclose()
-          share()
-        } } style={styles.shareButton}>
+        <TouchableOpacity
+          onPress={() => {
+            onClose();
+            share();
+          }}
+          style={styles.shareButton}
+        >
           <Text style={styles.shareButtonText}>Share</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => onclose() } style={styles.notNowButton}>
+        <TouchableOpacity onPress={() => onClose()} style={styles.notNowButton}>
           <Text style={styles.notNowButtonText}>Not Now</Text>
         </TouchableOpacity>
       </View>
@@ -73,9 +96,8 @@ const styles = StyleSheet.create({
   headingText: {
     color: "#353535",
     textAlign: "center",
-    fontFamily: "Inter-Regular",
     marginTop: 27,
-    fontFamily: 'Inter-Bold',
+    fontFamily: "Inter-Bold",
   },
   subHeadingText: {
     color: "#8D99DE",
