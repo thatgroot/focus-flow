@@ -395,6 +395,7 @@ const schedule: React.FC = () => {
                 style={[styles.button, { backgroundColor: '#FEB5A6' }]}
               >
                 <Text style={[styles.text]}>Task</Text>
+                
               </TouchableOpacity>
             </View>
           </View>
@@ -407,9 +408,10 @@ const schedule: React.FC = () => {
         >
           <Text style={styles.planTxt}>Plan</Text>
         </Pressable>
-        <Pressable style={styles.completedBtn}>
+
+        <TouchableOpacity style={styles.completedBtn}  onPress={() => router.push("/CompletedTaskScreen")}>
           <Text style={styles.compeleteTxt}>Completed</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
 
       <TaskCategoriesModal visible={modalizeRefTask} onClose={closeTask} />
