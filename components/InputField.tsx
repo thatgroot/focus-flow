@@ -1,11 +1,7 @@
+import { inputRegex } from "@/utils/auth";
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Image, TextInput } from "react-native";
-const inputRegex = {
-  email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-  password: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-  text: /^[a-zA-Z\s]*$/,
-  number: /^[0-9]*$/,
-};
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const stateBorderColor = {
   active: "#5F75EE",
@@ -20,7 +16,7 @@ interface Props {
   inputType: "email" | "password" | "text" | "number";
   error: string;
   onChangeText?: ((text: string) => void) | undefined;
-  inputState: "active" | "invalid" | "valid" | "inactive"
+  inputState: "active" | "invalid" | "valid" | "inactive";
 }
 
 export default function LabeledInput({
@@ -32,9 +28,11 @@ export default function LabeledInput({
   inputState,
 }: Props) {
   const [text, setText] = useState("");
+  const [compat, setCompat] = useState<"invalid" | "valid" | "inactive">(
+    "inactive"
+  );
 
-
-  const [compat, setCompat] = useState<"invalid" | "valid" |  "inactive">("inactive");
+  const [toggle, setToggle] = useState(false);
   const handleChangeText = (inputText: string) => {
     setText(inputText);
     if (onChangeText) onChangeText(inputText);
@@ -61,15 +59,21 @@ export default function LabeledInput({
           keyboardType={
             inputType === "number" ? "numeric" : "default" // Set keyboardType based on inputType
           }
-          secureTextEntry={inputType === "password"} // Set secureTextEntry for password inputType
+          secureTextEntry={inputType === "password" && !toggle} // Set secureTextEntry for password inputType
           value={text}
           autoCapitalize="none"
         />
         {inputType === "password" && (
-          <Image
-            style={styles.icon}
-            source={require("@/assets/icons/eye.png")} // Placeholder icon, replace with appropriate image
-          />
+          <TouchableOpacity
+            onPress={() => {
+              setToggle(!toggle);
+            }}
+          >
+            <Image
+              style={styles.icon}
+              source={require("@/assets/icons/eye.png")} // Placeholder icon, replace with appropriate image
+            />
+          </TouchableOpacity>
         )}
       </View>
       {error && inputState == "invalid" && (

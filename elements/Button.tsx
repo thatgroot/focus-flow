@@ -26,7 +26,8 @@ export default function Button({ text, onPress, disabled=false }: Props) {
 
 const styles = StyleSheet.create({
   button: {
-    width: 280,
+    maxWidth: 280,
+    width:"100%",
     height: 40,
     borderRadius: 20,
     justifyContent: "center",

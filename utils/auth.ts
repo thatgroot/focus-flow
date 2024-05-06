@@ -5,7 +5,16 @@ import {
   signInWithEmailAndPassword,
 } from "@firebase/auth";
 import { auth } from "./firebase";
-export const currentUID = ()=> auth.currentUser?.uid;
+import { controllers } from "./crud";
+import {
+  EmailAuthCredential,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updateEmail,
+  updatePassword,
+  verifyBeforeUpdateEmail,
+} from "firebase/auth";
+
 export const register = async ({
   name,
   email,
@@ -26,6 +35,17 @@ export const register = async ({
       displayName: name,
     });
 
+    controllers.userInfo.add({
+      data: {
+        name: name,
+      },
+      onError: (error) => {
+        console.error(error);
+      },
+      onSuccess: (id) => {
+        console.info(id);
+      },
+    });
     return {
       error: false,
       message: "sucess",
@@ -57,4 +77,51 @@ export const signin = async ({
       message: "account doesn't exists",
     };
   }
+};
+export const inputRegex = {
+  email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+  password: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+  text: /^[a-zA-Z\s]*$/,
+  number: /^[0-9]*$/,
+};
+
+export const updateUser = {
+  email: ({
+    value,
+    onSuccess,
+    onError,
+  }: CreateDocumentTypScaffold & { value: string }) => {
+    if (inputRegex["email"].test(value) && auth.currentUser) {
+      try {
+        verifyBeforeUpdateEmail(auth.currentUser, value)
+          .then(() => {
+            onSuccess("Please verify your new email");
+          })
+          .catch(onError);
+        // updateEmail(auth.currentUser, value)
+        // .then(() => {
+        //   onSuccess("email udated successfully");
+        // })
+      } catch (error) {
+        onError(error);
+      }
+    } else {
+      onError("Ensure your email follows this format: localpart@domain.tld.");
+    }
+  },
+
+  password: ({
+    value,
+    onSuccess,
+    onError,
+  }: CreateDocumentTypScaffold & { value: string }) => {
+    reauthenticateWithCredential(auth.currentUser!,EmailAuthProvider.credential(auth.currentUser?.email!,"bdz035Iq")).then((creds)=>{
+      updatePassword(auth.currentUser!, value)
+      .then(() => {
+        onSuccess("password udated successfully");
+      })
+      .catch(onError);
+    })
+
+  },
 };

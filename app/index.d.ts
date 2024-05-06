@@ -1,41 +1,37 @@
-type WithOmitPath = Omit<CreateDocumentType, 'path'>;
+type WithOmitPath = Omit<CreateDocumentType, "path">;
 // Enum for recurrence types
-type Recurrence = 'daily' | 'weekly' | 'monthly';
+type Recurrence = "daily" | "weekly" | "monthly";
 
 interface CreateDocumentTypScaffold {
-  onSuccess: (id: string) => void;
+  onSuccess: (value: string | any) => void;
   onError: (error: any) => void;
 }
 
 interface CreateDocumentType extends CreateDocumentTypScaffold {
   path: string;
 }
+
+interface UserInfoData {
+  name?: string;
+  username?: string;
+}
 // - courses -> uid -> name, timestamp
 interface Subject {
   name: string;
 }
-
+type SessionStatus = "active" | "paused" | "inactive";
+type ScheduleType = "class" | "task" | undefined;
 // - schedule -> uid ->  type, course, tags, period, notes, date{start,end}, time{start,end},completed
 interface Schedule {
-  entity: {
-    type: 'class' | 'task';
-    name: string;
-    course: string;
-  };
-  tags: Tag[] | [];
-  notes: string;
-  period: {
-    value: number;
-    unit: string;
-  };
-  date: {
-    start: Date;
-    end: Date;
-  };
-  time: {
-    start: number;
-    end: number;
-  };
+  subject: string;
+  startDate: Date;
+  endDate: Date;
+  note: string;
+  tags: string[] | [];
+  startTime: Date;
+  endTime: Date;
+  schedule: "daily" | "monthly" | "weekly"; // This will be a common property for both Task and Class
+  completionStatus: boolean;
 }
 
 // - due_dates -> ui -> type, id, date, time
@@ -54,60 +50,41 @@ interface DueDate {
 
 // - groups -> uid -> title, bio, time
 interface Group {
+  uid?: string;
+  id?: string;
   title: string;
   bio: string;
-  time: {
-    value: number;
-    unit: 'minutes' | 'hours';
-  };
+  time: string;
+  memberCount?: number;
 }
+
+interface DayType  {
+    date: number;
+    day: string;
+}
+
+type WeekType   = DayType[]
 
 // - groups -> uid -> title, bio, time
 interface GroupSession {
-  group: string;
-  milliseconds: number | string;
-}
-// - members -> group_id ->  user_id
-interface GroupMembers {
-  members: { name: string; uid: string; live: boolean }[];
-}
-// - leadership -> group ->  uid, time, live
-interface Leadership {
-  group: string;
-  member: string;
-  time: number;
+    status: SessionStatus,
+    uid:string,
+    name:string,
 }
 
+interface StudySession {
+  timeSpent?: string;
+  status: SessionStatus;
+}
 // Interface for tags
 interface Tag {
   name: string;
 }
 
-interface ScheduleItem {
-  subject: string;
-  startDate: Date;
-  note: string | undefined;
-  endDate: Date;
-  startTime: {
-    hour: number;
-    minutes: number;
-    unit: 'am' | 'pm';
-  };
-  endTime: {
-    hour: number;
-    minutes: number;
-    unit: 'am' | 'pm';
-  };
-  schedule: Recurrence; // This will be a common property for both Task and Class
-  dayOfWeek?: number; // Optional for weekly schedule
-}
 // Interface for task data
-interface Task extends ScheduleItem {
-  tags: string[];
-  completionStatus: boolean;
-}
+interface Task extends Schedule {}
 
-interface Class extends ScheduleItem {}
+interface Class extends Schedule {}
 // Interface for group member data
 interface GroupMember {
   uid: string;

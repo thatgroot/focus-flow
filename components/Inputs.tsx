@@ -10,7 +10,7 @@ const Inputs = ({
   placeholder: string;
   icon: any;
   isTime: boolean;
-  onChangeText: (text: string) => void;
+  onChangeText?: (text: string) => void;
 }) => {
   return (
     <View style={styles.searchSection}>

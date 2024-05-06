@@ -1,6 +1,6 @@
-import React, { useState, ReactNode } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { CheckboxProps } from './CheckBox'; // Adjust import path as needed
+import React, { useState, ReactNode } from "react";
+import { View, StyleSheet } from "react-native";
+import { CheckboxProps } from "./CheckBox"; // Adjust import path as needed
 
 interface CheckboxGroupProps {
   children: ReactNode;
@@ -18,7 +18,7 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
   onChange,
 }) => {
   const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
-  const [currentLabel, setCurrentLabel] = useState<string>('');
+  const [currentLabel, setCurrentLabel] = useState<string>("");
 
   const handleCheckboxChange = (label: string, isRadio?: boolean) => {
     if (isRadio) {
@@ -30,7 +30,10 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
         ? selectedLabels.filter((item) => item !== label)
         : [...selectedLabels, label];
       setSelectedLabels(updatedLabels);
-      onChange({ current: currentLabel, selected: updatedLabels });
+      onChange({
+        current: updatedLabels[updatedLabels.length - 1],
+        selected: updatedLabels,
+      });
     }
   };
 
@@ -40,9 +43,9 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
         React.cloneElement(child as React.ReactElement<CheckboxProps>, {
           onPress: handleCheckboxChange,
           isChecked: selectedLabels.includes(
-            (child as React.ReactElement<CheckboxProps>).props.label,
+            (child as React.ReactElement<CheckboxProps>).props.label
           ),
-        }),
+        })
       )}
     </View>
   );
@@ -50,8 +53,8 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
+    flexDirection: "column",
+    alignItems: "flex-start",
     gap: 6,
   },
 });

@@ -29,15 +29,18 @@ const TimeList = [
 ];
 
 
-const TaskCategoriesModal = ({visible,onClose}) => {
+const TaskCategoriesModal = ({ref: visible,onClose}:{
+  ref: any;
+  onClose:any
+}) => {
 
 
   const [selectedTimeName, setSelectedTimeName] = useState('');
 
 
-  const modalizeReff = useRef(null);
-  const modalizeRefSuccessRff = useRef(null);
-  const modalizeRefShareRFF = useRef(null);
+  const modalizeReff = useRef<Modalize>(null);
+  const modalizeRefSuccessRff = useRef<Modalize>(null);
+  const modalizeRefShareRFF = useRef<Modalize>(null);
 
   const onCloseRFF = () => {
     // @ts-ignore
@@ -155,7 +158,7 @@ const TaskCategoriesModal = ({visible,onClose}) => {
           </View>
 
          <View style={styles.modalBtn}>
-         <Button text='Finish' onPress={onCloseRFF} />
+         <Button disabled={false} text='Finish' onPress={onCloseRFF} />
 
          </View>
         </View>
@@ -200,7 +203,7 @@ const TaskCategoriesModal = ({visible,onClose}) => {
         <View style={styles.modalView}>
 
 
-         <ShareSuccess onclose={closeSuccess} share={onOpenShare} />
+         <ShareSuccess onClose={closeSuccess} share={onOpenShare} />
         </View>
 
 

@@ -12,9 +12,8 @@ const TabsLayout = () => {
           elevation: 0,
           shadowOpacity: 0,
           backgroundColor: " #FFFFFF",
-
           borderTopWidth: 0,
-          height: 60,
+          paddingVertical:12,
         },
       }}
     >
