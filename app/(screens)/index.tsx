@@ -3,13 +3,13 @@ import { Image } from "expo-image";
 import { StyleSheet, Text, View } from "react-native";
 import { Color, FontFamily, FontSize, Border } from "@/styles/GlobalStyles";
 import { router, useNavigation } from "expo-router";
-import { currentUID } from "@/utils/auth";
+import { auth } from "@/utils/firebase";
 
 const Splash = () => {
   React.useEffect(() => {
     // go to (auth/signin)
     setTimeout(() => {
-     if(!currentUID()){
+     if(!auth.currentUser?.uid){
       router.replace("/(screens)/auth/signin");
      }else {
       router.replace("/home_screen");

@@ -4,14 +4,13 @@ import { Users } from "./Users";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 
-
-export const StudyGroup: React.FC<StudyGroupProps> = ({
-  title,
-  type,
-  users,
-  count,
-  gradient
-}) => {
+export const StudyGroup = ({
+title,bio,
+time,
+memberCount,
+gradient,
+users
+}:Group &{ gradient:string[],users:any[]}) => {
   return (
     <LinearGradient
       colors={gradient}
@@ -19,27 +18,27 @@ export const StudyGroup: React.FC<StudyGroupProps> = ({
       end={[1, 0]}
       style={styles.container}
     >
-        <View style={styles.innerContainer}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.titleText}>{type}</Text>
-            <Image
-              source={require("@/assets/icons/group.png")}
-              style={{
-                width: 22,
-                height: 22,
-              }}
-            />
-          </View>
-          <Text style={styles.subtitleText}>{title}</Text>
-        </View>
-        <View style={styles.infoContainer}>
-          <Users users={users} />
-          <Text style={styles.countText}>{count}</Text>
+      <View style={styles.innerContainer}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.titleText}>{"Study Group"}</Text>
           <Image
-            source={require("@/assets/icons/next-white.png")}
-            style={{ height: 12, width: 12 }}
+            source={require("@/assets/icons/group.png")}
+            style={{
+              width: 22,
+              height: 22,
+            }}
           />
         </View>
+        <Text style={styles.subtitleText}>{title}</Text>
+      </View>
+      <View style={styles.infoContainer}>
+        <Users users={users} />
+        <Text style={styles.countText}>{memberCount}</Text>
+        <Image
+          source={require("@/assets/icons/next-white.png")}
+          style={{ height: 12, width: 12 }}
+        />
+      </View>
     </LinearGradient>
   );
 };
@@ -49,7 +48,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     height: 148,
-    width:"100%",
+    width: "100%",
     padding: 8,
     borderRadius: 10,
     shadowColor: "#000",
@@ -63,6 +62,7 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     gap: 6,
+    alignSelf:"stretch"
   },
   titleContainer: {
     flexDirection: "row",
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   },
   subtitleText: {
     fontSize: 20,
-    fontFamily: 'Inter-Bold',
+    fontFamily: "Inter-Bold",
     color: "white",
   },
   infoContainer: {
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   },
   countText: {
     fontSize: 16,
-    fontFamily: 'Inter-Bold',
+    fontFamily: "Inter-Bold",
     color: "white",
   },
 });

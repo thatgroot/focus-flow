@@ -1,3 +1,4 @@
+import { ucFirst } from "@/utils/helpers";
 import { Image } from "expo-image";
 import React from "react";
 import {
@@ -15,34 +16,39 @@ interface TimeEntryProps {
   type: "recent" | "upcomming";
 }
 
-const TimeEntry: React.FC<TimeEntryProps> = ({
-  timestamp,
-  duration,
+const TimeEntry = ({
+  label,
+  title,
   onPress,
   type,
+}: {
+  label: string;
+  title: string;
+  onPress: any;
+  type: "recent" | string;
 }) => {
   return (
-    <View
-      style={{
-        ...styles.container,
-        backgroundColor: type === "recent" ? "#FEB5A610" : "#13CE6625",
-      }}
-    >
-      <View style={styles.contentContainer}>
-        <Text style={styles.timestamp}>{timestamp}</Text>
-        <View style={styles.detailsContainer}>
-          <View style={styles.dot} />
-          <Text
-            style={{
-              ...styles.duration,
-              color: type === "upcomming" ? "#13ce66" : "#FEB5A6",
-            }}
-          >
-            {duration}
-          </Text>
+    <TouchableOpacity onPress={onPress}>
+      <View
+        style={{
+          ...styles.container,
+          backgroundColor: type === "recent" ? "#FEB5A610" : "#13CE6625",
+        }}
+      >
+        <View style={styles.contentContainer}>
+          <Text style={styles.timestamp}>{ucFirst(label)}</Text>
+          <View style={styles.detailsContainer}>
+            <View style={styles.dot} />
+            <Text
+              style={{
+                ...styles.duration,
+                color: type === "upcomming" ? "#13ce66" : "#FEB5A6",
+              }}
+            >
+              {title}
+            </Text>
+          </View>
         </View>
-      </View>
-      <TouchableOpacity onPress={onPress}>
         <Image
           style={{
             width: 12,
@@ -50,8 +56,8 @@ const TimeEntry: React.FC<TimeEntryProps> = ({
           }}
           source={require("@/assets/icons/next.png")}
         />
-      </TouchableOpacity>
-    </View>
+      </View>
+    </TouchableOpacity>
   );
 };
 
@@ -89,7 +95,7 @@ const styles = StyleSheet.create({
   },
   duration: {
     fontSize: 19,
-    fontFamily: 'Inter-Bold',
+    fontFamily: "Inter-Bold",
   },
 });
 

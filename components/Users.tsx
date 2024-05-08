@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     width:72,
     justifyContent: "center",
     alignItems: "center",
-    gap: 7,
+    gap: 6,
   },
   userAvatarContainer: {
     width: 24,

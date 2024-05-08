@@ -76,7 +76,7 @@ const ParticipantsPage: React.FC = () => {
 
                 <View style={styles.boxView}>
                     {dataGoal.map((item) => (
-                        <View style={[styles.boxViewDay, { backgroundColor: item.color }]} key={item.id}>
+                        <View key={item.id} style={[styles.boxViewDay, { backgroundColor: item.color }]} >
                             <View>
                                 <Text style={styles.headingsub}>{item.time}</Text>
                                 <Text style={styles.headingWeeks}> {item.Weekly}</Text>
@@ -124,7 +124,7 @@ const ParticipantsPage: React.FC = () => {
 
                     <View style={{marginTop:30}}>
                         {WeekData.map((item, index) =>
-                            <View style={styles.mainWeeks}>
+                            <View  key={index} style={styles.mainWeeks}>
                                 <View style={styles.boxId}>
                                 <Text style={styles.idView}>{item.id}</Text>
                                 </View>

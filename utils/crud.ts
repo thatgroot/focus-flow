@@ -11,77 +11,155 @@ import {
   updateDoc,
   where,
   deleteDoc,
+  QuerySnapshot,
 } from "firebase/firestore";
-import { database } from "./firebase";
-import { currentUID } from "./auth";
-import { addDays } from "date-fns";
-import { toClasses, toSessions, toTasks } from "./helpers";
-
-async function crud({
+import { auth, database } from "./firebase";
+import {
+  formatTime,
+  getStartTimeInMinutes,
+  toSchedules,
+  toSessions,
+} from "./helpers";
+import { addDays, milliseconds } from "date-fns";
+import { Alert } from "react-native";
+// CRUD function for Firestore operations
+async function performCrud({
   path,
   data,
   method = "set",
-  ...args
-}: CreateDocumentType & {
+  onSuccess,
+  onError,
+}: {
+  path: string;
   data: any;
-  method: "set" | "update" | "delete";
+  method?: "set" | "update" | "delete" | "get" | "getAll";
+  onSuccess: (id: string) => void;
+  onError: (error: string) => void;
 }) {
+  const ref = doc(database, path);
   try {
-    const ref = doc(database, path);
-    if (method === "set") {
-      await setDoc(ref, data);
-    } else if (method == "update") {
-      await updateDoc(ref, data);
-    } else if (method == "delete") {
-      await deleteDocument({
-        path,
-        ...args,
-      });
+    if (method === "set") await setDoc(ref, data);
+    else if (method === "update") await updateDoc(ref, data);
+    else if (method === "delete") await deleteDoc(ref);
+    else if (method === "getAll") {
+      const ref = collection(database, path);
+      return await getDocs(query(ref));
+    } else if (method === "get") {
+      return await getDoc(ref);
     }
-    args.onSuccess(ref.id);
+    onSuccess(ref.id);
   } catch (error: any) {
-    args.onError(error.message);
+    onError(error.message);
   }
 }
 
+// Function to get documents from Firestore
+async function getDocuments(query: Query<DocumentData>): Promise<any[]> {
+  const snapshot = await getDocs(query);
+  return snapshot.docs.map((doc) => doc.data());
+}
+
+// Function to create a document in Firestore
+async function createDocument<T>({
+  path,
+  data,
+  onSuccess,
+  onError,
+}: {
+  path: string;
+  data: T;
+  onSuccess: (id: string) => void;
+  onError: (error: string) => void;
+}) {
+  await performCrud({
+    path,
+    data,
+    onSuccess,
+    onError,
+  });
+}
+
+// Function to update a document in Firestore
+async function updateDocument<T>({
+  path,
+  data,
+  onSuccess,
+  onError,
+}: {
+  path: string;
+  data: T;
+  onSuccess: (id: string) => void;
+  onError: (error: string) => void;
+}) {
+  await performCrud({
+    path,
+    data,
+    method: "update",
+    onSuccess,
+    onError,
+  });
+}
+
+// Function to delete a document in Firestore
+async function deleteDocument({
+  path,
+  onSuccess,
+  onError,
+}: {
+  path: string;
+  onSuccess: (id: string) => void;
+  onError: (error: string) => void;
+}) {
+  await performCrud({
+    data: undefined,
+    path,
+    method: "delete",
+    onSuccess,
+    onError,
+  });
+}
 const getDocsQuery = async (query: Query<DocumentData, DocumentData>) => {
   const tasksSnapshot = await getDocs(query);
   return tasksSnapshot.docs.map((doc) => doc.data());
 };
 
-const createDoc = async (args: CreateDocumentType & { data: any }) => {
-  await crud({ ...args, method: "set" });
-};
-
-const updateDocument = async (args: CreateDocumentType & { data: any }) => {
-  await crud({ ...args, method: "set" });
-};
-
-const deleteDocument = async ({
-  path,
-  onError,
-  onSuccess,
-}: CreateDocumentType): Promise<void> => {
-  const ref = doc(database, path);
-  const snapshot = await getDoc(ref);
-  if (snapshot.exists()) {
-    await deleteDoc(ref)
-      .then(() => {
-        onSuccess(ref.id);
-      })
-      .catch((error: any) => {
-        onError(error.message);
-      });
-  } else {
-    onError("Document doesn't exists");
-  }
-};
-
 export const controllers = {
+  userInfo: {
+    add: async (args: WithOmitPath & { data: UserInfoData }) => {
+      await createDocument({
+        path: `users/${auth.currentUser?.uid}/info`,
+        ...args,
+      });
+    },
+    update: async ({
+      id,
+      ...args
+    }: WithOmitPath & { id: string; data: Subject }) => {
+      await updateDocument({
+        path: `users/${auth.currentUser?.uid}/info/${id}`,
+        ...args,
+      });
+    },
+    delete: async ({
+      id,
+      ...args
+    }: WithOmitPath & { id: string }): Promise<void> => {
+      await deleteDocument({
+        path: `users/${auth.currentUser?.uid}/info/${id}`,
+        ...args,
+      });
+    },
+    get: async (args: WithOmitPath & { id: string }): Promise<UserInfoData> => {
+      const ref = collection(database, `users/${auth.currentUser?.uid}/info`);
+      const data = await getDocs(query(ref));
+
+      return data.docs.map((doc) => doc.data())[0];
+    },
+  },
   course: {
     add: async (args: WithOmitPath & { data: Subject }) => {
-      await createDoc({
-        path: `courses/${currentUID()}`,
+      await createDocument({
+        path: `courses/${auth.currentUser?.uid}`,
         ...args,
       });
     },
@@ -102,16 +180,26 @@ export const controllers = {
     },
   },
   task: {
-    add: async (args: WithOmitPath & { data: Task }) => {
-      const ref = collection(database, `users/${currentUID()}/tasks`);
-      return await addDoc(ref, { ...args.data });
+    add: async ({
+      data,
+      onError,
+      onSuccess,
+    }: WithOmitPath & { data: Task }) => {
+      const ref = collection(database, `users/${auth.currentUser?.uid}/tasks`);
+      await addDoc(ref, { ...data })
+        .then((docRef) => {
+          onSuccess(docRef.id);
+        })
+        .catch((reason) => {
+          onError(reason.message);
+        });
     },
     update: async ({
       id,
       ...args
     }: WithOmitPath & { id: string; data: Task }) => {
       await updateDocument({
-        path: `users/${currentUID()}/tasks/${id}`,
+        path: `users/${auth.currentUser?.uid}/tasks/${id}`,
         ...args,
       });
     },
@@ -120,7 +208,7 @@ export const controllers = {
       ...args
     }: WithOmitPath & { id: string }): Promise<void> => {
       await deleteDocument({
-        path: `users/${currentUID()}/tasks/${id}`,
+        path: `users/${auth.currentUser?.uid}/tasks/${id}`,
         ...args,
       });
     },
@@ -131,7 +219,10 @@ export const controllers = {
       onError,
       onSuccess,
     }: WithOmitPath & { data: Class }) => {
-      const ref = collection(database, `users/${currentUID()}/classes`);
+      const ref = collection(
+        database,
+        `users/${auth.currentUser?.uid}/classes`
+      );
       await addDoc(ref, { ...data })
         .then((docRef) => {
           onSuccess(docRef.id);
@@ -145,7 +236,7 @@ export const controllers = {
       ...args
     }: WithOmitPath & { id: string; data: Class }) => {
       await updateDocument({
-        path: `users/${currentUID()}/classes/${id}`,
+        path: `users/${auth.currentUser?.uid}/classes/${id}`,
         ...args,
       });
     },
@@ -154,17 +245,42 @@ export const controllers = {
       ...args
     }: WithOmitPath & { id: string }): Promise<void> => {
       await deleteDocument({
-        path: `users/${currentUID()}/classes/${id}`,
+        path: `users/${auth.currentUser?.uid}/classes/${id}`,
         ...args,
       });
     },
   },
   group: {
-    add: async (args: WithOmitPath & { data: Group }) => {
-      const ref = collection(database, `users/${currentUID()}/groups`);
+    search: async ({ title }: Pick<Group, "title">) => {
+      const ref = collection(database, `groups`);
+      const _query = query(ref, where("title", "==", title.trim()));
+      const groups = await getDocsQuery(_query);
+      return groups as Group[];
+    },
+
+    add: async (args: WithOmitPath & { data?: Group }) => {
+      const ref = collection(database, `groups`);
       await addDoc(ref, { ...args.data })
-        .then((ref) => {
-          args.onSuccess(ref.id);
+        .then(async (newGroupRef) => {
+          await performCrud({
+            path: `groups/${newGroupRef.id}`,
+            data: {
+              ...args.data,
+              id: newGroupRef.id,
+            },
+            onError: args.onError,
+            onSuccess: async (id) => {
+              const userGroupsRef = doc(
+                database,
+                `users/${auth.currentUser?.uid}/groups/${newGroupRef.id}`
+              );
+              await setDoc(userGroupsRef, { id: newGroupRef.id }).then(
+                (_ref) => {
+                  args.onSuccess(newGroupRef.id);
+                }
+              );
+            },
+          });
         })
         .catch((reason: any) => {
           args.onError(reason);
@@ -175,7 +291,7 @@ export const controllers = {
       ...args
     }: WithOmitPath & { id: string; data: Group }) => {
       await updateDocument({
-        path: `users/${currentUID()}/groups/${id}`,
+        path: `users/${auth.currentUser?.uid}/groups/${id}`,
         ...args,
       });
     },
@@ -184,7 +300,7 @@ export const controllers = {
       ...args
     }: WithOmitPath & { id: string }): Promise<void> => {
       await deleteDocument({
-        path: `users/${currentUID()}/groups/${id}`,
+        path: `users/${auth.currentUser?.uid}/groups/${id}`,
         ...args,
       });
     },
@@ -193,19 +309,24 @@ export const controllers = {
       const snapshot = await getDoc(ref);
       if (!snapshot.exists()) {
         await setDoc(ref, {
-          members: [currentUID()],
-        }).then(() => {
-          onSuccess(ref.id);
+          members: [auth.currentUser?.uid],
+        }).then(async () => {
+          await createDocument({
+            path: `users/${auth.currentUser?.uid}/memberOf/${id}`,
+            data: { id, joinedOn: new Date() },
+            onSuccess,
+            onError,
+          });
         });
       } else {
         const _doc = await getDoc(ref);
         const data = _doc.data() !== undefined ? _doc.data() : { members: [] };
         if (data !== undefined) {
-          if (data["members"].includes(currentUID())) {
+          if (data["members"].includes(auth.currentUser?.uid)) {
             onError("You are already a group member");
           } else {
             updateDoc(ref, {
-              members: [...data["members"], currentUID()],
+              members: [...data["members"], auth.currentUser?.uid],
             }).then(() => {
               onSuccess(ref.id);
             });
@@ -214,49 +335,173 @@ export const controllers = {
       }
     },
     sessions: {
-      add: async (args: WithOmitPath & { data: GroupSession }) => {
-        const ref = collection(database, `users/${currentUID()}/sessions`);
-        await addDoc(ref, { ...args.data })
-          .then((ref) => {
-            args.onSuccess(ref.id);
-          })
-          .catch((reason) => {
-            args.onError(reason);
-          });
+      add: async ({
+        groupId,
+        data,
+        onError,
+        onSuccess,
+      }: WithOmitPath & { groupId: string; data: StudySession }) => {
+        async function addToGroupSessions() {
+          const session_data = {
+            status: data.status,
+            uid: auth.currentUser?.uid,
+            name: auth.currentUser?.displayName,
+          };
+          const ref = doc(
+            database,
+            `group_sessions/${groupId}/sessions/${auth.currentUser?.uid}`
+          );
+          try {
+            const docSnapshot = await getDoc(ref);
+            if (!docSnapshot.exists()) {
+              await performCrud({
+                method: "set",
+                path: `group_sessions/${groupId}/sessions/${auth.currentUser?.uid}`,
+                data: session_data,
+                onError,
+                onSuccess,
+              });
+            } else {
+              await performCrud({
+                method: "update",
+                path: `group_sessions/${groupId}/sessions/${auth.currentUser?.uid}`,
+                data: session_data,
+                onError,
+                onSuccess,
+              });
+            }
+          } catch (error: any) {
+            onError(error.message);
+          }
+        }
+        const ref = doc(
+          database,
+          `users/${auth.currentUser?.uid}/sessions/${groupId}`
+        );
+        try {
+          const docSnapshot = await getDoc(ref);
+          if (!docSnapshot.exists()) {
+            await performCrud({
+              method: "set",
+              path: `users/${auth.currentUser?.uid}/sessions/${groupId}`,
+              data,
+              onError,
+              onSuccess,
+            });
+          } else {
+            await performCrud({
+              method: "update",
+              path: `users/${auth.currentUser?.uid}/sessions/${groupId}`,
+              data,
+              onError,
+              onSuccess,
+            });
+          }
+          addToGroupSessions();
+        } catch (error: any) {
+          onError(error.message);
+        }
       },
       update: async ({
         group,
         ...args
       }: WithOmitPath & { group: string; data: GroupSession }) => {
         await updateDocument({
-          path: `users/${currentUID()}/sessions/${group}`,
+          path: `users/${auth.currentUser?.uid}/sessions/${group}`,
           ...args,
         });
       },
       get: async () => {
-        const ref = collection(database, `users/${currentUID()}/sessions`);
+        const ref = collection(
+          database,
+          `users/${auth.currentUser?.uid}/sessions`
+        );
         const data = await getDocs(query(ref));
         return data.docs.map((doc) => doc.data());
       },
+      getFor: async (groupId: string) => {
+        const groupRef = doc(
+          database,
+          `users/${auth.currentUser?.uid}/sessions/${groupId}`
+        );
+        const snapshot = await getDoc(groupRef);
+        return snapshot.data() as StudySession;
+      },
+      liveCount: async ({ groupId }: {   groupId: string }) => {
+        const ref = collection(database, `group_sessions/${groupId}/sessions`);
+        const _query = query(ref, where("status", "==", "active"));
+        const data = (await getDocsQuery(_query)) as GroupSession[];
+        return {
+          count: data.length,
+          data,
+        };
+      },
+    },
+    groupInfo: async (groupId: string) => {
+      const ref = collection(database, `members/${groupId}`);
+      const data = await getDocs(query(ref));
+      const members: string[] = data.docs[0].data().members; // assuming "members" is an array of user IDs
+      return members;
+    },
+    get: async () => {
+      const ref = collection(database, `users/${auth.currentUser?.uid}/groups`);
+      const data = await getDocs(query(ref));
+
+      return data.docs.map((doc) => doc.data());
+    },
+
+    live: async () => {},
+    joined: async () => {
+      const ref = collection(
+        database,
+        `users/${auth.currentUser?.uid}/memberOf`
+      );
+      const data = await getDocs(query(ref));
+      const groups: Group[] = [];
+      await Promise.all(
+        data.docs.map(async ({ id }) => {
+          const groupRef = doc(database, `groups/${id}`);
+          const snapshot = await getDoc(groupRef);
+
+          const membersRef = doc(database, `members/${id}`);
+          const membersSnapshot = await getDoc(membersRef);
+          if (snapshot.exists() && membersSnapshot.exists()) {
+            const members = membersSnapshot.data()["members"];
+            snapshot.data();
+            groups.push({
+              id: snapshot.id,
+              ...(snapshot.data() as Group),
+              memberCount: members.length as number,
+            });
+          }
+        })
+      );
+      return groups;
     },
   },
 };
 
 function buildScheduleQuery(type: "tasks" | "classes") {
+  const path = `users/${auth.currentUser?.uid}/${type}`;
   return query(
-    collection(database, `users/${currentUID()}/${type}`),
+    collection(database, path),
     where("endDate", ">=", addDays(new Date(), 0)), // Today or later
-    where("endDate", "<=", addDays(new Date(), 3)) // Within the next 3 days
+    where("endDate", "<=", addDays(new Date(), 14)) // Within the next 3 days
   );
 }
 
-export function arrangeByStartTime({classes,tasks}: { classes: Class[]; tasks: Task[] }): {
+export function arrangeByStartTime({
+  classes,
+  tasks,
+}: {
+  classes: Class[];
+  tasks: Task[];
+}): {
   time: string;
-  items: (Task | Class)[];
+  items: Schedule[];
 }[] {
-  const combinedData: (Task | Class)[] = [...tasks, ...classes];
+  const combinedData: Schedule[] = [...tasks, ...classes];
 
-  // Sort by startTime
   combinedData.sort((a, b) => {
     const aStartTime = getStartTimeInMinutes(a.startTime);
     const bStartTime = getStartTimeInMinutes(b.startTime);
@@ -264,9 +509,9 @@ export function arrangeByStartTime({classes,tasks}: { classes: Class[]; tasks: T
   });
 
   // Group items by time
-  const arrangedData: { time: string; items: (Task | Class)[] }[] = [];
+  const arrangedData: { time: string; items: Schedule[] }[] = [];
   let currentStartTime: number = 0;
-  let currentItems: (Task | Class)[] = [];
+  let currentItems: Schedule[] = [];
 
   for (const item of combinedData) {
     const itemStartTime = getStartTimeInMinutes(item.startTime);
@@ -294,30 +539,11 @@ export function arrangeByStartTime({classes,tasks}: { classes: Class[]; tasks: T
   return arrangedData;
 }
 
-  function getStartTimeInMinutes(startTime: {
-  hour: number;
-  minutes: number;
-  unit: "am" | "pm";
-}): number {
-  const hour = startTime.unit === "pm" ? startTime.hour + 12 : startTime.hour;
-  return hour * 60 + startTime.minutes;
-}
-
-function formatTime(minutes: number): string {
-  const hour = Math.floor(minutes / 60);
-  const remainingMinutes = minutes % 60;
-  const formattedHour = hour < 10 ? `0${hour}` : `${hour}`;
-  const formattedMinutes =
-    remainingMinutes < 10 ? `0${remainingMinutes}` : `${remainingMinutes}`;
-  return `${formattedHour}:${formattedMinutes}`;
-}
-
 export async function getDueDates() {
   const tasksQuery = buildScheduleQuery("tasks");
   const classesQuery = buildScheduleQuery("classes");
-  const tasks = toTasks(await getDocsQuery(tasksQuery));
-  const classes = toClasses(await getDocsQuery(classesQuery));
+  const tasks = toSchedules(await getDocsQuery(tasksQuery));
+  const classes = toSchedules(await getDocsQuery(classesQuery));
   const sessions = toSessions(await controllers.group.sessions.get());
-
   return { classes, tasks, sessions };
 }

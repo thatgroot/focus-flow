@@ -1,11 +1,7 @@
+import { inputRegex } from "@/utils/auth";
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Image, TextInput } from "react-native";
-const inputRegex = {
-  email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-  password: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-  text: /^[a-zA-Z\s]*$/,
-  number: /^[0-9]*$/,
-};
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const stateBorderColor = {
   active: "#5F75EE",
@@ -20,7 +16,8 @@ interface Props {
   inputType: "email" | "password" | "text" | "number";
   error: string;
   onChangeText?: ((text: string) => void) | undefined;
-  inputState: "active" | "invalid" | "valid" | "inactive"
+  inputState: "active" | "invalid" | "valid" | "inactive";
+  multiline?: boolean;
 }
 
 export default function LabeledInput({
@@ -30,11 +27,14 @@ export default function LabeledInput({
   error,
   onChangeText,
   inputState,
+  multiline,
 }: Props) {
   const [text, setText] = useState("");
+  const [compat, setCompat] = useState<"invalid" | "valid" | "inactive">(
+    "inactive"
+  );
 
-
-  const [compat, setCompat] = useState<"invalid" | "valid" |  "inactive">("inactive");
+  const [toggle, setToggle] = useState(false);
   const handleChangeText = (inputText: string) => {
     setText(inputText);
     if (onChangeText) onChangeText(inputText);
@@ -51,25 +51,32 @@ export default function LabeledInput({
       <View
         style={{
           ...styles.inputContainer,
-          borderColor: stateBorderColor[compat],
+          borderColor: stateBorderColor[compat], borderRadius: multiline ? 24 : 100
         }}
       >
         <TextInput
-          style={styles.input}
+          style={[styles.input, { height: multiline ? 84 : 60,paddingTop: multiline ? 22 : 0 }]}
           onChangeText={handleChangeText}
-          placeholder={placeholder}
+          placeholder={multiline ? "" : placeholder}
+          multiline={multiline}
           keyboardType={
             inputType === "number" ? "numeric" : "default" // Set keyboardType based on inputType
           }
-          secureTextEntry={inputType === "password"} // Set secureTextEntry for password inputType
+          secureTextEntry={inputType === "password" && !toggle} // Set secureTextEntry for password inputType
           value={text}
           autoCapitalize="none"
         />
         {inputType === "password" && (
-          <Image
-            style={styles.icon}
-            source={require("@/assets/icons/eye.png")} // Placeholder icon, replace with appropriate image
-          />
+          <TouchableOpacity
+            onPress={() => {
+              setToggle(!toggle);
+            }}
+          >
+            <Image
+              style={styles.icon}
+              source={require("@/assets/icons/eye.png")} // Placeholder icon, replace with appropriate image
+            />
+          </TouchableOpacity>
         )}
       </View>
       {error && inputState == "invalid" && (
@@ -91,11 +98,12 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    gap: 7,
+    gap: 6,
   },
   label: {
     flex: 0,
     fontSize: 14,
+    alignSelf: "stretch",
     fontWeight: "600",
     color: "#353535",
   },
@@ -103,15 +111,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    height: 60,
-    paddingLeft: 10,
-    paddingRight: 16,
     borderRadius: 100,
     borderWidth: 2,
     position: "relative",
+    paddingRight: 18,
   },
   input: {
     flex: 1,
+    minHeight: 60,
+    paddingHorizontal: 18,
     fontSize: 14,
     color: "#353535",
   },

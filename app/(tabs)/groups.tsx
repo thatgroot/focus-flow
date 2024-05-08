@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -6,71 +6,37 @@ import {
   Text,
   TouchableOpacity,
   SafeAreaView,
-  FlatList,
-  Modal,
   ScrollView,
   TextInput,
+  Alert,
 } from "react-native";
 
 import { EvilIcons } from "@expo/vector-icons";
 import { StudyGroup } from "@/components/StudyGroup";
 import { FeaturedGroup } from "@/components/FeaturedGroup";
-import { Link, useNavigation, useRouter } from "expo-router";
-import Button from "@/elements/Button";
-const DATA: StudyGroupProps[] = [
-  {
-    gradient: ["#9AA5B5", "#9AA5B5"],
-    type: "Study",
-    title: "Study Together",
-    users: [
-      require("@/assets/images/user1.png"),
-      require("@/assets/images/user2.png"),
-      require("@/assets/images/user3.png"),
-      require("@/assets/images/user4.png"),
-    ],
-    count: "33,558",
-  },
-  {
-    gradient: ["#8a97dd", "#8a97dd85"],
-    type: "Study",
-    title: "Practical Group",
-    users: [
-      require("@/assets/images/user1.png"),
-      require("@/assets/images/user2.png"),
-      require("@/assets/images/user3.png"),
-      require("@/assets/images/user4.png"),
-    ],
-    count: "33,558",
-  },
-  {
-    gradient: ["#FFCA65", "#FFCA65"],
-    type: "Study",
-    title: "Practical Group",
-    users: [
-      require("@/assets/images/user1.png"),
-      require("@/assets/images/user2.png"),
-      require("@/assets/images/user3.png"),
-      require("@/assets/images/user4.png"),
-    ],
-    count: "33,558",
-  },
-  {
-    gradient: ["#FEB5A6", "#FEB5A6"],
-    type: "Study",
-    title: "Practical Group",
-    users: [
-      require("@/assets/images/user1.png"),
-      require("@/assets/images/user2.png"),
-      require("@/assets/images/user3.png"),
-      require("@/assets/images/user4.png"),
-    ],
-    count: "33,558",
-  },
+import { useNavigation, useRouter } from "expo-router";
+import { controllers } from "@/utils/crud";
+import { useAppStore } from "@/store";
+const gradients = [
+  ["#9AA5B5", "#9AA5B5"],
+  ["#8a97dd", "#8a97dd85"],
+  ["#FFCA65", "#FFCA65"],
+  ["#FEB5A6", "#FEB5A6"],
 ];
 
-const groups: React.FC = () => {
+const groups = () => {
+  const { group, setGroup, groups, joinedGroups, searchGroups } = useAppStore();
   const router = useRouter();
-  const navigation = useNavigation();
+
+  useEffect(() => {
+    joinedGroups();
+    return () => {};
+  }, []);
+
+  useEffect(() => {
+    console.log("groups", groups);
+    return () => {};
+  }, [groups]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -83,7 +49,7 @@ const groups: React.FC = () => {
           <Text style={styles.heading}>Your Groups</Text>
           <TouchableOpacity
             style={styles.plusBtn}
-            onPress={() => router.push("/GroupDetails")}
+            onPress={() => router.push("/GroupForm")}
           >
             <Image
               style={styles.iconleft}
@@ -99,6 +65,9 @@ const groups: React.FC = () => {
             placeholder="Search a group by name "
             style={styles.TextInput}
             placeholderTextColor={"#9AA5B5"}
+            onChangeText={(text) => {
+              searchGroups(text);
+            }}
           />
         </View>
         <View
@@ -124,9 +93,33 @@ const groups: React.FC = () => {
               rowGap: 12,
             }}
           >
-            {DATA.map((item, index) => (
-              <TouchableOpacity key={index} onPress={() => router.push("/GroupPage")}>
-                <StudyGroup {...item} />
+            {groups?.map((group, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => {
+
+                  setGroup({
+                    ...group,
+                  });
+                  router.push("/GroupBoard");
+                }}
+                style={{
+                  width: "48%",
+                }}
+              >
+                <StudyGroup
+                  memberCount={group.memberCount}
+                  users={[
+                    require("@/assets/images/user1.png"),
+                    require("@/assets/images/user2.png"),
+                    require("@/assets/images/user3.png"),
+                    require("@/assets/images/user4.png"),
+                  ]}
+                  title={group.title}
+                  bio={""}
+                  time=""
+                  gradient={gradients[index]}
+                />
               </TouchableOpacity>
             ))}
           </View>
@@ -153,9 +146,36 @@ const groups: React.FC = () => {
               rowGap: 12,
             }}
           >
-            {DATA.map((item, index) => (
-              <TouchableOpacity  key={index} onPress={() => router.push("/GroupPage")}>
-                <FeaturedGroup {...item} />
+            {groups?.map(({ title, time, bio, memberCount }, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => {
+                  setGroup({
+                    ...group,
+                    memberCount,
+                    time,
+                    title,
+                    bio,
+                  });
+                  router.push("/GroupBoard");
+                }}
+                style={{
+                  width: "48%",
+                }}
+              >
+                {/* Featured Group instead : @TODO */}
+                <FeaturedGroup
+                  memberCount={memberCount}
+                  users={[
+                    require("@/assets/images/user1.png"),
+                    require("@/assets/images/user2.png"),
+                    require("@/assets/images/user3.png"),
+                    require("@/assets/images/user4.png"),
+                  ]}
+                  title={title}
+                  bio={""}
+                  time=""
+                />
               </TouchableOpacity>
             ))}
           </View>

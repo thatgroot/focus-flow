@@ -1,6 +1,7 @@
 import { Tabs } from "expo-router";
 import { Image } from "expo-image";
 import { View } from "react-native";
+import { t } from "@/utils/helpers";
 
 const TabsLayout = () => {
   return (
@@ -12,16 +13,15 @@ const TabsLayout = () => {
           elevation: 0,
           shadowOpacity: 0,
           backgroundColor: " #FFFFFF",
-
           borderTopWidth: 0,
-          height: 60,
+          paddingVertical:12,
         },
       }}
     >
       <Tabs.Screen
         name="home_screen"
         options={{
-          title: "Home",
+          title: t("home"),
           tabBarIcon: ({ color, focused }) => (
             <View>
               <Image
@@ -39,7 +39,7 @@ const TabsLayout = () => {
       <Tabs.Screen
         name="schedule"
         options={{
-          title: "Schedule",
+          title: t("schedule"),
           tabBarIcon: ({ color, focused }) => (
             <Image
               source={require("../../assets/icons/schedule.png")}
@@ -55,6 +55,7 @@ const TabsLayout = () => {
       <Tabs.Screen
         name="groups"
         options={{
+          title: t("groups"),
           tabBarIcon: ({ color, focused }) => (
             <Image
               source={require("../../assets/icons/groups.png")}
@@ -70,6 +71,7 @@ const TabsLayout = () => {
       <Tabs.Screen
         name="settings"
         options={{
+          title: t("settings"),
           tabBarIcon: ({ color, focused }) => (
             <Image
               source={require("../../assets/icons/settings.png")}

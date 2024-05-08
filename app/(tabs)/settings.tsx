@@ -17,6 +17,9 @@ import SelectDropdown from "react-native-select-dropdown";
 
 
 import { Link, useNavigation, useRouter } from "expo-router";
+import { auth } from "@/utils/firebase";
+import { signOut } from "firebase/auth";
+import { Avatar } from "@/components/Avatar";
 
 
 
@@ -31,7 +34,15 @@ const settings: React.FC = () => {
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
 
-
+  const handleSignOut = async () =>{
+    try{
+      await signOut(auth);
+      console.log("Signed out successfully")
+      router.push("/auth/signin");
+    }catch (error) {
+      console.log({error});
+   }
+  }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -39,17 +50,13 @@ const settings: React.FC = () => {
 
         <View style={styles.mainsection}>
           <View style={styles.ProfileMain}>
-            <Image style={styles.Profile} source={require('../../assets/images/Image.png')} />
+           <Avatar/>
             <View>
-              <Text style={styles.heading}>Theodore Handle</Text>
-              <Text style={[styles.heading, styles.headingSub]}>@username</Text>
+              <Text style={styles.heading}>{auth.currentUser?.displayName}</Text>
             </View>
-
-
-
           </View>
           <TouchableOpacity onPress={() => router.push("/EditProfileUploads")}>
-          <Image style={styles.ProfileEdit} source={require('../../assets/images/icon.png')} />
+          <Image style={styles.ProfileEdit} source={require('../../assets/icons/pencil.png')} />
           </TouchableOpacity>
         </View>
 
@@ -111,7 +118,9 @@ const settings: React.FC = () => {
           <Image style={styles.Arrow} source={require('../../assets/images/GroupArrow.png')} />
 
         </TouchableOpacity>
-        <TouchableOpacity style={styles.AccountView}>
+        <TouchableOpacity style={styles.AccountView} onPress={()=>{
+          handleSignOut()
+        }}>
           <View style={styles.IconView}>
             <View style={styles.BoxView}>
             <Image style={styles.userIcon} source={require('../../assets/images/logout.png')} />

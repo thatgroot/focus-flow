@@ -4,6 +4,7 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 
 import { useEffect } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import {
   SafeAreaProvider,
 } from "react-native-safe-area-context";
@@ -53,20 +54,23 @@ export default function RootLayout() {
 function RootLayoutNav() {
   return (
     <SafeAreaProvider>
-      <Stack screenOptions={{headerShown:false}}>
-        {/* <Stack.Screen name="(screens)" options={{ headerShown: false }} /> */}
-        <Stack.Screen
-          name="(tabs)"
-          options={{
-            title: "home_screen",
-            headerShown:false,
-          }}
-        />
-        <Stack.Screen
-          name="modal"
-          options={{ presentation: "modal", header: () => <></> }}
-        />
-      </Stack>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+
+        <Stack screenOptions={{ headerShown: false }}>
+          {/* <Stack.Screen name="(screens)" options={{ headerShown: false }} /> */}
+          <Stack.Screen
+            name="(tabs)"
+            options={{
+              title: "home_screen",
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="modal"
+            options={{ presentation: "modal", header: () => <></> }}
+          />
+        </Stack>
+      </GestureHandlerRootView>
     </SafeAreaProvider>
   );
 }

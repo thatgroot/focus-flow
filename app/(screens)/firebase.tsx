@@ -3,6 +3,7 @@ import { View, StyleSheet, ScrollView, Alert } from "react-native";
 import Button from "@/elements/Button";
 import { theme } from "@/styles/theme";
 import { controllers, getDueDates } from "@/utils/crud";
+import { auth } from "@/utils/firebase";
 
 const DATA = [
   {
@@ -108,18 +109,13 @@ const SignInScreen = () => {
             await controllers.class.add({
               data: {
                 subject: "Math Homework",
+                tags: ["math", "homework"],
+                completionStatus:false,
+                note:"",
                 startDate: new Date("2024-05-01T00:00:00.000Z"),
                 endDate: new Date("2024-05-01T23:59:59.999Z"),
-                startTime: {
-                  hour: 6,
-                  minutes: 30,
-                  unit: "pm",
-                }, // 8:00 AM
-                endTime: {
-                  hour: 8,
-                  minutes: 30,
-                  unit: "pm",
-                }, // 8:00 AM
+                startTime: new Date("2024-05-01T20:50:59.999Z"), // 8:00 AM
+                endTime: new Date("2024-05-01T20:50:59.999Z"), // 8:00 AM// 8:00 AM
                 schedule: "daily",
               },
               onSuccess: (id) => {
@@ -139,19 +135,14 @@ const SignInScreen = () => {
             await controllers.class.update({
               id: "Acgyo3JB60wOBqrSRgZC",
               data: {
+                completionStatus:false,
+                note:"",
+                tags:[],
                 subject: "Biology Homework",
                 startDate: new Date("2024-05-01T00:00:00.000Z"),
                 endDate: new Date("2024-05-01T23:59:59.999Z"),
-                startTime: {
-                  hour: 7,
-                  minutes: 30,
-                  unit: "pm",
-                }, // 8:00 AM
-                endTime: {
-                  hour: 9,
-                  minutes: 30,
-                  unit: "pm",
-                }, // 8:00 AM
+                startTime: new Date("2024-05-01T20:50:59.999Z"), // 8:00 AM
+                endTime: new Date("2024-05-01T20:50:59.999Z"), // 8:00 AM// 8:00 AM
                 schedule: "daily",
               },
               onSuccess: (id) => {
@@ -172,20 +163,13 @@ const SignInScreen = () => {
               data: {
                 subject: "Math Homework",
                 tags: ["math", "homework"],
+                completionStatus:false,
+                note:"",
                 startDate: new Date("2024-05-01T00:00:00.000Z"),
                 endDate: new Date("2024-05-01T23:59:59.999Z"),
-                startTime: {
-                  hour: 6,
-                  minutes: 30,
-                  unit: "pm",
-                }, // 8:00 AM
-                endTime: {
-                  hour: 8,
-                  minutes: 30,
-                  unit: "pm",
-                }, // 8:00 AM
+                startTime: new Date("2024-05-01T20:50:59.999Z"), // 8:00 AM
+                endTime: new Date("2024-05-01T20:50:59.999Z"), // 8:00 AM// 8:00 AM
                 schedule: "daily",
-                completionStatus: false,
               },
               onSuccess: (id) => {
                 Alert.alert(id);
@@ -206,20 +190,13 @@ const SignInScreen = () => {
               data: {
                 subject: "Math Homework",
                 tags: ["math", "homework"],
+                completionStatus:false,
+                note:"",
                 startDate: new Date("2024-05-01T00:00:00.000Z"),
                 endDate: new Date("2024-05-01T23:59:59.999Z"),
-                startTime: {
-                  hour: 7,
-                  minutes: 30,
-                  unit: "am",
-                }, // 8:00 AM
-                endTime: {
-                  hour: 8,
-                  minutes: 30,
-                  unit: "am",
-                }, // 8:00 AM
-                schedule: "weekly",
-                completionStatus: false,
+                startTime: new Date("2024-05-01T20:50:59.999Z"), // 8:00 AM
+                endTime: new Date("2024-05-01T20:50:59.999Z"), // 8:00 AM// 8:00 AM
+                schedule: "daily",
               },
               onSuccess: () => {
                 Alert.alert("updated");
@@ -249,12 +226,10 @@ const SignInScreen = () => {
           onPress={async () => {
             await controllers.group.add({
               data: {
+                uid:auth.currentUser?.uid,
                 title: "Bio Group",
                 bio: "just a group",
-                time: {
-                  unit: "hours",
-                  value: 1,
-                },
+                time:  "60 minutes",
               },
               onError(error) {
                 Alert.alert(error);
@@ -275,10 +250,7 @@ const SignInScreen = () => {
               data: {
                 title: "Math Group",
                 bio: "just a group",
-                time: {
-                  unit: "hours",
-                  value: 1,
-                },
+                time:  "30 minutes",
               },
               onSuccess: () => {
                 Alert.alert("updated");
@@ -295,7 +267,7 @@ const SignInScreen = () => {
           disabled={false}
           onPress={async () => {
             await controllers.group.join({
-              id: "lUu472b6sU193YlEO7ZV",
+              id: "m9epW53D95IfwPDv3htu",
               onSuccess: (id) => {
                 Alert.alert(id);
               },
@@ -310,18 +282,18 @@ const SignInScreen = () => {
         <Button
           disabled={false}
           onPress={async () => {
-            await controllers.group.sessions.add({
-              data: {
-                group: "lUu472b6sU193YlEO7ZV",
-                milliseconds: 3600 * 1000,
-              },
-              onError(error) {
-                Alert.alert(error);
-              },
-              onSuccess(error) {
-                Alert.alert(error);
-              },
-            });
+            // await controllers.group.sessions.add({
+            //   group:"zDrwbl7eytqraNsuUmEl",
+            //   data:{
+            //     time: (new Date()).getMilliseconds()
+            //   },
+            //   onError(error) {
+            //     Alert.alert(error);
+            //   },
+            //   onSuccess(id) {
+            //     Alert.alert(id);
+            //   },
+            // });
           }}
           text="Create Session"
         />

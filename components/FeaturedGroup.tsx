@@ -5,13 +5,11 @@ import { Image } from "expo-image";
 // import { LinearGradient } from "expo-linear-gradient";
 
 
-export const FeaturedGroup: React.FC<StudyGroupProps> = ({
+export const FeaturedGroup  = ({
   title,
-  type,
-  users,
-  count,
-//   gradient
-}) => {
+  memberCount,
+  users
+  }:Group &{ users:any[]}) => {
   return (
     <View
 
@@ -19,7 +17,7 @@ export const FeaturedGroup: React.FC<StudyGroupProps> = ({
     >
         <View style={styles.innerContainer}>
           <View style={styles.titleContainer}>
-            <Text style={styles.titleText}>{type}</Text>
+            <Text style={styles.titleText}>{"Study Group"}</Text>
             <Image
             tintColor={"#9AA5B5"}
               source={require("@/assets/icons/group.png")}
@@ -33,7 +31,7 @@ export const FeaturedGroup: React.FC<StudyGroupProps> = ({
         </View>
         <View style={styles.infoContainer}>
           <Users users={users} />
-          <Text style={styles.countText}>{count}</Text>
+          <Text style={styles.countText}>{memberCount}</Text>
           <Image
           tintColor={"rgba(154, 165, 181, 1)"}
             source={require("@/assets/icons/next-white.png")}
@@ -65,7 +63,8 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   innerContainer: {
-    gap: 6,
+      gap: 6,
+      alignSelf:"stretch"
   },
   titleContainer: {
     flexDirection: "row",

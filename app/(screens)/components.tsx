@@ -33,11 +33,11 @@ import Reminder from "@/components/Reminder";
 import ModalWrapper from "@/components/ModalWrapper";
 import AddCourseModal from "@/components/AddCourseModal";
 import ReminderNotification from "@/components/ReminderNotification";
-import ShareSchedule from "@/components/ShareSchedule";
 import ShareSuccess from "@/components/ShareSuccess";
 import TaskCategories from "@/components/TaskCategories";
+import ShareSchedule from "@/components/ShareSchedule";
 
-const DATA: StudyGroupProps[] = [
+const DATA = [
   {
     gradient: ["#9AA5B5", "#9AA5B5"],
     type: "Study",
@@ -88,7 +88,7 @@ const DATA: StudyGroupProps[] = [
   },
 ];
 
-const SignInScreen = () => {
+const Components = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   const toggleBottomSheet = () => {
@@ -120,10 +120,9 @@ const SignInScreen = () => {
           <Reminder />
         </ModalWrapper>
 
-        <TaskCategories />
-        <ShareSuccess />
+        <ShareSuccess onClose={()=>{}} share={()=>{}} />
 
-        <ShareSchedule />
+        <ShareSchedule/>
         <AddCourseModal isVisible={false} onClose={() => {}} />
 
         <ReminderNotification />
@@ -183,6 +182,9 @@ const SignInScreen = () => {
                   active={active}
                   dayOfWeek={day}
                   date={date}
+                  onSelect={()=>{
+
+                  }}
                 />
               );
             })}
@@ -206,7 +208,7 @@ const SignInScreen = () => {
             position: calculatePosition(270, 128, calculateAngle(index, 4), 4),
           }))}
         />
-        <FlatList
+        {/* <FlatList
           data={DATA}
           renderItem={({ item }) => (
             <View style={{ margin: 6 }}>
@@ -215,7 +217,7 @@ const SignInScreen = () => {
           )}
           keyExtractor={(item) => item.gradient.toString()} // Replace with unique identifier
           numColumns={2}
-        />
+        /> */}
 
         <View
           style={{
@@ -324,13 +326,14 @@ const SignInScreen = () => {
 
         <View style={styles.inputContainer}>
           <LabeledInput
+          inputState="inactive"
             label="Email"
             placeholder="Enter your email"
             inputType="email"
             error="Email taken. Try another one"
           />
 
-          <CheckboxGroup onChange={handleCheckboxChange}>
+          {/* <CheckboxGroup onChange={handleCheckboxChange}>
             {["Male", "Female"].map((label, index) => (
               <Checkbox
                 isRadio={true}
@@ -340,9 +343,9 @@ const SignInScreen = () => {
                 label={label}
               />
             ))}
-          </CheckboxGroup>
+          </CheckboxGroup> */}
 
-          <CheckboxGroup onChange={handleCheckboxChange}>
+          {/* <CheckboxGroup onChange={handleCheckboxChange}>
             {["Pscychology", "Biology", "Physics", "Mathematics"].map(
               (label, index) => (
                 <Checkbox
@@ -354,7 +357,7 @@ const SignInScreen = () => {
                 />
               )
             )}
-          </CheckboxGroup>
+          </CheckboxGroup> */}
         </View>
 
         <View
@@ -365,7 +368,7 @@ const SignInScreen = () => {
             paddingBottom: 96,
           }}
         >
-          <Button text="Sign In" onPress={() => {}} />
+          <Button disabled text="Sign In" onPress={() => {}} />
           <View style={styles.signUpContainer}>
             <Text style={styles.signUpText}>Don’t have an Account?</Text>
             <Link onPress={() => {}} text="Sign Up" />
@@ -447,4 +450,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignInScreen;
+export default Components;

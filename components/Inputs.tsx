@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TextInput, Image } from 'react-native';
-import React from 'react';
+import React, { useRef, useState } from 'react';
 
 const Inputs = ({
   placeholder,
@@ -10,14 +10,27 @@ const Inputs = ({
   placeholder: string;
   icon: any;
   isTime: boolean;
-  onChangeText: (text: string) => void;
+  onChangeText?: (text: string) => void;
 }) => {
+  const inputRef = useRef(null);
+  const handleTextChange = (text: string) => {
+    const timeRegex = /^([1-9]|1[0-2]):([0-5][0-9])\s([AaPp][Mm])$/;
+    if (isTime && !timeRegex.test(text)) {
+      return;
+    }
+
+    if (onChangeText) {
+      onChangeText(text);
+    }
+  };
+
   return (
     <View style={styles.searchSection}>
       <TextInput
+        ref={inputRef}
         placeholder={placeholder}
         style={styles.inputTime}
-        onChangeText={onChangeText}
+        onChangeText={handleTextChange}
       />
       <View style={styles.iconContainer}>
         <Image source={icon} style={[styles.icon, isTime && styles.Time]} />
@@ -25,7 +38,6 @@ const Inputs = ({
     </View>
   );
 };
-
 export default Inputs;
 
 const styles = StyleSheet.create({

@@ -2,12 +2,11 @@ import LabeledInput from "@/components/InputField";
 import Button from "@/elements/Button";
 import Link from "@/elements/Link";
 import { register } from "@/utils/auth";
+import { t } from "@/utils/helpers";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "@/utils/firebase";
+import { Alert, KeyboardAvoidingView, ScrollView, StyleSheet, Text, View } from "react-native";
 const Signup = () => {
   const router = useRouter();
 
@@ -38,7 +37,7 @@ const Signup = () => {
 
   return (
     <ScrollView>
-      <View style={{ flex: 1, gap: 18, paddingVertical: 48 }}>
+      <KeyboardAvoidingView behavior="padding" enabled style={{ flex: 1, gap: 18, paddingVertical: 48 }}>
         <Image
           style={{
             width: "100%",
@@ -48,32 +47,23 @@ const Signup = () => {
         />
         <View
           style={{
-            gap: 56,
+            gap: 48,
             paddingHorizontal: 18,
           }}
         >
           <View style={{ gap: 24, alignItems: "center" }}>
             <View
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "flex-start",
-                alignItems: "center",
-                flexGrow: 0,
-                flexShrink: 0,
-                position: "relative",
-                gap: 7,
-              }}
+              style={styles.titleContainer}
             >
-              <Text style={styles.title}>Create an Account</Text>
+              <Text style={styles.title}>{t("create_account_label")}</Text>
               <Text style={styles.description}>
-                Enter Your Credentials to Continue:
+                {t("signin_subtitle")}
               </Text>
             </View>
 
             <LabeledInput
-              label="Full Name"
-              placeholder="Full Name"
+              label={t("full_name")}
+              placeholder={t("full_name")}
               inputType="text"
               error="Name is require!"
               inputState="inactive"
@@ -83,10 +73,10 @@ const Signup = () => {
             />
 
             <LabeledInput
-              label="Enter Email"
+              label={t("enter_email")}
               placeholder="teebaapp123@gmail.com"
               inputType="email"
-              error="Invalid Email. Try another one"
+              error={t("invalid_email")}
               inputState="inactive"
               onChangeText={(text) => {
                 setData({ ...data, email: text });
@@ -94,7 +84,7 @@ const Signup = () => {
             />
 
             <LabeledInput
-              label="Enter Password"
+              label={t("enter_password")}
               placeholder="Password"
               inputType="password"
               error=""
@@ -105,10 +95,10 @@ const Signup = () => {
             />
 
             <LabeledInput
-              label="Confirm Password"
-              placeholder="Confirm Password"
+              label={t("confirm_password")}
+              placeholder={t("confirm_password")}
               inputType="password"
-              error={!matching ? "Passwords do not match." : ""}
+              error={!matching && data.password ? t("password_mismatch") : ""}
               inputState={!matching ? "invalid" : "valid"}
               onChangeText={(text) => {
                 setMatching(text === data.password);
@@ -119,28 +109,37 @@ const Signup = () => {
           <View
             style={{
               alignItems: "center",
+              justifyContent: "flex-start",
               gap: 24,
             }}
           >
             <Button
               disabled={!matching}
               onPress={onHandleSignup}
-              text="Signup"
+              text={t("sign_up")}
             />
             <Link
-              text="Sign in"
+              text={t("signin")}
               onPress={() => {
                 router.push("/auth/signin");
               }}
             />
           </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  titleContainer: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    position: "relative",
+    gap: 6,
+  },
   title: {
     fontSize: 20,
     fontFamily: "Inter-Bold",
