@@ -120,39 +120,39 @@ async function deleteDocument({
 }
 const getDocsQuery = async (query: Query<DocumentData, DocumentData>) => {
   const tasksSnapshot = await getDocs(query);
-  return tasksSnapshot.docs.map((doc) => doc.data());
+  return tasksSnapshot.docs.map((doc) => {
+    return {
+      id: doc.id,
+      ...doc.data(),
+    };
+  });
 };
 
 export const controllers = {
   userInfo: {
     add: async (args: WithOmitPath & { data: UserInfoData }) => {
       await createDocument({
-        path: `users/${auth.currentUser?.uid}/info`,
+        path: `usersInfo/${auth.currentUser?.uid}`,
         ...args,
       });
     },
-    update: async ({
-      id,
-      ...args
-    }: WithOmitPath & { id: string; data: Subject }) => {
+    update: async ({ ...args }: WithOmitPath & { data: Subject }) => {
       await updateDocument({
-        path: `users/${auth.currentUser?.uid}/info/${id}`,
+        path: `usersInfo/${auth.currentUser?.uid}`,
         ...args,
       });
     },
     delete: async ({
-      id,
       ...args
     }: WithOmitPath & { id: string }): Promise<void> => {
       await deleteDocument({
-        path: `users/${auth.currentUser?.uid}/info/${id}`,
+        path: `usersInfo/${auth.currentUser?.uid}`,
         ...args,
       });
     },
-    get: async (args: WithOmitPath & { id: string }): Promise<UserInfoData> => {
-      const ref = collection(database, `users/${auth.currentUser?.uid}/info`);
+    get: async (): Promise<UserInfoData> => {
+      const ref = collection(database, `usersInfo/${auth.currentUser?.uid}`);
       const data = await getDocs(query(ref));
-
       return data.docs.map((doc) => doc.data())[0];
     },
   },
@@ -184,7 +184,7 @@ export const controllers = {
       data,
       onError,
       onSuccess,
-    }: WithOmitPath & { data: Task }) => {
+    }: WithOmitPath & { data: Schedule }) => {
       const ref = collection(database, `users/${auth.currentUser?.uid}/tasks`);
       await addDoc(ref, { ...data })
         .then((docRef) => {
@@ -212,13 +212,19 @@ export const controllers = {
         ...args,
       });
     },
+    get: async () => {
+      const ref = collection(database, `users/${auth.currentUser?.uid}/tasks`);
+      const _query = query(ref, where("completionStatus", "==", true));
+      const tasks = await getDocsQuery(_query);
+      return tasks as Schedule[];
+    },
   },
   class: {
     add: async ({
       data,
       onError,
       onSuccess,
-    }: WithOmitPath & { data: Class }) => {
+    }: WithOmitPath & { data: Schedule }) => {
       const ref = collection(
         database,
         `users/${auth.currentUser?.uid}/classes`
@@ -427,7 +433,7 @@ export const controllers = {
         const snapshot = await getDoc(groupRef);
         return snapshot.data() as StudySession;
       },
-      liveCount: async ({ groupId }: {   groupId: string }) => {
+      liveCount: async ({ groupId }: { groupId: string }) => {
         const ref = collection(database, `group_sessions/${groupId}/sessions`);
         const _query = query(ref, where("status", "==", "active"));
         const data = (await getDocsQuery(_query)) as GroupSession[];

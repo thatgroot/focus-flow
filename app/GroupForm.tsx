@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   StyleSheet,
@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
-  TextInput,
   Alert,
   KeyboardAvoidingView,
 } from "react-native";
@@ -40,18 +39,17 @@ const GroupForm: React.FC = () => {
                 style={styles.LeftIcon}
                 source={require("../assets/images/team.png")}
               />
-              <Text style={styles.heading}>Study Together</Text>
+              <Text style={styles.heading}>{t("study_together")}</Text>
             </View>
             <View />
           </View>
           <View style={{ marginTop: 48, justifyContent: "center", alignItems: "center", gap: 24 }}>
 
-
             <LabeledInput
               label={t("group_title_label")}
               placeholder={t("group_title_label")}
               inputType="text"
-              error="Name is require!"
+              error=""
               inputState="inactive"
               onChangeText={(text: string) => {
                 setGroup({
@@ -80,7 +78,7 @@ const GroupForm: React.FC = () => {
             </View>
 
             <View style={{ flex: 1, alignSelf: "stretch", gap: 6 }}>
-              <Text style={[styles.StylesTitle,]}>Add Time</Text>
+              <Text style={[styles.StylesTitle,]}>{t("add_time")}</Text>
               <SelectDropdown
                 data={[10, 20, 30, 40, 50, 60].map((i) => `${i} minutes`)}
                 onSelect={(time, index) => {
@@ -102,7 +100,7 @@ const GroupForm: React.FC = () => {
 
             <Button
               disabled={false}
-              text="Next"
+              text={t("next")}
               onPress={() => {
                 if (group) {
                   controllers.group.add({

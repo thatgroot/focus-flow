@@ -1,66 +1,170 @@
-import React from "react";
+import { useAppStore } from "@/store";
+import { controllers } from "@/utils/crud";
+import { t, translateDate } from "@/utils/helpers";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   Image,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 
 export const Schedules = ({
-  item,
+  bgColor,
+  icon,
+  data,
 }: {
-  item: {
-    title: string;
-    time: string;
-    due: string;
-    bgColor:
-      | "rgba(255, 202, 101, 1)"
-      | "rgba(154, 165, 181, 0.25)"
-      | "rgba(254, 181, 166, 1)"
-      | "rgba(141, 153, 222, 1)"
-      | "rgba(154, 165, 181, 0.25)";
+  bgColor:
+    | "rgba(255, 202, 101, 1)"
+    | "rgba(154, 165, 181, 0.25)"
+    | "rgba(254, 181, 166, 1)"
+    | "rgba(141, 153, 222, 1)"
+    | "rgba(154, 165, 181, 0.25)";
 
-    icon: any;
-  };
+  icon: any;
+  data: Schedule;
 }) => {
+  const [checked, setChecked] = useState(false);
+  const { locale } = useAppStore();
+  useEffect(() => {
+    setChecked(data.completionStatus);
+  }, []);
   return (
-    <View style={styles.container}>
-      <View style={[styles.card, { backgroundColor: item?.bgColor, gap: 12 }]}>
-          <View style={{ ...styles.item }}>
-            <View style={styles.headerTitle}>
-              <Text style={styles.subtitle}>{item.title}</Text>
-              <TouchableOpacity onPress={() => {}}>
-                <Image source={item?.icon} style={styles.shareIcon} />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.subDetails}>
-              <View style={styles.subDetail}>
-                <View
-                  style={[
-                    styles.subDetailBox,
-                    { backgroundColor: "rgba(0, 0, 0, 0.28)" },
-                  ]}
-                >
-                  <Text style={styles.subDetailText}>{item?.time}</Text>
-                </View>
-              </View>
-              <View style={styles.subDetail}>
-                {item.due && (
-                  <View
-                    style={[
-                      styles.subDetailBox,
-                      { backgroundColor: "#e3485020" },
-                    ]}
-                  >
-                    <Text style={[styles.subDetailText, { color: "#fff" }]}>
-                      {item?.due}
-                    </Text>
-                  </View>
-                )}
-              </View>
+    <View style={[styles.card, { backgroundColor: bgColor, gap: 6 }]}>
+      <View style={{ ...styles.item }}>
+        <View
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+            borderRadius: 24,
+            width: 48,
+            height: 24,
+            marginVertical: 6,
+            backgroundColor: "rgba(255,255,255,0.31)",
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 10,
+              fontWeight: "300",
+              textAlign: "left",
+              color: "#000",
+            }}
+          >
+            {data.subject ? t('class_title') : t("task_title")}
+          </Text>
+        </View>
+        <View style={styles.headerTitle}>
+          <Text style={styles.subtitle}>
+            {/* @ts-ignore */}
+            {data.subject ? t(data.subject?.toLocaleLowerCase()) : data.title}
+          </Text>
+          <TouchableOpacity onPress={() => {}}>
+            <Image source={icon} style={styles.shareIcon} />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.subDetails}>
+          <View style={styles.subDetail}>
+            <View
+              style={[
+                styles.subDetailBox,
+                { backgroundColor: "rgba(0, 0, 0, 0.28)" },
+              ]}
+            >
+              <Text style={styles.subDetailText}>
+                {locale === "en"
+                  ? data?.startDate.toDateString()
+                  : translateDate(data?.startDate.toDateString())}
+              </Text>
             </View>
           </View>
+          <View style={styles.subDetail}>
+            {data.endDate.toDateString() && (
+              <View
+                style={[styles.subDetailBox, { backgroundColor: "#e3485020" }]}
+              >
+                <Text style={[styles.subDetailText, { color: "#fff" }]}>
+                  {locale === "en"
+                    ? data?.startDate.toDateString()
+                    : translateDate(data.endDate.toDateString())}
+                </Text>
+              </View>
+            )}
+          </View>
+        </View>
+      </View>
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignSelf: "stretch",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          position: "relative",
+          gap: 6,
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 12,
+            textAlign: "left",
+            fontWeight: checked ? "700" : "normal",
+            color: checked ? "#8D99DE" : "#fff",
+          }}
+        >
+          {t("mark_as_complete")}
+        </Text>
+
+        <TouchableOpacity
+          onPress={() => {
+            const { id, ...others } = data;
+            if (data.subject) {
+              controllers.class.update({
+                onError: (error) => {
+                  Alert.alert(error);
+                },
+                onSuccess: (id) => {},
+                id: id!,
+                data: {
+                  ...others,
+                  completionStatus: !checked,
+                  completedOn: new Date()
+                },
+              });
+            } else {
+              controllers.task.update({
+                onError: (error) => {
+                  Alert.alert(error);
+                },
+                onSuccess: (id) => {},
+                id: id!,
+                data: {
+                  ...others,
+                  completionStatus: !checked,
+                  completedOn: new Date()
+                },
+              });
+            }
+
+            setChecked(!checked);
+          }}
+        >
+          {checked ? (
+            <Image
+              style={{
+                width: 18,
+                height: 18,
+              }}
+              source={require("@/assets/images/checked_radio.png")}
+            />
+          ) : (
+            <View style={[styles.checkbox]} />
+          )}
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -152,11 +256,18 @@ const styles = StyleSheet.create({
     color: "white",
   },
   shareIcon: {
-    width: 22,
-    height: 24,
+    width: 18,
+    height: 20,
   },
   headerTitle: {
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  checkbox: {
+    width: 18,
+    height: 18,
+    borderWidth: 1.3,
+    borderColor: "#fff",
+    borderRadius: 10,
   },
 });

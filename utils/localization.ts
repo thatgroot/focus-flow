@@ -1,7 +1,9 @@
 // ./localization.js
 const translations = {
   en: {
-    // Sign In Section
+    hi: "Hi",
+    good_morning: "Good Morning!",
+
     signin: "Sign In",
     signing_in: "processing your request",
     signin_subtitle: "Enter Your Credentials to Continue",
@@ -20,8 +22,8 @@ const translations = {
     remember_me: "Remember me",
 
     // Home Page
-    current_date_label: "Today",
-    study_live_label: "Study live with 2,589 others",
+    today: "Today",
+    study_live_label: "Study live with {__} others",
     upcoming_due_dates: "Upcoming due dates",
 
     // Navigation Bar
@@ -31,10 +33,17 @@ const translations = {
     settings: "Settings",
 
     // Courses
-    psychology: "Psychology",
     biology: "Biology",
+    chemistry: "Chemistry",
     physics: "Physics",
+    psychology: "Psychology",
+    islamic: "Islamic",
+    english: "English",
+    geography: "Geography",
+    economy: "Economy",
     mathematics: "Mathematics",
+    history: "History",
+    arabic: "Arabic",
     add_custom_course: "Add Custom Course",
     enter_course_name: "Enter Course Name",
     add: "Add",
@@ -59,7 +68,17 @@ const translations = {
     schedule_label: "Schedule",
     plan_label: "Plan",
     completed_label: "Completed",
+
+    active: "Active",
+    paused: "Paused",
+    inactive: "Inactive",
+
+    no_end_date_available: "No end date available",
+    due_date: "Due Date", // New key
+    mark_as_complete: "Mark as Complete",
+
     // ... other translations ...
+    recent_group_sessions: "Recent Group Sessions",
 
     // Share Schedule Section
     share_schedule_title: "Share Your Schedule",
@@ -71,6 +90,7 @@ const translations = {
     to_label: "To",
     share_button: "Share",
     copy_link_button: "Copy Link",
+    study_label: "Study",
     study: "📗 Study",
     exercise: "🏋️ Exercise",
     sleep: "💤 Sleep",
@@ -81,7 +101,12 @@ const translations = {
     class_title: "Class",
     task_title: "Task",
 
-    schedule_class_button: "Schedule a Class",
+    schedule_class: "Schedule Class",
+    schedule_task: "Schedule Task",
+
+    // ... existing translations
+    task_goal: "Task goal",
+    track_spent_time: "Track how you spend your time",
 
     // Schedule Frequency Section
     schedule_frequency_title: "Choose Frequency",
@@ -89,9 +114,18 @@ const translations = {
     weekly: "Weekly",
     monthly: "Monthly",
 
+    add_to_planner: "Add to Planner", // Can be removed if not needed elsewhere
+
     // Note Section
     note_title: "Add Note",
     note_placeholder: "Type the note here...",
+
+    startDate: "Start Date",
+    endDate: "End Date",
+
+    am: "AM",
+    pm: "PM",
+    finish: "Finish",
 
     // Schedule Confirmation Section
     schedule_confirmation_title: "Congratulations!",
@@ -106,21 +140,23 @@ const translations = {
     // Groups Section
     groups_title: "Your Groups",
     create_group_button: "Create",
-    joined_groups_title: "Joined groups({__})",
+    joined_groups_title: "Joined groups ({__})",
     joined_groups_description: "The groups that you have joined",
     featured_groups_title: "Featured Groups",
     top_trending_study_groups_title: "Top trending Study groups",
 
+    search_group_placeholder: "Search a group by name",
+
     // Group Details Section
     group_owner_label: "Group Owner",
-    live_members_count: "{number} live Now",
-    join_live_button: "Join Live",
-    view_leaderboard_button: "View Leaderboard",
-    leave_group_button: "Leave Group",
+    live_members_count: "{__} live Now",
+    join_live: "Join Live",
+    view_leaderboard: "View Leaderboard",
+    leave_group: "Leave Group",
 
     // Focus Mode Section
     focus_mode_title: "Focus Mode",
-    study_together_button: "Study Together",
+    study_together: "Study Together",
     this_week: "This week",
     this_month: "This month",
     all_time: "All Time",
@@ -128,7 +164,7 @@ const translations = {
     // Group Information Section
     group_title_label: "Group Title",
     group_bio_label: "Group Bio",
-    add_time_button: "Add Time",
+    add_time: "Add Time",
     at_symbol: "@",
 
     // Timer Settings Section
@@ -148,7 +184,9 @@ const translations = {
   },
 
   ar: {
-    // Sign In Section
+    hi: "مرحبا",
+    good_morning: "صباح الخير!",
+
     signin: "تسجيل الدخول",
     signing_in: "يعالج طلبك",
     signin_subtitle: "أدخل بيانات   الخاصة بك للمتابعة",
@@ -166,8 +204,8 @@ const translations = {
     remember_me: "تذكرنى",
 
     // Home Page
-    current_date_label: "اليوم",
-    study_live_label: "الدراسة مباشرة مع 2,589 آخرين",
+    today: "اليوم",
+    study_live_label: "الدراسة مباشرة مع {__} آخرين",
     upcoming_due_dates: "مواعيد الاستحقاق القادمة",
 
     // Navigation Bar
@@ -177,10 +215,17 @@ const translations = {
     settings: "إعدادات",
 
     // Courses
-    psychology: "علم النفس",
-    biology: "مادة الاحياء",
-    physics: "الفيزياء",
-    mathematics: "الرياضيات",
+    biology: "علم الأحياء",
+    chemistry: "كيمياء", // Removed English explanation
+    physics: "فيزياء", // Removed English explanation
+    psychology: "علم النفس", // Removed English explanation
+    islamic: "إسلامية", // Removed English explanation
+    english: "عربي", // Replaced with Arabic translation
+    geography: "جغرافيا", // Removed English explanation
+    economy: "اقتصاد", // Removed English explanation
+    mathematics: "رياضيات", // Removed English explanation
+    history: "تاريخ",
+    arabic: "عربي",
     add_custom_course: "إضافة دورة مخصصة",
     enter_course_name: "أدخل اسم الدورة",
     add: "يضيف",
@@ -206,6 +251,16 @@ const translations = {
     plan_label: "يخطط",
     completed_label: "مكتمل",
 
+    active: "نشط",
+    paused: "متوقف مؤقتا",
+    inactive: "غير نشط",
+
+    no_end_date_available: "تاريخ الانتهاء غير متوفر",
+    due_date: "تاريخ الاستحقاق",
+    mark_as_complete: "تم العلامة على أنها مكتملة",
+
+    recent_group_sessions: "جلسات المجموعة الأخيرة",
+
     // Share Schedule Section
     share_schedule_title: "مشاركة الجدول الزمني الخاص بك",
     choose_timeline: "اختر الجدول الزمني الخاص بك الذي تريد مشاركته",
@@ -217,6 +272,7 @@ const translations = {
     share_button: "يشارك",
     copy_link_button: "نسخ الوصلة",
 
+    study_label: "يذاكر",
     study: "📗 يذاكر",
     exercise: "🏋️ يمارس",
     sleep: "💤 ينام",
@@ -227,7 +283,13 @@ const translations = {
     class_title: "فصل",
     task_title: "مهمة",
 
-    schedule_class_button: "جدولة فصل دراسي",
+    // ... existing translations
+    schedule_class: "جدولة الدرس", // Schedule the lesson
+    schedule_task: "جدولة المهمة", // Schedule the task
+
+    // ... existing translations
+    task_goal: "هدف المهمة", // Goal of the task
+    track_spent_time: "تتبع كيفية قضاء وقتك", // Track how you spend your time
 
     // Schedule Frequency Section
     schedule_frequency_title: "اختر تكرار",
@@ -235,9 +297,18 @@ const translations = {
     weekly: "أسبوعيا",
     monthly: "شهريا",
 
+    add_to_planner: "إضافة إلى المُخطط",
+
     // Note Section
     note_title: "أضف ملاحظة",
     note_placeholder: "اكتب الملاحظة هنا...",
+
+    startDate: "تاريخ البدء",
+    endDate: "تاريخ الانتهاء",
+    am: "ص",
+    pm: "م",
+
+    finish: "إنهاء",
 
     // Schedule Confirmation Section
     schedule_confirmation_title: "تهانينا",
@@ -257,16 +328,18 @@ const translations = {
     featured_groups_title: "المجموعات المميزة",
     top_trending_study_groups_title: "أعلى مجموعات الدراسة تتجه",
 
+    search_group_placeholder: "البحث عن مجموعة حسب الاسم",
+
     // Group Details Section
     group_owner_label: "مالك المجموعة",
-    live_members_count: "{number} يعيش الآن",
-    join_live_button: "انضم لايف",
-    view_leaderboard_button: "عرض المتصدرين",
-    leave_group_button: "غادر المجموعة",
+    live_members_count: "{__} يعيش الآن",
+    join_live: "انضم لايف",
+    view_leaderboard: "عرض المتصدرين",
+    leave_group: "غادر المجموعة",
 
     // Focus Mode Section
     focus_mode_title: "وضع التركيز",
-    study_together_button: "الدراسة معًا",
+    study_together: "الدراسة معًا",
     this_week: "هذا الاسبوع",
     this_month: "هذا الشهر",
     all_time: "كل الوقت",
@@ -274,7 +347,7 @@ const translations = {
     // Group Information Section
     group_title_label: "عنوان المجموعة",
     group_bio_label: "المجموعة الحيوية",
-    add_time_button: "إضافة وقت",
+    add_time: "إضافة وقت",
     at_symbol: "@",
 
     // Timer Settings Section

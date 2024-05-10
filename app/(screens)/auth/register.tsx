@@ -47,7 +47,7 @@ const Signup = () => {
         />
         <View
           style={{
-            gap: 48,
+            gap: 24,
             paddingHorizontal: 18,
           }}
         >
@@ -102,6 +102,7 @@ const Signup = () => {
               inputState={!matching ? "invalid" : "valid"}
               onChangeText={(text) => {
                 setMatching(text === data.password);
+                console.log(text,data.password,text === data.password)
               }}
             />
           </View>
@@ -110,7 +111,8 @@ const Signup = () => {
             style={{
               alignItems: "center",
               justifyContent: "flex-start",
-              gap: 24,
+              gap: 12,
+              paddingBottom:64
             }}
           >
             <Button

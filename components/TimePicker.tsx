@@ -1,3 +1,4 @@
+import { t } from '@/utils/helpers';
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
@@ -46,7 +47,7 @@ const CustomTimePicker = ({ onPick }: { onPick: (date: Date) => void }) => {
       <TextInput
         style={styles.input}
         value={hour}
-        placeholder='00'
+        placeholder={'00'}
         onChangeText={handleHourChange}
         keyboardType="number-pad"
       />
@@ -59,7 +60,7 @@ const CustomTimePicker = ({ onPick }: { onPick: (date: Date) => void }) => {
         keyboardType="number-pad"
       />
       <TouchableOpacity style={styles.button} onPress={toggleAMPM}>
-        <Text style={styles.buttonText}>{isAM ? 'AM' : 'PM'}</Text>
+        <Text style={styles.buttonText}>{isAM ? t("am") : t("pm")}</Text>
       </TouchableOpacity>
     </View>
   );

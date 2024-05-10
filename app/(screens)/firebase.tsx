@@ -59,9 +59,7 @@ const DATA = [
 const SignInScreen = () => {
   const [isVisible, setIsVisible] = useState(false);
 
-  const toggleBottomSheet = () => {
-    setIsVisible(!isVisible);
-  };
+
 
   const handleCheckboxChange = (selectedLabels: string[]) => {
     console.log("Selected label:", JSON.stringify(selectedLabels));

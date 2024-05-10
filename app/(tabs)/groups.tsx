@@ -8,15 +8,14 @@ import {
   SafeAreaView,
   ScrollView,
   TextInput,
-  Alert,
 } from "react-native";
 
 import { EvilIcons } from "@expo/vector-icons";
 import { StudyGroup } from "@/components/StudyGroup";
 import { FeaturedGroup } from "@/components/FeaturedGroup";
-import { useNavigation, useRouter } from "expo-router";
-import { controllers } from "@/utils/crud";
+import { useRouter } from "expo-router";
 import { useAppStore } from "@/store";
+import { arabic_dates, t } from "@/utils/helpers";
 const gradients = [
   ["#9AA5B5", "#9AA5B5"],
   ["#8a97dd", "#8a97dd85"],
@@ -25,7 +24,8 @@ const gradients = [
 ];
 
 const groups = () => {
-  const { group, setGroup, groups, joinedGroups, searchGroups } = useAppStore();
+  const { group, setGroup, groups, joinedGroups, searchGroups, locale } =
+    useAppStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -46,7 +46,7 @@ const groups = () => {
           source={require("../../assets/images/iconleft.png")}
         />
         <View style={styles.MainHeading}>
-          <Text style={styles.heading}>Your Groups</Text>
+          <Text style={styles.heading}>{t("groups_title")}</Text>
           <TouchableOpacity
             style={styles.plusBtn}
             onPress={() => router.push("/GroupForm")}
@@ -56,13 +56,13 @@ const groups = () => {
               source={require("../../assets/images/plus.png")}
             />
 
-            <Text style={[styles.heading, styles.btnTxt]}>Create</Text>
+            <Text style={[styles.heading, styles.btnTxt]}>{t("create_group_button")}</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.mainSearch}>
           <EvilIcons name="search" size={24} color="#9AA5B5" />
           <TextInput
-            placeholder="Search a group by name "
+            placeholder={t("search_group_placeholder")}
             style={styles.TextInput}
             placeholderTextColor={"#9AA5B5"}
             onChangeText={(text) => {
@@ -80,9 +80,16 @@ const groups = () => {
               gap: 4,
             }}
           >
-            <Text style={styles.headingGroups}>Joined groups(4)</Text>
+            <Text style={styles.headingGroups}>
+              {t("joined_groups_title").replace(
+                "{__}",
+                `${
+                  locale === "en" ? groups.length : arabic_dates[groups.length]
+                }`
+              )}
+            </Text>
             <Text style={styles.subheading}>
-              The groups that you have joined.
+              {t("joined_groups_description")}
             </Text>
           </View>
           <View
@@ -97,7 +104,6 @@ const groups = () => {
               <TouchableOpacity
                 key={index}
                 onPress={() => {
-
                   setGroup({
                     ...group,
                   });
@@ -135,8 +141,12 @@ const groups = () => {
               gap: 4,
             }}
           >
-            <Text style={styles.headingGroups}>Featured Groups</Text>
-            <Text style={styles.subheading}>Top trending Study groups.</Text>
+            <Text style={styles.headingGroups}>
+              {t("featured_groups_title")}
+            </Text>
+            <Text style={styles.subheading}>
+              {t("top_trending_study_groups_title")}
+            </Text>
           </View>
           <View
             style={{

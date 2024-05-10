@@ -3,14 +3,19 @@ import { View, Text, StyleSheet } from "react-native";
 import { Users } from "./Users";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
+import { useAppStore } from "@/store";
+import { arabic_dates } from "@/utils/helpers";
 
 export const StudyGroup = ({
-title,bio,
-time,
-memberCount,
-gradient,
-users
-}:Group &{ gradient:string[],users:any[]}) => {
+  title,
+  bio,
+  time,
+  memberCount,
+  gradient,
+  users,
+}: Group & { gradient: string[]; users: any[] }) => {
+  const { locale } = useAppStore();
+
   return (
     <LinearGradient
       colors={gradient}
@@ -33,7 +38,9 @@ users
       </View>
       <View style={styles.infoContainer}>
         <Users users={users} />
-        <Text style={styles.countText}>{memberCount}</Text>
+        <Text style={styles.countText}>
+          {locale === "en" ? memberCount : arabic_dates[`${memberCount}`]}
+        </Text>
         <Image
           source={require("@/assets/icons/next-white.png")}
           style={{ height: 12, width: 12 }}
@@ -62,7 +69,7 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     gap: 6,
-    alignSelf:"stretch"
+    alignSelf: "stretch",
   },
   titleContainer: {
     flexDirection: "row",

@@ -20,15 +20,15 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
   const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
   const [currentLabel, setCurrentLabel] = useState<string>("");
 
-  const handleCheckboxChange = (label: string, isRadio?: boolean) => {
+  const handleCheckboxChange = (value: string, isRadio?: boolean) => {
     if (isRadio) {
-      setSelectedLabels([label]);
-      onChange({ current: label, selected: [...selectedLabels, label] });
-      setCurrentLabel(label);
+      setSelectedLabels([value]);
+      onChange({ current: value, selected: [...selectedLabels, value] });
+      setCurrentLabel(value);
     } else {
-      const updatedLabels = selectedLabels.includes(label)
-        ? selectedLabels.filter((item) => item !== label)
-        : [...selectedLabels, label];
+      const updatedLabels = selectedLabels.includes(value)
+        ? selectedLabels.filter((item) => item !== value)
+        : [...selectedLabels, value];
       setSelectedLabels(updatedLabels);
       onChange({
         current: updatedLabels[updatedLabels.length - 1],
@@ -43,7 +43,7 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
         React.cloneElement(child as React.ReactElement<CheckboxProps>, {
           onPress: handleCheckboxChange,
           isChecked: selectedLabels.includes(
-            (child as React.ReactElement<CheckboxProps>).props.label
+            (child as React.ReactElement<CheckboxProps>).props.value
           ),
         })
       )}

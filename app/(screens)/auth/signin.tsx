@@ -19,12 +19,6 @@ const Signin = () => {
     email: "",
     password: "",
   });
-  // const shouldBeRTL = true;
-  // if (shouldBeRTL !== I18nManager.isRTL && Platform.OS !== 'web') {
-  //   I18nManager.allowRTL(shouldBeRTL);
-  //   I18nManager.forceRTL(shouldBeRTL);
-  //   reloadAsync();
-  // }
 
 
   return (
