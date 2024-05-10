@@ -1,4 +1,6 @@
-import { controllers } from "./crud";
+import { I18n } from "i18n-js";
+import { translations } from "./localization";
+import { I18nManager } from "react-native";
 
 export function addDays(date: Date, days: number): Date {
   const result = new Date(date);
@@ -6,6 +8,11 @@ export function addDays(date: Date, days: number): Date {
   return result;
 }
 
+export function timestampToDate({seconds,nanoseconds}:{seconds: number, nanoseconds:number}): Date {
+  const milliseconds = seconds * 1000 + nanoseconds / 1000000;
+
+  return new Date(milliseconds);
+}
 export const toSchedules = (classes: any[]): Schedule[] | [] => {
   return classes.map((classData: any) => {
     return {
@@ -92,7 +99,7 @@ export const date = {
   ) => {
     const lastItem =
       data[data.length - 1]?.items?.[data[data.length - 1]?.items.length - 1];
-    return lastItem?.endDate?.toDateString() ?? "No end date available";
+    return lastItem?.endDate?.toDateString();
   },
 };
 
@@ -114,3 +121,116 @@ export const calculateTotalTime = (ms1: number, ms2: string) => {
     Number(seconds2) * 1000;
   return totalMs;
 };
+
+let _translationHandler: I18n;
+export function setTranslationHandler(v: I18n) {
+  _translationHandler = v;
+}
+type TranslationKey = keyof typeof translations.en;
+export function t(key: TranslationKey) {
+  if (_translationHandler) {
+    return _translationHandler.t(key);
+  } else {
+    const i18n = new I18n(translations);
+    i18n.locale = "en";
+    setTranslationHandler(i18n);
+    return i18n.t(key);
+  }
+}
+
+type EmptyValue = string | number | null | undefined;
+
+export function hasEmptyValues<T>(obj: T): Array<string> {
+  const emptyValues: Array<string> = [];
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      const value = obj[key];
+      if (
+        value === null ||
+        value === undefined ||
+        (typeof value === "string" && value.trim() === "")
+      ) {
+        emptyValues.push(key);
+      }
+    }
+  }
+  return emptyValues;
+}
+interface DayTranslations {
+  [key: string]: string;
+}
+
+interface MonthTranslations {
+  [key: string]: string;
+}
+interface DateTranslations {
+  [key: string]: string;
+}
+export const arabic_days: DayTranslations = {
+  Mon: "پیر",
+  Tue: "منگل",
+  Wed: "بدھ",
+  Thu: "جمعرات",
+  Fri: "جمعه",
+  Sat: "ہفتہ",
+  Sun: "اتوار",
+};
+
+const arabic_months: MonthTranslations = {
+  Feb: "فروری",
+  Mar: "مارچ",
+  Apr: "اپریل",
+  May: "مئی",
+  Jun: "جون",
+  Jul: "جولائی",
+  Aug: "اگست",
+  Sep: "ستمبر",
+  Oct: "اکتوبر",
+  Nov: "نومبر",
+  Dec: "دسمبر",
+};
+export const arabic_dates: DateTranslations = {
+  "0": "۰",
+  "1": "۱",
+  "2": "۲",
+  "3": "۳",
+  "4": "۴",
+  "5": "۵",
+  "6": "۶",
+  "7": "۷",
+  "8": "۸",
+  "9": "۹",
+};
+
+export function translateValue(value: string) {
+  return value
+    .split("")
+    .map((part) => arabic_dates[part])
+    .join("");
+}
+export function translateDate(value: string): string {
+  const [day, month, date, year] = value.split(" ");
+  let _date = date
+    .split("")
+    .map((part) => arabic_dates[part])
+    .join("");
+  let _year = year
+    .split("")
+    .map((part) => arabic_dates[part])
+    .join("");
+  return `${arabic_days[day]} ${arabic_months[month]} ${_date} ${_year}`;
+}
+
+export function translatetime(value: string): string {
+  const [hour, minute] = value.split(":");
+  console.log("hour,minute", hour, minute);
+  let _hour = hour
+    .split("")
+    .map((part) => arabic_dates[part])
+    .join("");
+  let _minute = minute
+    .split("")
+    .map((part) => arabic_dates[part])
+    .join("");
+  return `${_hour}:${_minute}`;
+}

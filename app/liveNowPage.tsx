@@ -16,7 +16,7 @@ import { useRouter } from "expo-router";
 import { CircularImageWithOverlays } from "@/components/CircularImageWithOverlays";
 import { controllers } from "@/utils/crud";
 import { useAppStore } from "@/store";
-import { calculateTotalTime, formatMsToTimeString } from "@/utils/helpers";
+import { calculateTotalTime, formatMsToTimeString, t } from "@/utils/helpers";
 
 const liveNowPage: React.FC = () => {
   const { group } = useAppStore();
@@ -99,11 +99,11 @@ const liveNowPage: React.FC = () => {
               style={styles.LeftIcon}
               source={require("../assets/images/team.png")}
             />
-            <Text style={styles.heading}>Study Together</Text>
+            <Text style={styles.heading}>{t("study_together")}</Text>
           </View>
           <View />
         </View>
-        <Text style={styles.headingOwner}>Group Owner</Text>
+        <Text style={styles.headingOwner}>{t("group_owner_label")}</Text>
         <View style={styles.together}>
           <Text style={styles.headingCaster}>Elven Caster</Text>
           <View style={styles.boxDays}>
@@ -131,7 +131,7 @@ const liveNowPage: React.FC = () => {
             }))}
           />
         </View>
-        <Text style={styles.subheading}>Focus Mode</Text>
+        <Text style={styles.subheading}>{t("focus_mode_title")}</Text>
         <View style={styles.mainlive}>
           <TouchableOpacity
             style={styles.btnLive}
@@ -140,7 +140,7 @@ const liveNowPage: React.FC = () => {
             <View style={styles.dotlive}>
               <View style={styles.dotlivesub}></View>
             </View>
-            <Text style={styles.livestyles}>{liveSession?.count} live Now</Text>
+            <Text style={styles.livestyles}>{t("live_members_count").replace("{__}",`${liveSession?.count??0}`)}</Text>
           </TouchableOpacity>
         </View>
         <View>

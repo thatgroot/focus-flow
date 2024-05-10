@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   StyleSheet,
@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
-  TextInput,
   Alert,
+  KeyboardAvoidingView,
 } from "react-native";
 import SelectDropdown from "react-native-select-dropdown";
 
@@ -17,107 +17,113 @@ import { useAppStore } from "@/store";
 import Button from "@/elements/Button";
 import { controllers } from "@/utils/crud";
 import { auth } from "@/utils/firebase";
+import { t } from "@/utils/helpers";
+import LabeledInput from "@/components/InputField";
 
 const GroupForm: React.FC = () => {
   const { group, setGroup } = useAppStore();
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView style={styles.container}>
-        <View style={styles.mainView}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <Image
-              style={styles.LeftIcon}
-              source={require("../assets/images/iconleft.png")}
-            />
-          </TouchableOpacity>
-          <View style={styles.mainStudy}>
-            <Image
-              style={styles.LeftIcon}
-              source={require("../assets/images/team.png")}
-            />
-            <Text style={styles.heading}>Study Together</Text>
+      <KeyboardAvoidingView behavior="padding" enabled  >
+        <ScrollView style={styles.container}>
+          <View style={styles.mainView}>
+            <TouchableOpacity onPress={() => router.back()}>
+              <Image
+                style={styles.LeftIcon}
+                source={require("../assets/images/iconleft.png")}
+              />
+            </TouchableOpacity>
+            <View style={styles.mainStudy}>
+              <Image
+                style={styles.LeftIcon}
+                source={require("../assets/images/team.png")}
+              />
+              <Text style={styles.heading}>{t("study_together")}</Text>
+            </View>
+            <View />
           </View>
-          <View />
-        </View>
+          <View style={{ marginTop: 48, justifyContent: "center", alignItems: "center", gap: 24 }}>
 
-        <View style={{ marginTop: 55 }}>
-          <Text style={styles.StylesTitle}>Group Title</Text>
-          <View style={styles.mainSearch}>
-            <TextInput
-              placeholder="Group Title"
-              style={styles.TextInput}
-              placeholderTextColor={"#9AA5B5"}
-              onChangeText={(text) => {
+            <LabeledInput
+              label={t("group_title_label")}
+              placeholder={t("group_title_label")}
+              inputType="text"
+              error=""
+              inputState="inactive"
+              onChangeText={(text: string) => {
                 setGroup({
                   ...group!,
                   title: text,
                 });
               }}
             />
-          </View>
-          <Text style={styles.TimeStyles}>1/17</Text>
-          <Text style={[styles.StylesTitle, styles.BioStyles]}>Group Bio</Text>
-          <View style={styles.mainSearchBio}>
-            <TextInput
-              placeholder="Group Bio..."
-              style={styles.TextInputBio}
-              placeholderTextColor={"#9AA5B5"}
-              onChangeText={(text) => {
-                setGroup({
-                  ...group!,
-                  bio: text,
-                });
+
+            <View style={{ flex: 1, alignSelf: "stretch" }}>
+              <LabeledInput
+                label={t("group_bio_label")}
+                placeholder={t("group_bio_label")}
+                multiline={true}
+                inputType="text"
+                error="Bio is require!"
+                inputState="inactive"
+                onChangeText={(text: string) => {
+                  setGroup({
+                    ...group!,
+                    bio: text,
+                  });
+                }}
+              />
+              <Text style={styles.TimeStyles}>1/17</Text>
+            </View>
+
+            <View style={{ flex: 1, alignSelf: "stretch", gap: 6 }}>
+              <Text style={[styles.StylesTitle,]}>{t("add_time")}</Text>
+              <SelectDropdown
+                data={[10, 20, 30, 40, 50, 60].map((i) => `${i} minutes`)}
+                onSelect={(time, index) => {
+                  setGroup({
+                    ...group!,
+                    time,
+                  });
+                }}
+                defaultButtonText={group?.time ? group?.time : "10 minutes"}
+                buttonTextAfterSelection={(time, index) => {
+                  return time;
+                }}
+                rowTextForSelection={(time, index) => {
+                  return time;
+                }}
+                buttonStyle={styles.dropDownlist}
+              />
+            </View>
+
+            <Button
+              disabled={false}
+              text={t("next")}
+              onPress={() => {
+                if (group) {
+                  controllers.group.add({
+                    data: {
+                      ...group!,
+                      uid: auth.currentUser?.uid!,
+                    },
+                    onError: (error) => {
+                      Alert.alert(error);
+                    },
+                    onSuccess: (id) => {
+                      Alert.alert(id.toString())
+                      router.push("/groups");
+                    },
+                  });
+                } else {
+                  Alert.alert("group details are missing");
+                }
               }}
             />
           </View>
-          <Text style={styles.TimeStyles}>1/17</Text>
-          <View style={{ margin: 20 }} />
-          <Text style={[styles.StylesTitle, styles.BioStyles]}>Add Time</Text>
-          <View style={{ margin: 10 }} />
-
-          <SelectDropdown
-            data={[10, 20, 30, 40, 50, 60].map((i) => `${i} minutes`)}
-            onSelect={(time, index) => {
-              setGroup({
-                ...group!,
-                time,
-              });
-            }}
-            defaultButtonText={group?.time ? group?.time : "10 minutes"}
-            buttonTextAfterSelection={(time, index) => {
-              return time;
-            }}
-            rowTextForSelection={(time, index) => {
-              return time;
-            }}
-            buttonStyle={styles.dropDownlist}
-          />
-          <Button
-            disabled={false}
-            text="Next"
-            onPress={() => {
-              if (group) {
-                controllers.group.add({
-                  data: {
-                    ...group!,
-                    uid :auth.currentUser?.uid!,
-                  },
-                  onError: (error) => {
-                    Alert.alert(error);
-                  },
-                  onSuccess: (id) => {
-                    Alert.alert(id.toString())
-                    router.push("/groups");
-                  },
-                });
-              } else {
-                Alert.alert("group details are missing");
-              }
-            }}
-          />
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -161,9 +167,6 @@ const styles = StyleSheet.create({
     fontFamily: "Inter-Medium",
     letterSpacing: 1,
     marginLeft: 10,
-  },
-  BioStyles: {
-    marginTop: 30,
   },
 
   mainSearch: {

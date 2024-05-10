@@ -17,6 +17,7 @@ interface Props {
   error: string;
   onChangeText?: ((text: string) => void) | undefined;
   inputState: "active" | "invalid" | "valid" | "inactive";
+  multiline?: boolean;
 }
 
 export default function LabeledInput({
@@ -26,6 +27,7 @@ export default function LabeledInput({
   error,
   onChangeText,
   inputState,
+  multiline,
 }: Props) {
   const [text, setText] = useState("");
   const [compat, setCompat] = useState<"invalid" | "valid" | "inactive">(
@@ -49,13 +51,14 @@ export default function LabeledInput({
       <View
         style={{
           ...styles.inputContainer,
-          borderColor: stateBorderColor[compat],
+          borderColor: stateBorderColor[compat], borderRadius: multiline ? 24 : 100
         }}
       >
         <TextInput
-          style={styles.input}
+          style={[styles.input, { height: multiline ? 84 : 60,paddingTop: multiline ? 22 : 0 }]}
           onChangeText={handleChangeText}
-          placeholder={placeholder}
+          placeholder={multiline ? "" : placeholder}
+          multiline={multiline}
           keyboardType={
             inputType === "number" ? "numeric" : "default" // Set keyboardType based on inputType
           }
@@ -95,11 +98,12 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    gap: 7,
+    gap: 6,
   },
   label: {
     flex: 0,
     fontSize: 14,
+    alignSelf: "stretch",
     fontWeight: "600",
     color: "#353535",
   },
@@ -107,15 +111,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    height: 60,
-    paddingLeft: 10,
-    paddingRight: 16,
     borderRadius: 100,
     borderWidth: 2,
     position: "relative",
+    paddingRight: 18,
   },
   input: {
     flex: 1,
+    minHeight: 60,
+    paddingHorizontal: 18,
     fontSize: 14,
     color: "#353535",
   },

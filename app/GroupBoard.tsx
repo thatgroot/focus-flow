@@ -13,6 +13,7 @@ import {
 import { useNavigation, useRouter } from "expo-router";
 import { useAppStore } from "@/store";
 import { controllers } from "@/utils/crud";
+import { t } from "@/utils/helpers";
 
 const grouppage: React.FC = () => {
   const router = useRouter();
@@ -54,11 +55,11 @@ const grouppage: React.FC = () => {
               style={styles.LeftIcon}
               source={require("../assets/images/team.png")}
             />
-            <Text style={styles.heading}>Study Together</Text>
+            <Text style={styles.heading}>{t("study_together")}</Text>
           </View>
           <View />
         </View>
-        <Text style={styles.headingOwner}>Group Owner</Text>
+        <Text style={styles.headingOwner}>{t("group_owner_label")}</Text>
         <View style={styles.together}>
           <Text style={styles.headingCaster}>Elven Caster</Text>
           <View style={styles.boxDays}>
@@ -73,7 +74,7 @@ const grouppage: React.FC = () => {
             <View style={styles.dotlive}>
               <View style={styles.dotlivesub}></View>
             </View>
-            <Text style={styles.livestyles}>{liveSession?.count} live Now</Text>
+            <Text style={styles.livestyles}>{t("live_members_count").replace("{__}",`${liveSession?.count??0}`)}</Text>
           </TouchableOpacity>
         </View>
 
@@ -95,12 +96,12 @@ const grouppage: React.FC = () => {
             });
           }}
         >
-          <Text style={styles.joinStyles}>Join Live</Text>
+          <Text style={styles.joinStyles}>{t("join_live")}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.BtnLeaderboard}>
-          <Text style={styles.LeaderboardStyles}>View Leaderboard</Text>
+          <Text style={styles.LeaderboardStyles}>{t("view_leaderboard")}</Text>
         </TouchableOpacity>
-        <Text style={styles.LeaveStyles}>Leave Group</Text>
+        <Text style={styles.LeaveStyles}>{t("leave_group")}</Text>
       </ScrollView>
     </SafeAreaView>
   );

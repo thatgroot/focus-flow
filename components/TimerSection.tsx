@@ -1,3 +1,5 @@
+import { useAppStore } from "@/store";
+import { arabic_dates, t } from "@/utils/helpers";
 import { Image } from "expo-image";
 import React from "react";
 import { View, Text, StyleSheet, ImageBackground } from "react-native";
@@ -16,6 +18,7 @@ export const TimerSection: React.FC<Props> = ({
   clock,
   onPress,
 }) => {
+  const { locale } = useAppStore();
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={[styles.container]}>
@@ -41,7 +44,10 @@ export const TimerSection: React.FC<Props> = ({
 
         <View style={styles.textContainer}>
           <Text style={[styles.text]}>
-            Study live with {users.length} others
+            {t("study_live_label").replace(
+              "{__}",
+              `${locale === "en" ? users.length : arabic_dates[users.length]}`
+            )}
           </Text>
           <View style={styles.userContainer}>
             {users.map((user, index) => (
@@ -84,7 +90,7 @@ const styles = StyleSheet.create({
     width: 110,
     justifyContent: "center",
     alignItems: "center",
-    gap: 7,
+    gap: 6,
   },
   userAvatarContainer: {
     width: 24,
@@ -107,7 +113,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 9,
     borderRadius: 20,
-    gap: 7,
+    gap: 6,
   },
   text: {
     fontSize: 15,

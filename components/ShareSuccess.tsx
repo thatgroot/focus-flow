@@ -1,12 +1,6 @@
-import React from "react";
-import {
-  View,
-  StyleSheet,
-  Image,
-  Text,
-  TouchableOpacity,
-  GestureResponderEvent,
-} from "react-native";
+import React, { useEffect, useRef } from "react";
+import { View, StyleSheet, Image, Text, TouchableOpacity } from "react-native";
+import { Modalize } from "react-native-modalize";
 
 interface TextProps {
   content: string;
@@ -40,38 +34,58 @@ const ShareSuccess = ({
   onClose: () => void;
   share: () => void;
 }) => {
+  const _ref = useRef<Modalize>(null);
+
   const congratulationTexts = [
     { content: "Class Scheduled!", style: styles.headingText },
     { content: "Share your Schedule", style: styles.subHeadingText },
     { content: "You can always share your schedule!", style: styles.infoText },
   ];
 
+  useEffect(() => {
+    _ref.current?.open();
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <View style={styles.card}>
-        <Text style={styles.headingText}>Congratulations!</Text>
-        <Image
-          resizeMode="contain"
-          source={require("../assets/icons/approve.png")}
-          style={styles.mainImage}
-        />
+    <Modalize
+      modalHeight={570}
+      ref={_ref}
+      handleStyle={{
+        marginTop: 30,
+        backgroundColor: "#e9e9e9",
+        width: 80,
+        zIndex: 9999,
+        elevation: 9999,
+      }}
+    >
+      <View style={styles.container}>
+        <View style={styles.card}>
+          <Text style={styles.headingText}>Congratulations!</Text>
+          <Image
+            resizeMode="contain"
+            source={require("../assets/icons/approve.png")}
+            style={styles.mainImage}
+          />
 
-        <ScreenSection textContents={congratulationTexts} />
+          <ScreenSection textContents={congratulationTexts} />
 
-        <TouchableOpacity
-          onPress={() => {
-            onClose();
-            share();
-          }}
-          style={styles.shareButton}
-        >
-          <Text style={styles.shareButtonText}>Share</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => onClose()} style={styles.notNowButton}>
-          <Text style={styles.notNowButtonText}>Not Now</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              onClose();
+            }}
+            style={styles.shareButton}
+          >
+            <Text style={styles.shareButtonText}>Share</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => onClose()}
+            style={styles.notNowButton}
+          >
+            <Text style={styles.notNowButtonText}>Not Now</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </Modalize>
   );
 };
 

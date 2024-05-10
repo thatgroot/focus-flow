@@ -101,8 +101,9 @@ export default function AddCourse() {
   const insets = useSafeAreaInsets();
   const [modalVisible, setModalVisible] = useState(false);
 
-  const handleCheckboxChange = (selectedLabels: string[]) => {
-    console.log("Selected label:", JSON.stringify(selectedLabels));
+  const handleCheckboxChange = ({current,selected}:{ current: string;
+    selected: string[];}) => {
+    console.log("Selected label:", JSON.stringify(current));
     // Handle the selected label here (e.g., update state)
   };
   return (
@@ -145,7 +146,7 @@ export default function AddCourse() {
           )}
         </CheckboxGroup>
         <ButtonLink />
-        <Button text="Next" />
+        {/* <Button text="Next" /> */}
       </View>
 
       <AddCourseModal

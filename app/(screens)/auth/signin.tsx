@@ -2,11 +2,16 @@ import LabeledInput from "@/components/InputField";
 import Button from "@/elements/Button";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { ScrollView, View, Text, Image, StyleSheet, Alert } from "react-native";
+import { ScrollView, View, Text, Image, StyleSheet, Alert, I18nManager, KeyboardAvoidingView } from "react-native";
 import { signin } from "@/utils/auth";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "@/utils/firebase";
+import { t } from "@/utils/helpers";
 
-const Signup = () => {
+const Signin = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState<{
     email: string;
     password: string;
@@ -14,33 +19,37 @@ const Signup = () => {
     email: "",
     password: "",
   });
+
+
   return (
     <ScrollView>
-      <View style={styles.container}>
+      <KeyboardAvoidingView behavior="position" enabled style={styles.container}>
+        <Text  >{I18nManager.isRTL ? ' RTL' : ' LTR'}</Text>
+
         <Image
           style={styles.image}
           source={require("@/assets/images/register_illustration.png")}
         />
         <View style={styles.content}>
           <View style={styles.titleContainer}>
-            <Text style={styles.title}>Create an Account</Text>
+            <Text style={styles.title}>{t("signin")}</Text>
             <Text style={styles.description}>
-              Enter Your Credentials to Continue:
+              {t("signin_subtitle")}
             </Text>
           </View>
           <LabeledInput
-            label="Enter Email"
+            label={t("enter_email")}
             placeholder="teebaapp123@gmail.com"
             inputType="email"
             inputState="inactive"
-            error="Invalid Email. Try another one"
+            error={t("invalid_email")}
             onChangeText={(text: string) => {
               setData({ ...data, email: text });
             }}
           />
           <View style={styles.inputContainer}>
             <LabeledInput
-              label="Enter Password"
+              label={t("enter_password")}
               placeholder="Password"
               inputType="password"
               inputState="inactive"
@@ -49,38 +58,51 @@ const Signup = () => {
                 setData({ ...data, password: text });
               }}
             />
-            <View style={styles.checkboxContainer}>
-              <View style={styles.checkboxContent}>
-                <View style={styles.checkbox}></View>
-                <Text style={styles.checkboxText}>Remember me</Text>
-              </View>
-              <Text style={styles.forgotPassword}>Forgot Password?</Text>
-            </View>
+            <TouchableOpacity style={styles.checkboxContainer} onPress={async () => {
+              if (data.email) {
+                await sendPasswordResetEmail(auth, auth.currentUser?.email!)
+                Alert.alert(t("reset_link"))
+              } else {
+                Alert.alert(t("provide_email"))
+              }
+
+            }}>
+              <Text style={styles.forgotPassword}>{t("forgot_password")}</Text>
+            </TouchableOpacity>
           </View>
           <View style={styles.buttonContainer}>
-
             <Button
               disabled={false}
               onPress={async () => {
-                await signin({ ...data }).then(({ error, message }) => {
-                  if (error) {
-                    Alert.alert(message);
-                  } else {
-                    router.push("/home_screen");
+                setLoading(true);
+                signin({
+                  email: data.email,
+                  password: data.password,
+                  onError: (error) => {
+                    setLoading(false);
+                    Alert.alert(error)
+                  },
+                  onSuccess: () => {
+                    setLoading(false);
+                    router.push("/home_screen")
                   }
-                });
+                })
               }}
-              text="Sign In"
+              text={loading ? t("signing_in") : t("signin")}
             />
             <View style={styles.alternateAction}>
               <Text style={styles.alternateText1}>
-                Already have an Account ?
+                {t("have_an_account")}
               </Text>
-              <Text style={styles.alternateText2}>Sign In</Text>
+              <TouchableOpacity onPress={() => {
+                router.push("/auth/register");
+              }}>
+                <Text style={styles.alternateText2}>{t("register")}</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </ScrollView>
   );
 };
@@ -100,13 +122,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
   },
   titleContainer: {
-    gap: 24,
+    gap: 6,
     alignItems: "center",
   },
   title: {
     fontSize: 20,
     fontFamily: "Inter-Bold",
     textAlign: "center",
+    color: "#8c99de",
   },
   description: {
     fontSize: 16,
@@ -118,7 +141,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   checkboxContainer: {
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     alignItems: "flex-start",
     flexDirection: "row",
     alignSelf: "stretch",
@@ -150,6 +173,7 @@ const styles = StyleSheet.create({
     gap: 24,
   },
   alternateAction: {
+    flexDirection: "row",
     alignItems: "center",
     gap: 24,
   },
@@ -166,4 +190,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Signup;
+export default Signin;

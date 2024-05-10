@@ -6,35 +6,28 @@ import {
   Text,
   TouchableOpacity,
   SafeAreaView,
-  FlatList,
   Modal,
   ScrollView,
 } from "react-native";
 
 import { Calendar } from "react-native-calendars";
 import moment from "moment";
-import DayCard from "@/components/DayCard";
 import { TimerSection } from "@/components/TimerSection";
 import TimeEntry from "@/components/TimeEntry";
 import ScheduleReminder from "@/components/ScheduleReminder";
-import { controllers, getDueDates } from "@/utils/crud";
-import { date, dateToTimeFormat } from "@/utils/helpers";
+import { getDueDates } from "@/utils/crud";
+import { date, dateToTimeFormat, t, translateDate } from "@/utils/helpers";
 import { useAppStore } from "@/store";
 import { router } from "expo-router";
 import DaysOfWeek from "@/components/DaysOfWeek";
 import { auth } from "@/utils/firebase";
 import { Avatar } from "@/components/Avatar";
-
 const HomeScreen: React.FC = () => {
-  const { groups, setGroup, joinedGroups } = useAppStore();
-
+  const { groups, setGroup, joinedGroups, locale } = useAppStore();
   const days = date.daysOfTheWeek();
-
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(0);
-
-  const [activeDay, setActiveDay] = useState<number | null>(null);
 
   const [markedDates, setMarkedDates] = useState<Date[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -81,7 +74,7 @@ const HomeScreen: React.FC = () => {
       .finally(() => {
         joinedGroups();
       });
-    return () => { };
+    return () => {};
   }, []);
 
   return (
@@ -90,17 +83,25 @@ const HomeScreen: React.FC = () => {
         <View style={styles.mainProfile}>
           <Avatar />
           <View>
-            <Text style={styles.heading}>Hi, {auth.currentUser?.displayName}</Text>
+            <Text style={styles.heading}>
+              {t("hi")}, {auth.currentUser?.displayName}
+            </Text>
             <Text style={[styles.heading, styles.headingSub]}>
-              Good Morning!
+              {t("good_morning")}
             </Text>
           </View>
         </View>
 
         <View style={styles.mainCalendar}>
           <View>
-            <Text style={[styles.heading, styles.headingSub]}>Today</Text>
-            <Text style={styles.heading}>16 March 2024</Text>
+            <Text style={[styles.heading, styles.headingSub]}>
+              {t("today")}
+            </Text>
+            <Text style={styles.heading}>
+              {locale === "en"
+                ? new Date().toDateString()
+                : translateDate(new Date().toDateString())}
+            </Text>
           </View>
           <View>
             <TouchableOpacity onPress={() => setShowCalendar(true)}>
@@ -163,7 +164,7 @@ const HomeScreen: React.FC = () => {
           </Modal>
           <DaysOfWeek
             days={days}
-            onSelect={(day: DayType) => {
+            onSelect={() => {
               // todo
             }}
           />
@@ -202,7 +203,7 @@ const HomeScreen: React.FC = () => {
               gap: 18,
             }}
           >
-            <Text style={styles.upcomingText}>Upcoming due dates</Text>
+            <Text style={styles.upcomingText}>{t("upcoming_due_dates")}</Text>
             <View
               style={{
                 gap: 8,
@@ -211,8 +212,16 @@ const HomeScreen: React.FC = () => {
               {dueDates.tasks.map((task, index) => (
                 <TimeEntry
                   key={`${task.subject}_${index}`}
-                  label={task.endDate.toDateString()}
-                  title="Study 24m 39s"
+                  label={
+                    locale === "en"
+                      ? task.endDate.toDateString()
+                      : translateDate(task.endDate.toDateString())
+                  }
+                  title={
+                    t("study_label") +
+                      " " +
+                      dateToTimeFormat(task?.startTime!) ?? ""
+                  }
                   type="upcomming"
                   onPress={() => {
                     setSelectedDueDate(task);
@@ -245,7 +254,9 @@ const HomeScreen: React.FC = () => {
               gap: 12,
             }}
           >
-            <Text style={styles.upcomingText}>Recent Group Sessions</Text>
+            <Text style={styles.upcomingText}>
+              {t("recent_group_sessions")}
+            </Text>
             <View
               style={{
                 gap: 8,
@@ -254,7 +265,7 @@ const HomeScreen: React.FC = () => {
               {sessions.map(({ status, timeSpent }, index) => (
                 <TimeEntry
                   key={`${timeSpent}_${index}`}
-                  label={status}
+                  label={t(status)}
                   title={timeSpent ?? ""}
                   type="recent"
                   onPress={() => {

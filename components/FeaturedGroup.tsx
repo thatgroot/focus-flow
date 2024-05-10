@@ -2,42 +2,43 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Users } from "./Users";
 import { Image } from "expo-image";
+import { arabic_dates } from "@/utils/helpers";
+import { useAppStore } from "@/store";
 // import { LinearGradient } from "expo-linear-gradient";
 
-
-export const FeaturedGroup  = ({
+export const FeaturedGroup = ({
   title,
   memberCount,
-  users
-  }:Group &{ users:any[]}) => {
+  users,
+}: Group & { users: any[] }) => {
+  const { locale } = useAppStore();
   return (
-    <View
-
-      style={styles.container}
-    >
-        <View style={styles.innerContainer}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.titleText}>{"Study Group"}</Text>
-            <Image
-            tintColor={"#9AA5B5"}
-              source={require("@/assets/icons/group.png")}
-              style={{
-                width: 22,
-                height: 22,
-              }}
-            />
-          </View>
-          <Text style={styles.subtitleText}>{title}</Text>
-        </View>
-        <View style={styles.infoContainer}>
-          <Users users={users} />
-          <Text style={styles.countText}>{memberCount}</Text>
+    <View style={styles.container}>
+      <View style={styles.innerContainer}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.titleText}>{"Study Group"}</Text>
           <Image
-          tintColor={"rgba(154, 165, 181, 1)"}
-            source={require("@/assets/icons/next-white.png")}
-            style={{ height: 12, width: 12 }}
+            tintColor={"#9AA5B5"}
+            source={require("@/assets/icons/group.png")}
+            style={{
+              width: 22,
+              height: 22,
+            }}
           />
         </View>
+        <Text style={styles.subtitleText}>{title}</Text>
+      </View>
+      <View style={styles.infoContainer}>
+        <Users users={users} />
+        <Text style={styles.countText}>
+          {locale === "en" ? memberCount : arabic_dates[`${memberCount}`]}
+        </Text>
+        <Image
+          tintColor={"rgba(154, 165, 181, 1)"}
+          source={require("@/assets/icons/next-white.png")}
+          style={{ height: 12, width: 12 }}
+        />
+      </View>
     </View>
   );
 };
@@ -45,12 +46,12 @@ export const FeaturedGroup  = ({
 const styles = StyleSheet.create({
   container: {
     justifyContent: "space-between",
-    backgroundColor:'white',
+    backgroundColor: "white",
 
     alignItems: "center",
     height: 148,
     maxWidth: 185,
-    width:"100%",
+    width: "100%",
     padding: 8,
     borderRadius: 10,
     shadowColor: "#000",
@@ -63,8 +64,8 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   innerContainer: {
-      gap: 6,
-      alignSelf:"stretch"
+    gap: 6,
+    alignSelf: "stretch",
   },
   titleContainer: {
     flexDirection: "row",
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
   },
   countText: {
     fontSize: 16,
-    fontFamily: 'Inter-Bold',
+    fontFamily: "Inter-Bold",
     color: "rgba(154, 165, 181, 1)",
   },
 });

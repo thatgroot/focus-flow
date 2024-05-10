@@ -14,6 +14,7 @@ import {
   updatePassword,
   verifyBeforeUpdateEmail,
 } from "firebase/auth";
+import { t } from "./helpers";
 
 export const register = async ({
   name,
@@ -61,22 +62,38 @@ export const register = async ({
 export const signin = async ({
   email,
   password,
+  onError,
+  onSuccess,
 }: {
   email: string;
   password: string;
+  onError: (error: any) => void;
+  onSuccess: () => void;
 }) => {
-  const data = await signInWithEmailAndPassword(auth, email, password);
-  if (data.user) {
-    return {
-      error: false,
-      message: "",
-    };
-  } else {
-    return {
-      error: true,
-      message: "account doesn't exists",
-    };
-  }
+  await signInWithEmailAndPassword(auth, email, password)
+    .then((data) => {
+      if (data.user) {
+        onSuccess();
+      } else {
+        onError("account doesn't exists");
+      }
+    })
+    .catch((error: any) => {
+      console.log("error", error.code);
+      let message = "";
+      if (error.code === "auth/too-many-requests") {
+        message = t("too_many_requests");
+      } else if (error.code === "auth/invalid-credential") {
+        message = t("invalid_credentials");
+      } else if (error.code === "auth/invalid-email") {
+        message = t("invalid_mail_address");
+      } else {
+        // message = t("failed_login");
+        message = error.code;
+      }
+      //
+      onError(message);
+    });
 };
 export const inputRegex = {
   email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
@@ -115,13 +132,15 @@ export const updateUser = {
     onSuccess,
     onError,
   }: CreateDocumentTypScaffold & { value: string }) => {
-    reauthenticateWithCredential(auth.currentUser!,EmailAuthProvider.credential(auth.currentUser?.email!,"bdz035Iq")).then((creds)=>{
+    reauthenticateWithCredential(
+      auth.currentUser!,
+      EmailAuthProvider.credential(auth.currentUser?.email!, "bdz035Iq")
+    ).then((creds) => {
       updatePassword(auth.currentUser!, value)
-      .then(() => {
-        onSuccess("password udated successfully");
-      })
-      .catch(onError);
-    })
-
+        .then(() => {
+          onSuccess("password udated successfully");
+        })
+        .catch(onError);
+    });
   },
 };

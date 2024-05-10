@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 40,
     backgroundColor: "#8a97dd",
     shadowColor: "#000",
     shadowOffset: {
@@ -42,6 +41,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.27,
     shadowRadius: 4.65,
     elevation: 1,
+    marginTop:24,
   },
   text: {
     fontSize: 16,

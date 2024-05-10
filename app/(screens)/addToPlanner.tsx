@@ -4,34 +4,24 @@ import {
   Text,
   View,
   Image,
-  ScrollView,
   TouchableOpacity,
-  TextInput,
   Alert,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
-import CheckboxGroup from "@/components/CheckBoxGroup";
-import Checkbox from "@/components/CheckBox";
-import Button from "../../elements/Button";
+import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 import { Modalize } from "react-native-modalize";
 import { router } from "expo-router";
-import SelectDropdown from "react-native-select-dropdown";
-import Inputs from "@/components/Inputs";
 import ShareSuccess from "@/components/ShareSuccess";
-import BottomSheet from "@/components/BottomSheet";
-import { Calendar } from "react-native-calendars";
 import { useAppStore } from "@/store";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { dateToTimeFormat } from "@/utils/helpers";
-import { controllers } from "@/utils/crud";
-
-const recurrences: Recurrence[] = ["daily", "weekly", "monthly"];
+import { SubjectPicker } from "@/components/schedules/SubjectPicker";
+import { ScheduleModal } from "@/components/schedules/ScheduleModal";
+import ShareModal from "@/components/ShareModal";
+import { IHandles } from "react-native-modalize/lib/options";
+import { t } from "@/utils/helpers";
 
 const addToPlanner = () => {
-  const { type,tags, scheduleItem, setScheduleItem } = useAppStore();
+  const _innerRef = useRef<Modalize>(null);
 
-  const [selectedRecurrence, setSelectedRecurrence] =
-    useState<Recurrence>("daily");
+  const { type, tags, setScheduleItem, scheduleItem } = useAppStore();
   const [data, setData] = useState<Schedule>({
     startDate: new Date(),
     endDate: new Date(),
@@ -39,25 +29,15 @@ const addToPlanner = () => {
     endTime: new Date(),
     note: "",
     schedule: "daily",
-    subject: "",
     completionStatus: false,
     tags,
   });
 
-  const [selectedKey, setSelectedKey] =
-    useState<
-      keyof Pick<Schedule, "startDate" | "endDate" | "startTime" | "endTime">
-    >("startDate");
-
-  const [showTimePicker, setShowTimePicker] = useState(false);
-  const scheduleFormRef = useRef<Modalize>(null);
-  const modalizeRefSuccess = useRef<Modalize>(null);
-  const calendarModelRef = useRef<Modalize>(null);
-  const modalizeRefShare = useRef<Modalize>(null);
-
+  const [openModal, setOpenModal] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showShare, setShowShare] = useState(false);
   const handleCheckboxChange = ({
     current,
-    selected,
   }: {
     current: string;
     selected: string[];
@@ -66,48 +46,17 @@ const addToPlanner = () => {
       ...data,
       subject: current,
     });
-  };
-
-  function handleChange<K extends keyof Schedule>({
-    name,
-    value,
-  }: {
-    name: K;
-    value: Schedule[K];
-  }) {
-    setData({
+    setScheduleItem({
       ...data,
-      [name]: value,
+      subject: current,
     });
-  }
-
-  const onOpenShare = () => {
-    modalizeRefShare.current?.open();
   };
 
-  const closeShare = () => {
-    modalizeRefShare.current?.close();
-  };
-
-  const onOpenSuccess = () => {
-    modalizeRefSuccess.current?.open();
-  };
-  const closeSuccess = () => {
-    modalizeRefSuccess.current?.close();
-  };
-  const close = () => {
-    onOpenSuccess();
-    scheduleFormRef.current?.close();
-  };
-  const onOpen = () => {
-    scheduleFormRef.current?.open();
-  };
+  const [modelRef, setModalRef] =
+    useState<MutableRefObject<IHandles | undefined>>();
 
   useEffect(() => {
-    if (type === "task") {
-      scheduleFormRef.current?.open();
-    }
-    return () => {};
+    setOpenModal(type === "task");
   }, []);
 
   return (
@@ -120,265 +69,52 @@ const addToPlanner = () => {
               style={styles.backBtn}
             />
           </TouchableOpacity>
-          <Text style={styles.headerTxt}>Add to Planner</Text>
+          <Text style={styles.headerTxt}>{t("add_to_planner")}</Text>
         </View>
       )}
       {type === "class" && (
-        <ScrollView>
-          <View style={styles.mainContainer}>
-            <CheckboxGroup onChange={handleCheckboxChange}>
-              {[
-                "Chemistry",
-                "English",
-                "Arabic",
-                "Biology",
-                "Physics",
-                "Mathematics",
-              ].map((label, index) => (
-                <Checkbox
-                  isRadio={true}
-                  isChecked={false}
-                  onPress={() => {}}
-                  key={index}
-                  label={label}
-                />
-              ))}
-            </CheckboxGroup>
-          </View>
-          <View style={styles.btn}>
-            <Button disabled={false} text="Schedule" onPress={onOpen} />
-          </View>
-        </ScrollView>
+        <SubjectPicker
+          onChange={handleCheckboxChange}
+          onAction={() => {
+            setOpenModal(true);
+            modelRef?.current?.open();
+            setScheduleItem(data);
+          }}
+        />
       )}
-      <Modalize
-        modalHeight={570}
-        ref={scheduleFormRef}
-        handleStyle={{
-          marginTop: 30,
-          backgroundColor: "#e9e9e9",
-          width: 80,
-          zIndex: 9999,
-          elevation: 9999,
-        }}
-      >
-        <View style={styles.modalView}>
-          <View style={[styles.header2, { marginTop: 20, marginLeft: 0 }]}>
-            <TouchableOpacity
-              onPress={() => {
-                if (type === "task") {
-                  router.push("/schedule");
-                } else {
-                  close();
-                }
-              }}
-            >
-              <Image
-                source={require("../../assets/icons/back.png")}
-                style={styles.backBtn}
-              />
-            </TouchableOpacity>
-            <Text style={styles.headerTxt}>Schedule a Class</Text>
-          </View>
-          <View style={styles.dropDownlistContainer}>
-            <SelectDropdown
-              data={recurrences}
-              onSelect={(recurrence: Recurrence) => {
-                setSelectedRecurrence(recurrence);
-                handleChange({
-                  name: "schedule",
-                  value: recurrence,
-                });
-              }}
-              renderDropdownIcon={() => (
-                <Image
-                  source={require("../../assets/icons/drop.png")}
-                  resizeMode="contain"
-                  style={{ width: 9, height: 14 }}
-                />
-              )}
-              defaultButtonText={selectedRecurrence || "daily"}
-              buttonTextAfterSelection={() => selectedRecurrence}
-              rowTextForSelection={(item) => {
-                return item;
-              }}
-              buttonStyle={styles.dropDownlist}
-            />
 
-            <TextInput
-              placeholder="Type the note here..."
-              style={styles.textArea}
-              onChangeText={(text) => {
-                handleChange({
-                  name: "note",
-                  value: text,
-                });
-              }}
-            />
+      {openModal && !showSuccess && (
+        <ScheduleModal
+          open={openModal}
+          onBack={(_ref) => {
+            setModalRef(_ref);
+            _ref.current?.close();
+          }}
+          onAction={(_ref) => {
+            setModalRef(_ref);
+            setShowSuccess(true);
+            _ref.current?.close();
+          }}
+        />
+      )}
+      {showSuccess && (
+        <ShareSuccess
+          onClose={() => {
+            setShowSuccess(false);
+            setShowShare(true);
+          }}
+          share={() => {}}
+        />
+      )}
 
-            <View style={styles.containerDate}>
-              <TouchableOpacity
-                onPress={() => {
-                  setSelectedKey("startDate");
-                  calendarModelRef.current?.open();
-                }}
-              >
-                <Inputs
-                  placeholder={data.startDate.toDateString() ?? "Start Date"}
-                  icon={require("../../assets/icons/calenderIcon.png")}
-                  isTime={false}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  setSelectedKey("endDate");
-                  calendarModelRef.current?.open();
-                }}
-              >
-                <Inputs
-                  onChangeText={(text) => {}}
-                  placeholder={data.endDate.toDateString() ?? "End Date"}
-                  icon={require("../../assets/icons/calenderIcon.png")}
-                  isTime={false}
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.containerDate}>
-              <TouchableOpacity
-                onPress={() => {
-                  setSelectedKey("startTime");
-                  setShowTimePicker(true);
-                }}
-              >
-                <Inputs
-                  placeholder={dateToTimeFormat(data.startTime) ?? "Start Time"}
-                  icon={require("../../assets/icons/IconTime.png")}
-                  isTime={true}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  setSelectedKey("endTime");
-                  setShowTimePicker(true);
-                }}
-              >
-                <Inputs
-                  placeholder={dateToTimeFormat(data.endTime) ?? "End Time"}
-                  icon={require("../../assets/icons/IconTime.png")}
-                  isTime={true}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <View style={styles.modalBtn}>
-            <Button
-              disabled={false}
-              text="Finish"
-              onPress={() => {
-                setScheduleItem({
-                  ...data,
-                });
-
-                if (type === "class") {
-                  controllers.class.add({
-                    data,
-                    onError: (error) => {
-                      Alert.alert(error);
-                    },
-                    onSuccess: (id) => {
-                      router.push("/schedule");
-                    },
-                  });
-                }else if(type === "task") {
-                  controllers.task.add({
-                    data,
-                    onError: (error) => {
-                      Alert.alert(error);
-                    },
-                    onSuccess: (id) => {
-                      router.push("/schedule");
-                    },
-                  });
-                }
-              }}
-            />
-          </View>
-        </View>
-      </Modalize>
-      <DateTimePickerModal
-        isVisible={showTimePicker}
-        mode="time"
-        onConfirm={(date) => {
-          handleChange({
-            name: selectedKey,
-            value: date,
-          });
-          setShowTimePicker(false);
-        }}
-        onCancel={() => {
-          setShowTimePicker(false);
-        }}
-      />
-      <Modalize
-        modalHeight={450}
-        ref={calendarModelRef}
-        handleStyle={{
-          marginTop: 30,
-          backgroundColor: "#e9e9e9",
-          width: 80,
-          zIndex: 9999,
-          elevation: 9999,
-        }}
-      >
-        <View style={styles.modalView}>
-          <Calendar
-            onDayPress={(day) => {
-              handleChange({
-                name: selectedKey,
-                value: new Date(day.dateString),
-              });
-              calendarModelRef.current?.close();
-            }}
-            theme={{
-              backgroundColor: "#ffffff",
-              calendarBackground: "#ffffff",
-              arrowColor: "#8D99DE",
-              todayTextColor: "#8D99DE",
-            }}
-          />
-        </View>
-      </Modalize>
-
-      <Modalize
-        modalHeight={570}
-        ref={modalizeRefSuccess}
-        handleStyle={{
-          marginTop: 30,
-          backgroundColor: "#e9e9e9",
-          width: 80,
-          zIndex: 9999,
-          elevation: 9999,
-        }}
-      >
-        <View style={styles.modalView}>
-          <ShareSuccess onClose={closeSuccess} share={onOpenShare} />
-        </View>
-      </Modalize>
-      <Modalize
-        modalHeight={570}
-        ref={modalizeRefShare}
-        handleStyle={{
-          marginTop: 30,
-          backgroundColor: "#e9e9e9",
-          width: 80,
-          zIndex: 9999,
-          elevation: 9999,
-        }}
-      >
-        <View style={[styles.modalView]}>
-          <BottomSheet onBack={closeShare} />
-        </View>
-      </Modalize>
+      {!showSuccess && showShare && (
+        <ShareModal
+          onBack={() => {
+            setShowShare(false);
+            router.push("/schedule");
+          }}
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -405,16 +141,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
-  mainContainer: {
-    flex: 1,
-    // justifyContent:'center',
-    alignItems: "center",
-    marginTop: 30,
-  },
-  btn: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
+
   modalView: {
     paddingHorizontal: 34,
     paddingVertical: 34,

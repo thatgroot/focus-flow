@@ -4,6 +4,7 @@ import { Image } from 'expo-image'; // Make sure this import is correct
 
 export interface CheckboxProps {
   label: string;
+  value: string;
   isRadio?: boolean; // New prop to specify if it's a radio button
   isChecked: boolean;
   onPress: (label: string, isRadio?: boolean) => void;
@@ -11,6 +12,7 @@ export interface CheckboxProps {
 
 const Checkbox: React.FC<CheckboxProps> = ({
   label,
+  value,
   isRadio = false,
   isChecked,
   onPress,
@@ -19,7 +21,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
     <TouchableOpacity
       style={styles.container}
       onPress={() => {
-        onPress(label, isRadio);
+        onPress(value, isRadio);
       }}
     >
       {isChecked ? (

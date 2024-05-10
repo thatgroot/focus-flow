@@ -1,32 +1,34 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
   Text,
   TouchableOpacity,
   SafeAreaView,
-  FlatList,
   Modal,
   Image,
   Pressable,
   ScrollView,
-  Alert,
 } from "react-native";
 
 import { Calendar } from "react-native-calendars";
 import moment from "moment";
 
 import { Schedules } from "@/components/Schedules";
-import { useNavigation, useRouter } from "expo-router";
-import TaskCategoriesModal from "@/components/TaskCategoriesModal";
+import { useRouter } from "expo-router";
 import ModalWrapper from "@/components/ModalWrapper";
 import { arrangeByStartTime, getDueDates } from "@/utils/crud";
 import { useAppStore } from "../../store";
-import { Modalize } from "react-native-modalize";
 import { Chip } from "@/components/TaskCategories";
 import Button from "@/elements/Button";
 import DaysOfWeek from "@/components/DaysOfWeek";
-import { date } from "@/utils/helpers";
+import {
+  date,
+  t,
+  translateDate,
+  translatetime,
+  ucFirst,
+} from "@/utils/helpers";
 
 const tasks = [
   {
@@ -51,27 +53,6 @@ const tasks = [
     backgroundColor: "rgba(254, 181, 166, 0.34)",
   },
   {
-    title: "Study",
-    icon: "📗",
-    backgroundColor: "rgba(141, 153, 222, 1)",
-  },
-  {
-    title: "Gym",
-    icon: "🏋️",
-    backgroundColor: "rgba(19, 206, 102, 0.29)",
-  },
-  {
-    title: "Exercise",
-    icon: "🏋️",
-    backgroundColor: "rgba(227, 72, 80, 0.21)",
-  },
-  // Duplicate categories as requested
-  {
-    title: "Sleep",
-    icon: "💤",
-    backgroundColor: "rgba(255, 202, 101, 0.47)",
-  },
-  {
     title: "Exercise",
     icon: "🏋️",
     backgroundColor: "rgba(227, 72, 80, 0.21)",
@@ -81,13 +62,14 @@ const tasks = [
 const schedule: React.FC = () => {
   const days = date.daysOfTheWeek();
 
+  const { locale, i18n, type } = useAppStore();
+
   const { setType, tags, setTags } = useAppStore();
 
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(0);
 
-  const [pressedIndex, setPressedIndex] = useState<number | null>(null);
   const [Isvisible, setVisible] = useState(false);
   const [showBadges, setShowBadges] = useState(false);
   const [markedDates, setMarkedDates] = useState<Date[]>([]);
@@ -110,63 +92,6 @@ const schedule: React.FC = () => {
     } else {
       setMarkedDates([...markedDates, date]);
     }
-  };
-
-  const renderMonthDays = (index: number) => {
-    const today = new Date();
-    const selectedDay = new Date(
-      today.getFullYear(),
-      today.getMonth() + index,
-      1
-    ); // Update selectedDay based on the index
-    const year = selectedDay.getFullYear();
-    const month = selectedDay.getMonth();
-
-    // Get the last day of the current month
-    const endOfMonth = new Date(year, month + 3, 0).getDate();
-
-    // Get the last day of the next two months
-
-    const days = [];
-
-    // Calculate the end day of rendering
-
-    for (let i = 1; i <= endOfMonth; i++) {
-      const date = new Date(year, month + 2, i);
-      const dayOfWeek = moment(date).format("ddd");
-
-      days.push(
-        <View style={styles.maindayWeeks} key={i}>
-          <TouchableOpacity
-            onPress={() => setPressedIndex(i)}
-            style={[
-              styles.BtnDayWeeks,
-              { backgroundColor: pressedIndex === i ? "#8D99DE" : "white" },
-              { borderColor: pressedIndex === i ? "white" : "white" },
-            ]}
-          >
-            <Text
-              style={[
-                styles.dayOfWeek,
-                { color: pressedIndex === i ? "white" : "#9AA5B5" },
-              ]}
-            >
-              {dayOfWeek}
-            </Text>
-            <Text
-              style={[
-                styles.day,
-                { color: pressedIndex === i ? "white" : "black" },
-              ]}
-            >
-              {i}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      );
-    }
-
-    return days;
   };
 
   useEffect(() => {
@@ -203,7 +128,7 @@ const schedule: React.FC = () => {
               router.push("/(screens)/addToPlanner");
             }}
           >
-            <Text style={styles.text}>Class</Text>
+            <Text style={styles.text}>{t("class_title")}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
@@ -212,7 +137,7 @@ const schedule: React.FC = () => {
             }}
             style={[styles.button, { backgroundColor: "#FEB5A6" }]}
           >
-            <Text style={[styles.text]}>Task</Text>
+            <Text style={styles.text}>{t("task_title")}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -230,13 +155,20 @@ const schedule: React.FC = () => {
             alignItems: "center",
           }}
         >
-          <Image
-            source={require("../../assets/icons/back.png")}
-            style={{
-              width: 18,
-              height: 18,
+          <TouchableOpacity
+            onPress={() => {
+              setVisible(false)
+              router.push("/schedule");
             }}
-          />
+          >
+            <Image
+              source={require("../../assets/icons/back.png")}
+              style={{
+                width: 18,
+                height: 18,
+              }}
+            />
+          </TouchableOpacity>
           <View
             style={{
               flex: 1,
@@ -253,17 +185,16 @@ const schedule: React.FC = () => {
                 fontFamily: "Inter-Bold",
               }}
             >
-              Schedule a Task
+              {/* @ts-ignore */}
+              {ucFirst(t(`schedule_${type}`))}
             </Text>
           </View>
         </View>
 
         <View style={styles.taskContent}>
           <View style={styles.goalSection}>
-            <Text style={styles.goalTitle}>Task goal</Text>
-            <Text style={styles.goalDescription}>
-              Track how you spend your time
-            </Text>
+            <Text style={styles.goalTitle}>{t("task_goal")}</Text>
+            <Text style={styles.goalDescription}>{t("track_spent_time")}</Text>
           </View>
           <View style={styles.tasks}>
             {tasks.map(({ title, icon, backgroundColor }, index) => (
@@ -288,10 +219,11 @@ const schedule: React.FC = () => {
 
         <Button
           disabled={false}
-          text="Schedule"
+          text={t("schedule")}
           onPress={() => {
             setVisible(false);
-            router.push("/addToPlanner");
+            setType("task");
+            router.push("/(screens)/addToPlanner");
           }}
         />
       </View>
@@ -303,7 +235,7 @@ const schedule: React.FC = () => {
       <ScrollView style={styles.container}>
         <View style={styles.mainProfile}>
           <View>
-            <Text style={[styles.headingSub]}>Schedule</Text>
+            <Text style={[styles.headingSub]}>{t("schedule")}</Text>
           </View>
           <Pressable>
             <Image
@@ -315,8 +247,14 @@ const schedule: React.FC = () => {
 
         <View style={styles.mainCalendar}>
           <View>
-            <Text style={[styles.heading, styles.headingSub]}>Today</Text>
-            <Text style={styles.heading}>16 March 2024</Text>
+            <Text style={[styles.heading, styles.headingSub]}>
+              {t("today")}
+            </Text>
+            <Text style={styles.heading}>
+              {locale === "en"
+                ? new Date().toDateString()
+                : translateDate(new Date().toDateString())}
+            </Text>
           </View>
           <View>
             <TouchableOpacity onPress={() => setShowCalendar(true)}>
@@ -414,7 +352,7 @@ const schedule: React.FC = () => {
           >
             <DaysOfWeek
               days={days}
-              onSelect={(day: DayType) => {
+              onSelect={() => {
                 // todo
               }}
             />
@@ -426,9 +364,13 @@ const schedule: React.FC = () => {
           }}
         >
           <View style={styles.DueDate}>
-            <Text style={styles.due}>Due:</Text>
-            <Text style={styles.yearDay}>
-              {date.scheduleExpire(data)}
+            <Text style={styles.due}>
+              {t("due_date")} {" : "}
+              {locale === "en"
+                ? date.scheduleExpire(data)
+                : translateDate(
+                    date.scheduleExpire(data) ?? new Date().toDateString()
+                  )}
             </Text>
           </View>
           <View
@@ -437,7 +379,7 @@ const schedule: React.FC = () => {
               paddingBottom: 200,
             }}
           >
-            {data.map((item, index) => (
+            {data.map(({ time, items }, index) => (
               <View
                 key={index} // Adding a unique key to each rendered item
                 style={{
@@ -453,7 +395,7 @@ const schedule: React.FC = () => {
                     fontFamily: "Inter-Bold",
                   }}
                 >
-                  {item.time}
+                  {locale === "en" ? time : translatetime(time)}
                 </Text>
                 <View
                   style={{
@@ -489,20 +431,20 @@ const schedule: React.FC = () => {
                     paddingBottom: 18,
                   }}
                 >
-                  {item.items.map((item, index) => (
-                    <Schedules
-                      item={{
-                        title: item.subject,
-                        due: item.endDate.toDateString(),
-                        bgColor: "rgba(254, 181, 166, 1)",
-                        icon: require("../../assets/icons/share.png"),
-                        time: item.endTime.toDateString(),
-                      }}
-                      key={`${
-                        item.subject
-                      }_${item.endDate.toDateString()}_${index}`}
-                    />
-                  ))}
+                  {items.map((item, index) => {
+                    // const itemStartTime = getStartTimeInMinutes(item.startTime);
+                    // const itemEndTime = getStartTimeInMinutes(item.endTime);
+                    // const startTime = formatTime(itemStartTime);
+                    // const endTime = formatTime(itemEndTime);
+                    return (
+                      <Schedules
+                        key={`${item.endDate.getMilliseconds()}_${index}`}
+                        data={item}
+                        bgColor="rgba(254, 181, 166, 1)"
+                        icon={require("../../assets/icons/share.png")}
+                      />
+                    );
+                  })}
                 </View>
               </View>
             ))}
@@ -523,14 +465,14 @@ const schedule: React.FC = () => {
           style={styles.planBtn}
           onPress={() => setVisible(!Isvisible)}
         >
-          <Text style={styles.planTxt}>Plan</Text>
+          <Text style={styles.planTxt}>{t("plan_label")}</Text>
         </Pressable>
 
         <TouchableOpacity
           style={styles.completedBtn}
           onPress={() => router.push("/CompletedTaskScreen")}
         >
-          <Text style={styles.compeleteTxt}>Completed</Text>
+          <Text style={styles.compeleteTxt}>{t("completed_label")}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

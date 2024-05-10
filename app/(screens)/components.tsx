@@ -1,30 +1,21 @@
-import { Image } from "expo-image";
 import React, { useState } from "react";
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  FlatList,
-  LayoutAnimation,
 } from "react-native";
 import LabeledInput from "@/components/InputField";
-import Checkbox from "@/components/CheckBox";
-import CheckboxGroup from "@/components/CheckBoxGroup";
-import BottomSheet from "@/components/BottomSheet";
+import ShareModal from "@/components/ShareModal";
 import Button from "@/elements/Button";
 import Link from "@/elements/Link";
 import TimeEntry from "@/components/TimeEntry";
 import DayCard from "@/components/DayCard";
 import { TimerSection } from "@/components/TimerSection";
-import { BottomNav } from "@/components/BottomNav";
-import { Schedules } from "@/components/Schedules";
 import { SubjectCard } from "@/components/SubjectCard";
 import { CompletedTask } from "@/components/CompletedTask";
 import { Users } from "@/components/Users";
-import { StudyGroup } from "@/components/StudyGroup";
 import { CircularImageWithOverlays } from "@/components/CircularImageWithOverlays";
 import { calculateAngle, calculatePosition } from "@/utils";
 import { theme } from "@/styles/theme";
@@ -34,7 +25,6 @@ import ModalWrapper from "@/components/ModalWrapper";
 import AddCourseModal from "@/components/AddCourseModal";
 import ReminderNotification from "@/components/ReminderNotification";
 import ShareSuccess from "@/components/ShareSuccess";
-import TaskCategories from "@/components/TaskCategories";
 import ShareSchedule from "@/components/ShareSchedule";
 
 const DATA = [
@@ -110,7 +100,7 @@ const Components = () => {
         >
           <Text style={styles.buttonText}>Bottom Sheet</Text>
         </TouchableOpacity>
-        <BottomSheet
+        <ShareModal
           onBack={() => {
             setIsVisible(false);
           }}
@@ -135,7 +125,7 @@ const Components = () => {
             alignItems: "center",
           }}
         >
-          <TimeEntry
+          {/* <TimeEntry
             timestamp="NOV 10, 01:43 - 02:07"
             duration="Study 24m 39s"
             type="upcomming"
@@ -144,7 +134,7 @@ const Components = () => {
             timestamp="NOV 10, 01:43 - 02:07"
             duration="Study 24m 39s"
             type="recent"
-          />
+          /> */}
           <View
             style={{
               flexDirection: "row",
@@ -306,7 +296,7 @@ const Components = () => {
             require("@/assets/images/user4.png"),
           ]}
         />
-        <TimerSection
+        {/* <TimerSection
           clock={require("@/assets/images/clock.png")}
           users={[
             require("@/assets/images/user1.png"),
@@ -315,7 +305,7 @@ const Components = () => {
             require("@/assets/images/user4.png"),
           ]}
           image={require("@/assets/images/study_illustration.png")} // Adjust the path based on your project structure
-        />
+        /> */}
 
         <View style={styles.signInContainer}>
           <Text style={styles.title}>Sign In</Text>

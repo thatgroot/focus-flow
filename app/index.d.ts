@@ -7,6 +7,16 @@ interface CreateDocumentTypScaffold {
   onError: (error: any) => void;
 }
 
+interface FirebaseConfig {
+  apiKey: string;
+  authDomain: string;
+  projectId: string;
+  storageBucket: string;
+  messagingSenderId: string;
+  appId: string;
+  measurementId: string;
+}
+
 interface CreateDocumentType extends CreateDocumentTypScaffold {
   path: string;
 }
@@ -21,9 +31,21 @@ interface Subject {
 }
 type SessionStatus = "active" | "paused" | "inactive";
 type ScheduleType = "class" | "task" | undefined;
+
+
 // - schedule -> uid ->  type, course, tags, period, notes, date{start,end}, time{start,end},completed
 interface Schedule {
-  subject: string;
+  id?: string;
+  title?: string;
+  subject?: "Chemistry"
+  | "Physics"
+  | "Psychology"
+  | "Islamic"
+  | "English"
+  | "Geography"
+  | "Economy"
+  | "Mathematics"
+  | "History" | string;
   startDate: Date;
   endDate: Date;
   note: string;
@@ -32,6 +54,7 @@ interface Schedule {
   endTime: Date;
   schedule: "daily" | "monthly" | "weekly"; // This will be a common property for both Task and Class
   completionStatus: boolean;
+  completedOn?: any;
 }
 
 // - due_dates -> ui -> type, id, date, time
@@ -58,18 +81,19 @@ interface Group {
   memberCount?: number;
 }
 
-interface DayType  {
-    date: number;
-    day: string;
+interface DayType {
+  date: number;
+  day: string;
 }
 
-type WeekType   = DayType[]
+type WeekType = DayType[];
 
 // - groups -> uid -> title, bio, time
 interface GroupSession {
-    status: SessionStatus,
-    uid:string,
-    name:string,
+  id?: string;
+  status: SessionStatus;
+  uid: string;
+  name: string;
 }
 
 interface StudySession {

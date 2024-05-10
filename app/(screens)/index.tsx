@@ -1,19 +1,20 @@
-import * as React from "react";
 import { Image } from "expo-image";
 import { StyleSheet, Text, View } from "react-native";
-import { Color, FontFamily, FontSize, Border } from "@/styles/GlobalStyles";
-import { router, useNavigation } from "expo-router";
+import { Color, FontSize, Border } from "@/styles/GlobalStyles";
+import { router } from "expo-router";
 import { auth } from "@/utils/firebase";
+import { useEffect } from "react";
 
 const Splash = () => {
-  React.useEffect(() => {
-    // go to (auth/signin)
+
+  useEffect(() => {
+
     setTimeout(() => {
-     if(!auth.currentUser?.uid){
-      router.replace("/(screens)/auth/signin");
-     }else {
-      router.replace("/home_screen");
-     }
+      if (!auth.currentUser?.uid) {
+        router.replace("/(screens)/auth/signin");
+      } else {
+        router.replace("/home_screen");
+      }
     }, 1000);
   }, []);
   return (
