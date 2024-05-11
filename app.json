@@ -2,10 +2,10 @@
   "expo": {
     "name": "focus-flow",
     "slug": "focus-flow",
-    "version": "1.0.0",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/icons/logo.png",
-    "scheme": "myapp",
+    "scheme": "focus-flow",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",

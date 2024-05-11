@@ -52,8 +52,13 @@ export default function RootLayout() {
     const i18n = new I18n(translations);
     setTranslationHandler(i18n);
     AsyncStorage.getItem("locale").then((v) => {
-      setLocale(v as any);
-      i18n.locale = v as any;
+      if (v) {
+        setLocale(v as any);
+        i18n.locale = v as any;
+      } else {
+        setLocale("en");
+        i18n.locale = "en";
+      }
     });
   }, []);
 
