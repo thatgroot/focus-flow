@@ -1,5 +1,5 @@
 import { useAppStore } from "@/store";
-import { arabic_dates, t } from "@/utils/helpers";
+import { arabic_dates, getFlexDirection, t } from "@/utils/helpers";
 import { Image } from "expo-image";
 import React from "react";
 import { View, Text, StyleSheet, ImageBackground } from "react-native";
@@ -42,7 +42,7 @@ export const TimerSection: React.FC<Props> = ({
           </View>
         )}
 
-        <View style={styles.textContainer}>
+        <View style={[styles.textContainer, getFlexDirection(locale)]}>
           <Text style={[styles.text]}>
             {t("study_live_label").replace(
               "{__}",
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   userContainer: {
     flexDirection: "row",
     borderRadius: 40,
-    width: 110,
+    width: 130,
     justifyContent: "center",
     alignItems: "center",
     gap: 6,
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 9,
     borderRadius: 20,
-    gap: 6,
+    justifyContent: "space-between",
   },
   text: {
     fontSize: 15,

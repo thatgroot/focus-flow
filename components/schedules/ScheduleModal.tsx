@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import Button from "../../elements/Button";
+import Button from "@/elements/Button";
 import { Modalize } from "react-native-modalize";
 import { router } from "expo-router";
 import SelectDropdown from "react-native-select-dropdown";
@@ -127,7 +127,7 @@ export const ScheduleModal = ({
                 }}
               >
                 <Image
-                  source={require("../../assets/icons/back.png")}
+                  source={require("@/assets/icons/back.png")}
                   style={styles.backBtn}
                 />
               </TouchableOpacity>
@@ -148,7 +148,7 @@ export const ScheduleModal = ({
                 }}
                 renderDropdownIcon={() => (
                   <Image
-                    source={require("../../assets/icons/drop.png")}
+                    source={require("@/assets/icons/drop.png")}
                     resizeMode="contain"
                     style={{ width: 9, height: 14 }}
                   />
@@ -184,7 +184,7 @@ export const ScheduleModal = ({
                       translateDate(data.startDate.toDateString()) ??
                       t("startDate")
                     }
-                    icon={require("../../assets/icons/calenderIcon.png")}
+                    icon={require("@/assets/icons/calenderIcon.png")}
                     isTime={false}
                   />
                 </TouchableOpacity>
@@ -200,7 +200,7 @@ export const ScheduleModal = ({
                       translateDate(data.startDate.toDateString()) ??
                       t("endDate")
                     }
-                    icon={require("../../assets/icons/calenderIcon.png")}
+                    icon={require("@/assets/icons/calenderIcon.png")}
                     isTime={false}
                   />
                 </TouchableOpacity>

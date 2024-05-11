@@ -1,6 +1,7 @@
 import { controllers } from "@/utils/crud";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { I18n } from "i18n-js";
-import { create } from "zustand";
+import { create, useStore } from "zustand";
 
 type State = {
   i18n?: I18n;
@@ -33,13 +34,17 @@ type Actions = {
   setLocale: (type: "en" | "ar") => void;
 };
 
+
+
 export const useAppStore = create<State & Actions>((set) => ({
-  locale: "en",
+  locale:"en",
   tags: [],
   groups: [],
   setType: (type: ScheduleType) => set({ type }),
   setLocale: (locale: "en" | "ar") => {
-    set({ locale });
+    AsyncStorage.setItem("locale", locale).then(() => {
+      set({ locale });
+    });
   },
   setTags: (tags: string[]) => set({ tags }),
   setGroup: (group: Group) => set({ group }),
@@ -52,9 +57,11 @@ export const useAppStore = create<State & Actions>((set) => ({
   },
   searchGroups: (text: string) => {
     controllers.group.search({ title: text }).then((data) => {
-      set({
-        groups: data ?? [],
-      });
+      if (data) {
+        set({
+          groups: data,
+        });
+      }
     });
   },
   groupSession: (id: string) => {

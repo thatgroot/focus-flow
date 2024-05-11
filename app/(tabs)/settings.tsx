@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -6,27 +6,51 @@ import {
   Text,
   TouchableOpacity,
   SafeAreaView,
-  FlatList,
-  Modal,
   ScrollView,
-  TextInput,
-  Switch,
+  Alert,
 } from "react-native";
-import SelectDropdown from "react-native-select-dropdown";
 
-import { Link, useNavigation, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { auth } from "@/utils/firebase";
 import { signOut } from "firebase/auth";
 import { Avatar } from "@/components/Avatar";
 import { I18n } from "i18n-js";
-import { setTranslationHandler, ucFirst } from "@/utils/helpers";
+import { getFlexDirection, getTextAlignment, setTranslationHandler, t } from "@/utils/helpers";
 import { useAppStore } from "@/store";
 import { translations } from "@/utils/localization";
 
 const settings: React.FC = () => {
   const router = useRouter();
   const { setLocale, locale } = useAppStore();
-  const [isEnabled, setIsEnabled] = useState<boolean>(false);
+
+
+
+  const account_navigation = [
+    {
+      title: t("edit_profile"),
+      icon: require("@/assets/images/user.png"),
+      route: "/EditProfile",
+    },
+    {
+      title: t("manage_account"),
+      icon: require("@/assets/images/profile_9483336.png"),
+      route: "/ManageAccount",
+    },
+    {
+      title: t("contact_support"),
+      icon: require("@/assets/images/customer-service_174188 .png"),
+      route: "/ContactSupport",
+    },
+  ];
+
+  const community_navigation = [
+    { title:t("faqs_title"), icon: require("@/assets/images/FAQ.png"), route: "/FAQs" },
+    {
+      title: t("logout"),
+      icon: require("@/assets/images/logout.png"),
+      route: "",
+    },
+  ];
 
   const handleSignOut = async () => {
     try {
@@ -66,9 +90,9 @@ const settings: React.FC = () => {
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.headingTimer}>Language Settings</Text>
+        <Text style={[styles.headingTimer]}>{t("language_settings")}</Text>
         <View style={styles.btnView}>
-          <Text style={styles.headingTimerON}>Change Language ({locale})</Text>
+          <Text style={styles.headingTimerON}>{t("change_language")} ({locale})</Text>
           <View
             style={{
               flexDirection: "row",
@@ -91,96 +115,53 @@ const settings: React.FC = () => {
             </TouchableOpacity>
           </View>
         </View>
-        <Text style={styles.headingTimer}>Your Account</Text>
-        <TouchableOpacity
-          style={styles.AccountView}
-          onPress={() => router.push("/EditProfile")}
-        >
-          <View style={styles.IconView}>
-            <View style={styles.BoxView}>
-              <Image
-                style={styles.userIcon}
-                source={require("../../assets/images/user.png")}
-              />
+        <Text style={styles.headingTimer}>{t("account_title")}</Text>
+        {account_navigation.map(({ title, icon, route }, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.AccountView}
+            onPress={() => router.push(route as any)}
+          >
+            <View style={styles.IconView}>
+              <View style={styles.BoxView}>
+                <Image style={styles.userIcon} source={icon} />
+              </View>
+              <Text style={styles.headingEdit}>{title}</Text>
             </View>
-            <Text style={styles.headingEdit}>Edit profile</Text>
-          </View>
 
-          <Image
-            style={styles.Arrow}
-            source={require("../../assets/images/GroupArrow.png")}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.AccountView}>
-          <View style={styles.IconView}>
-            <View style={styles.BoxView}>
-              <Image
-                style={styles.userIcon}
-                source={require("../../assets/images/profile_9483336.png")}
-              />
+            <Image
+              style={styles.Arrow}
+              source={require("../../assets/images/GroupArrow.png")}
+            />
+          </TouchableOpacity>
+        ))}
+        <Text style={styles.headingTimer}>{t("community_title")}</Text>
+        {community_navigation.map(({ title, icon, route }, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.AccountView}
+            onPress={() => {
+              Alert.alert(title)
+              if (title == t("logout")) {
+                handleSignOut();
+              } else {
+                router.push(route as any);
+              }
+            }}
+          >
+            <View style={styles.IconView}>
+              <View style={styles.BoxView}>
+                <Image style={styles.userIcon} source={icon} />
+              </View>
+              <Text style={styles.headingEdit}>{title}</Text>
             </View>
-            <Text style={styles.headingEdit}>Manage account</Text>
-          </View>
 
-          <Image
-            style={styles.Arrow}
-            source={require("../../assets/images/GroupArrow.png")}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.AccountView}>
-          <View style={styles.IconView}>
-            <View style={styles.BoxView}>
-              <Image
-                style={styles.userIcon}
-                source={require("../../assets/images/customer-service_174188 .png")}
-              />
-            </View>
-            <Text style={styles.headingEdit}>Contact support</Text>
-          </View>
-
-          <Image
-            style={styles.Arrow}
-            source={require("../../assets/images/GroupArrow.png")}
-          />
-        </TouchableOpacity>
-        <Text style={styles.headingTimer}>Community</Text>
-        <TouchableOpacity style={styles.AccountView}>
-          <View style={styles.IconView}>
-            <View style={styles.BoxView}>
-              <Image
-                style={styles.userIcon}
-                source={require("../../assets/images/FAQ.png")}
-              />
-            </View>
-            <Text style={styles.headingEdit}>FAQ’s</Text>
-          </View>
-
-          <Image
-            style={styles.Arrow}
-            source={require("../../assets/images/GroupArrow.png")}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.AccountView}
-          onPress={() => {
-            handleSignOut();
-          }}
-        >
-          <View style={styles.IconView}>
-            <View style={styles.BoxView}>
-              <Image
-                style={styles.userIcon}
-                source={require("../../assets/images/logout.png")}
-              />
-            </View>
-            <Text style={styles.headingEdit}>Logout</Text>
-          </View>
-
-          <Image
-            style={styles.Arrow}
-            source={require("../../assets/images/GroupArrow.png")}
-          />
-        </TouchableOpacity>
+            <Image
+              style={styles.Arrow}
+              source={require("../../assets/images/GroupArrow.png")}
+            />
+          </TouchableOpacity>
+        ))}
       </ScrollView>
     </SafeAreaView>
   );

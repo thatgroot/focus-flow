@@ -11,7 +11,6 @@ import {
   updateDoc,
   where,
   deleteDoc,
-  QuerySnapshot,
 } from "firebase/firestore";
 import { auth, database } from "./firebase";
 import {
@@ -20,10 +19,77 @@ import {
   toSchedules,
   toSessions,
 } from "./helpers";
-import { addDays, milliseconds } from "date-fns";
-import { Alert } from "react-native";
-// CRUD function for Firestore operations
-async function performCrud({
+import { addDays } from "date-fns";
+
+type CrudAction<T> = (
+  path: string,
+  data?: T,
+  onSuccess?: (id?: string, docs?: any[]) => void,
+  onError?: (error: string) => void
+) => Promise<void>;
+function processError(error: any, onError?: (error: string) => void) {
+  onError && onError(error.message);
+}
+const crudActions: Record<
+  "set" | "update" | "delete" | "get" | "getAll",
+  CrudAction<any>
+> = {
+  set: async (path, data, onSuccess, onError) => {
+    const ref = doc(database, path);
+    try {
+      await setDoc(ref, data!);
+      onSuccess && onSuccess(ref.id);
+    } catch (error: any) {
+      onError && onError(error.message);
+    }
+  },
+  update: async (path, data, onSuccess, onError) => {
+    const ref = doc(database, path);
+    try {
+      await updateDoc(ref, data!);
+      onSuccess && onSuccess(ref.id);
+    } catch (error: any) {
+      onError && onError(error.message);
+    }
+  },
+  delete: async (path, _, onSuccess, onError) => {
+    const ref = doc(database, path);
+    try {
+      await deleteDoc(ref);
+      onSuccess && onSuccess(ref.id);
+    } catch (error: any) {
+      processError(error, onError);
+    }
+  },
+  get: async (path, _, onSuccess, onError) => {
+    const ref = doc(database, path);
+    try {
+      const docSnap = await getDoc(ref);
+      if (docSnap.exists()) {
+        onSuccess && onSuccess(ref.id, [docSnap.data()]);
+      } else {
+        onError && onError("Document does not exist.");
+      }
+    } catch (error: any) {
+      processError(error, onError);
+    }
+  },
+  getAll: async (path, _, onSuccess, onError) => {
+    const collectionRef = collection(database, path);
+    try {
+      const querySnapshot = await getDocs(collectionRef);
+      const documents = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      onSuccess && onSuccess(undefined, documents);
+    } catch (error: any) {
+      processError(error, onError);
+    }
+  },
+};
+
+async function performCrud<T>({
   path,
   data,
   method = "set",
@@ -31,93 +97,58 @@ async function performCrud({
   onError,
 }: {
   path: string;
-  data: any;
-  method?: "set" | "update" | "delete" | "get" | "getAll";
-  onSuccess: (id: string) => void;
-  onError: (error: string) => void;
+  data?: T;
+  method?: keyof typeof crudActions;
+  onSuccess?: (id?: string, docs?: any[]) => void;
+  onError?: (error: string) => void;
 }) {
-  const ref = doc(database, path);
-  try {
-    if (method === "set") await setDoc(ref, data);
-    else if (method === "update") await updateDoc(ref, data);
-    else if (method === "delete") await deleteDoc(ref);
-    else if (method === "getAll") {
-      const ref = collection(database, path);
-      return await getDocs(query(ref));
-    } else if (method === "get") {
-      return await getDoc(ref);
-    }
-    onSuccess(ref.id);
-  } catch (error: any) {
-    onError(error.message);
+  const action = crudActions[method!];
+  if (!action) {
+    processError({ message: "Invalid method." }, onError);
+    return;
   }
+  await action(path, data, onSuccess, onError);
 }
 
-// Function to get documents from Firestore
-async function getDocuments(query: Query<DocumentData>): Promise<any[]> {
-  const snapshot = await getDocs(query);
-  return snapshot.docs.map((doc) => doc.data());
-}
-
-// Function to create a document in Firestore
-async function createDocument<T>({
+async function createOrUpdateDocument<T>({
   path,
   data,
+  method = "set",
   onSuccess,
   onError,
 }: {
   path: string;
   data: T;
-  onSuccess: (id: string) => void;
-  onError: (error: string) => void;
+  method?: keyof typeof crudActions;
+  onSuccess?: (id?: string, docs?: any[]) => void;
+  onError?: (error: string) => void;
 }) {
   await performCrud({
     path,
     data,
+    method,
     onSuccess,
     onError,
   });
 }
 
-// Function to update a document in Firestore
-async function updateDocument<T>({
-  path,
-  data,
-  onSuccess,
-  onError,
-}: {
-  path: string;
-  data: T;
-  onSuccess: (id: string) => void;
-  onError: (error: string) => void;
-}) {
-  await performCrud({
-    path,
-    data,
-    method: "update",
-    onSuccess,
-    onError,
-  });
-}
-
-// Function to delete a document in Firestore
 async function deleteDocument({
   path,
   onSuccess,
   onError,
 }: {
   path: string;
-  onSuccess: (id: string) => void;
-  onError: (error: string) => void;
+  onSuccess?: (id?: string, docs?: any[]) => void;
+  onError?: (error: string) => void;
 }) {
   await performCrud({
-    data: undefined,
     path,
     method: "delete",
     onSuccess,
     onError,
   });
 }
+
 const getDocsQuery = async (query: Query<DocumentData, DocumentData>) => {
   const tasksSnapshot = await getDocs(query);
   return tasksSnapshot.docs.map((doc) => {
@@ -131,14 +162,15 @@ const getDocsQuery = async (query: Query<DocumentData, DocumentData>) => {
 export const controllers = {
   userInfo: {
     add: async (args: WithOmitPath & { data: UserInfoData }) => {
-      await createDocument({
+      await performCrud({
         path: `usersInfo/${auth.currentUser?.uid}`,
         ...args,
       });
     },
     update: async ({ ...args }: WithOmitPath & { data: Subject }) => {
-      await updateDocument({
+      await performCrud({
         path: `usersInfo/${auth.currentUser?.uid}`,
+        method: "update",
         ...args,
       });
     },
@@ -158,7 +190,7 @@ export const controllers = {
   },
   course: {
     add: async (args: WithOmitPath & { data: Subject }) => {
-      await createDocument({
+      await performCrud({
         path: `courses/${auth.currentUser?.uid}`,
         ...args,
       });
@@ -167,16 +199,21 @@ export const controllers = {
       id,
       ...args
     }: WithOmitPath & { id: string; data: Subject }) => {
-      await updateDocument({
+      await performCrud({
         path: `courses/${id}`,
         ...args,
+        method: "update",
       });
     },
     delete: async ({
       id,
       ...args
     }: WithOmitPath & { id: string }): Promise<void> => {
-      await deleteDocument({ path: `courses/${id}`, ...args });
+      await performCrud({
+        path: `courses/${id}`,
+        ...args,
+        method: "delete",
+      });
     },
   },
   task: {
@@ -186,6 +223,7 @@ export const controllers = {
       onSuccess,
     }: WithOmitPath & { data: Schedule }) => {
       const ref = collection(database, `users/${auth.currentUser?.uid}/tasks`);
+
       await addDoc(ref, { ...data })
         .then((docRef) => {
           onSuccess(docRef.id);
@@ -198,21 +236,23 @@ export const controllers = {
       id,
       ...args
     }: WithOmitPath & { id: string; data: Task }) => {
-      await updateDocument({
+      await performCrud({
         path: `users/${auth.currentUser?.uid}/tasks/${id}`,
         ...args,
+        method: "update",
       });
     },
     delete: async ({
       id,
       ...args
     }: WithOmitPath & { id: string }): Promise<void> => {
-      await deleteDocument({
+      await performCrud({
         path: `users/${auth.currentUser?.uid}/tasks/${id}`,
         ...args,
+        method: "delete",
       });
     },
-    get: async () => {
+    completed: async () => {
       const ref = collection(database, `users/${auth.currentUser?.uid}/tasks`);
       const _query = query(ref, where("completionStatus", "==", true));
       const tasks = await getDocsQuery(_query);
@@ -241,18 +281,20 @@ export const controllers = {
       id,
       ...args
     }: WithOmitPath & { id: string; data: Class }) => {
-      await updateDocument({
+      await performCrud({
         path: `users/${auth.currentUser?.uid}/classes/${id}`,
         ...args,
+        method: "update",
       });
     },
     delete: async ({
       id,
       ...args
     }: WithOmitPath & { id: string }): Promise<void> => {
-      await deleteDocument({
+      await performCrud({
         path: `users/${auth.currentUser?.uid}/classes/${id}`,
         ...args,
+        method: "delete",
       });
     },
   },
@@ -296,18 +338,20 @@ export const controllers = {
       id,
       ...args
     }: WithOmitPath & { id: string; data: Group }) => {
-      await updateDocument({
+      await performCrud({
         path: `users/${auth.currentUser?.uid}/groups/${id}`,
         ...args,
+        method: "update",
       });
     },
     delete: async ({
       id,
       ...args
     }: WithOmitPath & { id: string }): Promise<void> => {
-      await deleteDocument({
+      await performCrud({
         path: `users/${auth.currentUser?.uid}/groups/${id}`,
         ...args,
+        method: "delete",
       });
     },
     join: async ({ id, onSuccess, onError }: WithOmitPath & { id: string }) => {
@@ -317,7 +361,7 @@ export const controllers = {
         await setDoc(ref, {
           members: [auth.currentUser?.uid],
         }).then(async () => {
-          await createDocument({
+          await performCrud({
             path: `users/${auth.currentUser?.uid}/memberOf/${id}`,
             data: { id, joinedOn: new Date() },
             onSuccess,
@@ -412,9 +456,10 @@ export const controllers = {
         group,
         ...args
       }: WithOmitPath & { group: string; data: GroupSession }) => {
-        await updateDocument({
+        await performCrud({
           path: `users/${auth.currentUser?.uid}/sessions/${group}`,
           ...args,
+          method: "update",
         });
       },
       get: async () => {

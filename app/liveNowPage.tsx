@@ -90,14 +90,14 @@ const liveNowPage: React.FC = () => {
           status !== "active" &&  <TouchableOpacity onPress={() => router.back()}>
           <Image
             style={styles.LeftIcon}
-            source={require("../assets/images/iconleft.png")}
+            source={require("@/assets/images/iconleft.png")}
           />
         </TouchableOpacity>
          }
           <View style={styles.mainStudy}>
             <Image
               style={styles.LeftIcon}
-              source={require("../assets/images/team.png")}
+              source={require("@/assets/images/team.png")}
             />
             <Text style={styles.heading}>{t("study_together")}</Text>
           </View>
@@ -179,7 +179,7 @@ const liveNowPage: React.FC = () => {
             >
               <Image
                 style={styles.icon}
-                source={require("../assets/images/play.png")}
+                source={require("@/assets/images/play.png")}
               />
             </TouchableOpacity>
           )}
@@ -210,7 +210,7 @@ const liveNowPage: React.FC = () => {
             >
               <Image
                 style={styles.icon}
-                source={require("../assets/images/stop.png")}
+                source={require("@/assets/images/stop.png")}
               />
             </TouchableOpacity>
           )}
@@ -242,7 +242,7 @@ const liveNowPage: React.FC = () => {
               <Image
                 style={styles.icon}
                 tintColor={"rgba(241, 137, 124, 1)"}
-                source={require("../assets/images/pause.png")}
+                source={require("@/assets/images/pause.png")}
               />
             </TouchableOpacity>
           )}

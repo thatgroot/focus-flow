@@ -5,12 +5,13 @@ const translations = {
     good_morning: "Good Morning!",
 
     signin: "Sign In",
-    signing_in: "processing your request",
+    processing_request: "Processing your request",
     signin_subtitle: "Enter Your Credentials to Continue",
     register: "Sign Up",
     enter_email: "Enter Email",
     invalid_email: "Please provide a valid email address",
     provide_email: "Please provide your email",
+    password: "Password",
     enter_password: "Enter Password",
     forgot_password: "Forgot Password?",
     too_many_requests: "Too many requests",
@@ -51,10 +52,14 @@ const translations = {
     next: "Next",
 
     // Reminders
-    reminder_subtitle: "Your {1} is Due on",
+    reminder: "Reminder",
+    reminder_subtitle: "Your {__} is due on: ",
     biology_assignment: "Biology Assignment",
     got_it: "GOT IT",
 
+    // Language settings
+    language_settings: "Language Settings",
+    change_language: "Change Language",
     // Account Creation
     create_account_label: "Create an Account",
     full_name: "Full Name",
@@ -88,8 +93,8 @@ const translations = {
     choose_time: "Choose Time",
     from_label: "From",
     to_label: "To",
-    share_button: "Share",
-    copy_link_button: "Copy Link",
+    share: "Share",
+    copy_link: "Copy Link",
     study_label: "Study",
     study: "📗 Study",
     exercise: "🏋️ Exercise",
@@ -131,7 +136,7 @@ const translations = {
     schedule_confirmation_title: "Congratulations!",
     schedule_confirmation_message: "Class Scheduled!",
     share_schedule_reminder: "Share your Schedule!",
-    not_now_button: "Not Now",
+    not_now: "Not Now",
 
     // Class Scheduled Section
     class_scheduled_title: "Congratulations",
@@ -139,7 +144,7 @@ const translations = {
 
     // Groups Section
     groups_title: "Your Groups",
-    create_group_button: "Create",
+    create_group: "Create",
     joined_groups_title: "Joined groups ({__})",
     joined_groups_description: "The groups that you have joined",
     featured_groups_title: "Featured Groups",
@@ -173,14 +178,14 @@ const translations = {
 
     // Account Section
     account_title: "Your Account",
-    edit_profile_button: "Edit profile",
-    manage_account_button: "Manage account",
-    contact_support_button: "Contact support",
+    edit_profile: "Edit profile",
+    manage_account: "Manage account",
+    contact_support: "Contact support",
 
     // Community Section
     community_title: "Community",
     faqs_title: "FAQ’s",
-    logout_button: "Logout",
+    logout: "Logout",
   },
 
   ar: {
@@ -188,12 +193,13 @@ const translations = {
     good_morning: "صباح الخير!",
 
     signin: "تسجيل الدخول",
-    signing_in: "يعالج طلبك",
+    processing_request: "يعالج طلبك",
     signin_subtitle: "أدخل بيانات   الخاصة بك للمتابعة",
     register: "اشتراك",
     enter_email: "أدخل البريد الإلكتروني",
     invalid_email: "من فضلك زود عنوان بريد إلكتروني صحيح",
     provide_email: "من فضلك، أدخل بريدك الإلكتروني",
+    password: "كلمة المرور",
     enter_password: "أدخل كلمة المرور",
     forgot_password: "هل نسيت كلمة السر؟",
     too_many_requests: "كثرة الطلبات",
@@ -233,10 +239,13 @@ const translations = {
     next: "التالي",
 
     // Reminders
-    reminder_subtitle: "مهمة علم {} الخاصة بك هيمستحق في",
+    reminder: "تذكير",
+    reminder_subtitle: "مهمة علم {__} الخاصة بك هيمستحق في",
     biology_assignment: "مهمة علم الأحياء",
     got_it: "فهمتها",
-
+    // Language settings
+    language_settings: "إعدادات اللغة",
+    change_language: "تغيير اللغة",
     // Account Creation
     create_account_label: "إنشاء حساب",
     full_name: "الاسم الكامل",
@@ -269,8 +278,8 @@ const translations = {
     choose_time: "اختر الوقت",
     from_label: "من",
     to_label: "ل",
-    share_button: "يشارك",
-    copy_link_button: "نسخ الوصلة",
+    share: "يشارك",
+    copy_link: "نسخ الوصلة",
 
     study_label: "يذاكر",
     study: "📗 يذاكر",
@@ -314,7 +323,7 @@ const translations = {
     schedule_confirmation_title: "تهانينا",
     schedule_confirmation_message: "تم جدولة الفصل !",
     share_schedule_reminder: "يمكنك دائمًا مشاركة جدولك الزمني!",
-    not_now_button: "ليس الآن",
+    not_now: "ليس الآن",
 
     // Class Scheduled Section
     class_scheduled_title: "تهانينا",
@@ -322,7 +331,7 @@ const translations = {
 
     // Groups Section
     groups_title: "مجموعاتك",
-    create_group_button: "يخلق",
+    create_group: "يخلق",
     joined_groups_title: "المجموعات المنضمة({__})",
     joined_groups_description: "المجموعات التي انضممت إليها",
     featured_groups_title: "المجموعات المميزة",
@@ -356,14 +365,14 @@ const translations = {
 
     // Account Section
     account_title: "الحساب الخاص بك",
-    edit_profile_button: "تعديل الملف الشخصي",
-    manage_account_button: "إدارة الحساب",
-    contact_support_button: "اتصل بالدعم",
+    edit_profile: "تعديل الملف الشخصي",
+    manage_account: "إدارة الحساب",
+    contact_support: "اتصل بالدعم",
 
     // Community Section
     community_title: "مجتمع",
     faqs_title: "الأسئلة الشائعة",
-    logout_button: "تسجيل خروج",
+    logout: "تسجيل خروج",
   },
 };
 

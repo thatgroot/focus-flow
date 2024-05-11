@@ -25,7 +25,7 @@ const Splash = () => {
           height: 225,
         }}
         contentFit="contain"
-        source={require("../../assets/images/group1.png")}
+        source={require("@/assets/images/group1.png")}
       />
       <View style={{}}>
         <Text style={[styles.flowTypo]}>FOCUS</Text>

@@ -17,6 +17,7 @@ export default function DaysOfWeek({
     <FlatList
       horizontal
       pagingEnabled
+      inverted={locale === "ar"}
       data={days} // Provide a single item array to FlatList
       keyExtractor={({ day, date }, index) => `${day}_${date}_${index}`} // Unique key for month
       showsHorizontalScrollIndicator={false}

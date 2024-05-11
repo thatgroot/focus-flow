@@ -33,7 +33,7 @@ const EditProfile: React.FC = () => {
           <TouchableOpacity onPress={() => router.back()}>
             <Image
               style={styles.LeftIcon}
-              source={require("../assets/images/iconleft.png")}
+              source={require("@/assets/images/iconleft.png")}
             />
           </TouchableOpacity>
 
@@ -65,7 +65,7 @@ const EditProfile: React.FC = () => {
                   objectFit: "contain",
                   width: 18,
                 }}
-                source={require("../assets/icons/pencil.png")}
+                source={require("@/assets/icons/pencil.png")}
               />
             </TouchableOpacity>
           </View>
@@ -90,7 +90,7 @@ const EditProfile: React.FC = () => {
                   objectFit: "contain",
                   width: 18,
                 }}
-                source={require("../assets/icons/pencil.png")}
+                source={require("@/assets/icons/pencil.png")}
               />
             </TouchableOpacity>
           </View>

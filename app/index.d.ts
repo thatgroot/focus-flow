@@ -1,7 +1,8 @@
 type WithOmitPath = Omit<CreateDocumentType, "path">;
 // Enum for recurrence types
 type Recurrence = "daily" | "weekly" | "monthly";
-
+type InputType ="email" | "password" | "text" | "number"
+type InputState ="active" | "invalid" | "valid" | "inactive"
 interface CreateDocumentTypScaffold {
   onSuccess: (value: string | any) => void;
   onError: (error: any) => void;

@@ -47,13 +47,13 @@ const grouppage: React.FC = () => {
           <TouchableOpacity onPress={() => router.back()}>
             <Image
               style={styles.LeftIcon}
-              source={require("../assets/images/iconleft.png")}
+              source={require("@/assets/images/iconleft.png")}
             />
           </TouchableOpacity>
           <View style={styles.mainStudy}>
             <Image
               style={styles.LeftIcon}
-              source={require("../assets/images/team.png")}
+              source={require("@/assets/images/team.png")}
             />
             <Text style={styles.heading}>{t("study_together")}</Text>
           </View>

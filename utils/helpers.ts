@@ -1,6 +1,6 @@
 import { I18n } from "i18n-js";
 import { translations } from "./localization";
-import { I18nManager } from "react-native";
+import { I18nManager, TextStyle, ViewStyle } from "react-native";
 
 export function addDays(date: Date, days: number): Date {
   const result = new Date(date);
@@ -8,9 +8,14 @@ export function addDays(date: Date, days: number): Date {
   return result;
 }
 
-export function timestampToDate({seconds,nanoseconds}:{seconds: number, nanoseconds:number}): Date {
+export function timestampToDate({
+  seconds,
+  nanoseconds,
+}: {
+  seconds: number;
+  nanoseconds: number;
+}): Date {
   const milliseconds = seconds * 1000 + nanoseconds / 1000000;
-
   return new Date(milliseconds);
 }
 export const toSchedules = (classes: any[]): Schedule[] | [] => {
@@ -66,10 +71,26 @@ export function ucFirst(text: string) {
   return text.replace(/(^[a-z]|\s[a-z])/g, (m) => m.toUpperCase());
 }
 
+export const getFlexDirection = (locale: "ar" | "en"): ViewStyle => ({
+  flexDirection: locale === "ar" ? "row-reverse" : "row",
+});
+export const getColumnAlignment = (locale: "ar" | "en"): ViewStyle => ({
+  alignItems: locale === "ar" ? "flex-end" : "flex-start",
+});
+
+export const getTextAlignment = (locale: "ar" | "en"): TextStyle => ({
+  textAlign: locale === "ar" ? "left" : "right",
+});
+export function tranlsateToArabicNumber(time: any) {
+  return `${time}`
+    .split("")
+    .map((part) => arabic_dates[part])
+    .join("");
+}
 export function dateToTimeFormat(date: Date): string {
   let hours = date.getHours();
   const minutes = date.getMinutes().toString().padStart(2, "0");
-  const ampm = hours >= 12 ? "PM" : "AM";
+  const ampm = hours >= 12 ? t("pm") : t("am");
   hours = hours % 12;
   hours = hours ? hours : 12;
   return `${hours}:${minutes} ${ampm}`;

@@ -3,14 +3,14 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
 } from "@firebase/auth";
 import { auth } from "./firebase";
 import { controllers } from "./crud";
 import {
-  EmailAuthCredential,
   EmailAuthProvider,
   reauthenticateWithCredential,
-  updateEmail,
+  sendEmailVerification,
   updatePassword,
   verifyBeforeUpdateEmail,
 } from "firebase/auth";
@@ -20,22 +20,23 @@ export const register = async ({
   name,
   email,
   password,
+  onError = (error: any) => console.error(error),
+  onSuccess = (id: string) => console.info(id),
 }: {
   name: string;
   email: string;
   password: string;
+  onError?: (error: any) => void;
+  onSuccess?: (id: string) => void;
 }) => {
   try {
-    const data: UserCredential = await createUserWithEmailAndPassword(
+    const { user } = await createUserWithEmailAndPassword(
       auth,
       email,
       password
     );
-
-    await updateProfile(data.user, {
-      displayName: name,
-    });
-
+    await sendEmailVerification(user);
+    await updateProfile(user, { displayName: name });
     controllers.userInfo.add({
       data: {
         name: name,
@@ -47,11 +48,14 @@ export const register = async ({
         console.info(id);
       },
     });
+
+    onSuccess("Please check your email for verification link");
     return {
       error: false,
-      message: "sucess",
+      message: "success",
     };
   } catch (error: any) {
+    onError(error);
     return {
       error: true,
       message: error.message,
@@ -71,9 +75,13 @@ export const signin = async ({
   onSuccess: () => void;
 }) => {
   await signInWithEmailAndPassword(auth, email, password)
-    .then((data) => {
-      if (data.user) {
-        onSuccess();
+    .then(({ user }) => {
+      if (user) {
+        if (user.emailVerified) {
+          onSuccess();
+        } else {
+          onError("Your email is not verified");
+        }
       } else {
         onError("account doesn't exists");
       }
@@ -142,5 +150,17 @@ export const updateUser = {
         })
         .catch(onError);
     });
+  },
+
+  forgotPassword: ({
+    email,
+    onSuccess,
+    onError,
+  }: CreateDocumentTypScaffold & { email: string }) => {
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        onSuccess("Please check your email for reset link");
+      })
+      .catch(onError);
   },
 };

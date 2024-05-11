@@ -1,4 +1,5 @@
-import { ucFirst } from "@/utils/helpers";
+import { useAppStore } from "@/store";
+import { getFlexDirection, ucFirst } from "@/utils/helpers";
 import { Image } from "expo-image";
 import React from "react";
 import {
@@ -27,13 +28,15 @@ const TimeEntry = ({
   onPress: any;
   type: "recent" | string;
 }) => {
+  const { locale } = useAppStore();
   return (
     <TouchableOpacity onPress={onPress}>
       <View
-        style={{
-          ...styles.container,
-          backgroundColor: type === "recent" ? "#FEB5A610" : "#13CE6625",
-        }}
+        style={[
+          styles.container,
+          { backgroundColor: type === "recent" ? "#FEB5A610" : "#13CE6625" },
+          getFlexDirection(locale),
+        ]}
       >
         <View style={styles.contentContainer}>
           <Text style={styles.timestamp}>{ucFirst(label)}</Text>
@@ -53,6 +56,7 @@ const TimeEntry = ({
           style={{
             width: 12,
             height: 18,
+            transform: [{ rotate: locale === "ar" ? "180deg" : "0deg" }],
           }}
           source={require("@/assets/icons/next.png")}
         />
