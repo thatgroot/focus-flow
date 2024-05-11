@@ -1,14 +1,22 @@
+import Button from "@/elements/Button";
 import { useAppStore } from "@/store";
 import { setTranslationHandler } from "@/utils/helpers";
 import { translations } from "@/utils/localization";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFonts } from "expo-font";
+import { Image } from "expo-image";
+import { NetworkState, getNetworkStateAsync } from "expo-network";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { I18n, } from "i18n-js";
+import { I18n } from "i18n-js";
 
-import { useEffect } from "react";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useEffect, useState } from "react";
+import { Alert, SafeAreaView, Text, View } from "react-native";
+import {
+  GestureHandlerRootView,
+  ScrollView,
+} from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export {
@@ -25,14 +33,13 @@ export const unstable_settings = {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-
-  const {setLocale} = useAppStore()
+  const { setLocale } = useAppStore();
   const [loaded, error] = useFonts({
-    "Inter-Light": require("../assets/fonts/Inter-Light.ttf"),
-    "Inter-Regular": require("../assets/fonts/Inter-Regular.ttf"),
-    "Inter-Medium": require("../assets/fonts/Inter-Medium.ttf"),
-    "Inter-Bold": require("../assets/fonts/Inter-Bold.ttf"),
-    "Inter-SemiBold": require("../assets/fonts/Inter-SemiBold.ttf"),
+    "Inter-Light": require("@/assets/fonts/Inter-Light.ttf"),
+    "Inter-Regular": require("@/assets/fonts/Inter-Regular.ttf"),
+    "Inter-Medium": require("@/assets/fonts/Inter-Medium.ttf"),
+    "Inter-Bold": require("@/assets/fonts/Inter-Bold.ttf"),
+    "Inter-SemiBold": require("@/assets/fonts/Inter-SemiBold.ttf"),
     ...FontAwesome.font,
   });
 
@@ -42,11 +49,12 @@ export default function RootLayout() {
   }, [error]);
 
   useEffect(() => {
-    const _locale = "en";
     const i18n = new I18n(translations);
-    i18n.locale = _locale;
     setTranslationHandler(i18n);
-    setLocale(_locale)
+    AsyncStorage.getItem("locale").then((v) => {
+      setLocale(v as any);
+      i18n.locale = v as any;
+    });
   }, []);
 
   useEffect(() => {
@@ -63,23 +71,80 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+  const [reachable, setReachable] = useState<boolean>(false);
+  const [show, setShow] = useState(false);
+  const { setLocale } = useAppStore();
+  function checkNetwork() {
+    getNetworkStateAsync().then(function (state) {
+      console.log("state.isInternetReachable", state.isInternetReachable);
+      setShow(!state.isInternetReachable);
+      setReachable(state.isInternetReachable ?? false);
+    });
+  }
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      checkNetwork();
+    }, 2000);
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <Stack screenOptions={{ headerShown: false }}>
-          {/* <Stack.Screen name="(screens)" options={{ headerShown: false }} /> */}
-          <Stack.Screen
-            name="(tabs)"
-            options={{
-              title: "home_screen",
-              headerShown: false,
+        {!reachable ? (
+          <View
+            style={{
+              flex: 1,
+              alignSelf: "stretch",
+              height: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: 12,
             }}
-          />
-          <Stack.Screen
-            name="modal"
-            options={{ presentation: "modal", header: () => <></> }}
-          />
-        </Stack>
+          >
+            <Image
+              source={require("@/assets/icons/logo.png")}
+              style={{
+                height: 300,
+                width: 300,
+              }}
+            />
+            {show && (
+              <>
+                <Text
+                  style={{
+                    fontWeight: "600",
+                  }}
+                >
+                  Please connect to itnernet
+                </Text>
+
+                <Button
+                  text="Try again?"
+                  onPress={() => {
+                    checkNetwork();
+                  }}
+                  disabled={false}
+                />
+              </>
+            )}
+          </View>
+        ) : (
+          <Stack screenOptions={{ headerShown: false }}>
+            {/* <Stack.Screen name="(screens)" options={{ headerShown: false }} /> */}
+            <Stack.Screen
+              name="(tabs)"
+              options={{
+                title: "home_screen",
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="modal"
+              options={{ presentation: "modal", header: () => <></> }}
+            />
+          </Stack>
+        )}
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );

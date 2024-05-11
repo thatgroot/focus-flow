@@ -8,8 +8,6 @@ import { arabic_dates } from "@/utils/helpers";
 
 export const StudyGroup = ({
   title,
-  bio,
-  time,
   memberCount,
   gradient,
   users,

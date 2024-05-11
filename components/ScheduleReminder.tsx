@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet, Image, Text, TouchableOpacity } from "react-native";
 import ModalWrapper from "./ModalWrapper";
-import { ucFirst } from "@/utils/helpers";
+import { t, ucFirst } from "@/utils/helpers";
 
 interface ScheduleReminder {
   type: ScheduleType;
@@ -9,7 +9,7 @@ interface ScheduleReminder {
   isVisible: boolean;
   onClose: () => void;
   dueOn: string;
-  dueAt: string
+  dueAt: string;
 }
 
 const Info = ({ label, value }: { [x: string]: any }) => (
@@ -25,39 +25,40 @@ const ScheduleReminder = ({
   name,
   isVisible,
   onClose,
-info
+  info,
 }: {
   type: ScheduleType | "group";
   name: string;
   isVisible: boolean;
-  onClose: ()=>void;
+  onClose: () => void;
   info: {
-    label:string;
-    value:string
-  }[]
+    label: string;
+    value: string;
+  }[];
 }) => {
-
-
   return (
     <ModalWrapper isVisible={isVisible} onClose={onClose}>
       <View style={styles.container}>
         <Image
           style={styles.mainbell}
-          source={require("../assets/images/schoolbell.png")}
+          source={require("@/assets/images/schoolbell.png")}
         />
         <View style={styles.subContainer}>
-          <Text style={styles.titleText}>Reminder</Text>
+          <Text style={styles.titleText}>{t("reminder")}</Text>
         </View>
         <View style={styles.subContainer}>
           <Text style={styles.descriptionText}>
-            Your {ucFirst(name)} {ucFirst(type ?? "")} is due on:
+            {t("reminder_subtitle").replace(
+              "{__}",
+              ucFirst(t(((type ?? "class") + "_title") as any))
+            )}
           </Text>
         </View>
         {info.map((item, index) => (
           <Info key={index} label={item.label} value={item.value} />
         ))}
         <TouchableOpacity style={styles.button} onPress={onClose}>
-          <Text style={styles.buttonText}>GOT IT</Text>
+          <Text style={styles.buttonText}>{t("got_it")}</Text>
         </TouchableOpacity>
       </View>
     </ModalWrapper>

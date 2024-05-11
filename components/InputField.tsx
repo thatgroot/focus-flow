@@ -1,4 +1,10 @@
+import { useAppStore } from "@/store";
 import { inputRegex } from "@/utils/auth";
+import {
+  getColumnAlignment,
+  getFlexDirection,
+  getTextAlignment,
+} from "@/utils/helpers";
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Image, TextInput } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -16,7 +22,7 @@ interface Props {
   inputType: "email" | "password" | "text" | "number";
   error: string;
   onChangeText?: ((text: string) => void) | undefined;
-  inputState: "active" | "invalid" | "valid" | "inactive";
+  inputState: InputState;
   multiline?: boolean;
 }
 
@@ -29,6 +35,11 @@ export default function LabeledInput({
   inputState,
   multiline,
 }: Props) {
+  const { locale } = useAppStore();
+
+  const direction = getFlexDirection(locale);
+  const alignment = getTextAlignment(locale);
+
   const [text, setText] = useState("");
   const [compat, setCompat] = useState<"invalid" | "valid" | "inactive">(
     "inactive"
@@ -46,16 +57,36 @@ export default function LabeledInput({
   };
 
   return (
-    <View style={styles.container}>
-      {label && <Text style={styles.label}>{label}</Text>}
+    <View style={[styles.container]}>
       <View
-        style={{
-          ...styles.inputContainer,
-          borderColor: stateBorderColor[compat], borderRadius: multiline ? 24 : 100
-        }}
+        style={[
+          {
+            alignSelf: "stretch",
+          },
+          direction,
+        ]}
+      >
+        {label && <Text style={[styles.label]}>{label}</Text>}
+      </View>
+      <View
+        style={[
+          {
+            ...styles.inputContainer,
+            borderColor: stateBorderColor[compat],
+            borderRadius: multiline ? 24 : 100,
+          },
+          direction,
+        ]}
       >
         <TextInput
-          style={[styles.input, { height: multiline ? 84 : 60,paddingTop: multiline ? 22 : 0 }]}
+          style={[
+            styles.input,
+            {
+              height: multiline ? 84 : 60,
+              paddingTop: multiline ? 22 : 0,
+              textAlign: locale === "ar" ? "right" : "left",
+            },
+          ]}
           onChangeText={handleChangeText}
           placeholder={multiline ? "" : placeholder}
           multiline={multiline}

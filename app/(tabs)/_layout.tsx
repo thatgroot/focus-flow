@@ -25,7 +25,7 @@ const TabsLayout = () => {
           tabBarIcon: ({ color, focused }) => (
             <View>
               <Image
-                source={require("../../assets/icons/home.png")}
+                source={require("@/assets/icons/home.png")}
                 style={{
                   width: 24,
                   height: 24,
@@ -42,7 +42,7 @@ const TabsLayout = () => {
           title: t("schedule"),
           tabBarIcon: ({ color, focused }) => (
             <Image
-              source={require("../../assets/icons/schedule.png")}
+              source={require("@/assets/icons/schedule.png")}
               style={{
                 width: 24,
                 height: 24,
@@ -58,7 +58,7 @@ const TabsLayout = () => {
           title: t("groups"),
           tabBarIcon: ({ color, focused }) => (
             <Image
-              source={require("../../assets/icons/groups.png")}
+              source={require("@/assets/icons/groups.png")}
               style={{
                 width: 24,
                 height: 24,
@@ -74,7 +74,7 @@ const TabsLayout = () => {
           title: t("settings"),
           tabBarIcon: ({ color, focused }) => (
             <Image
-              source={require("../../assets/icons/settings.png")}
+              source={require("@/assets/icons/settings.png")}
               style={{
                 width: 24,
                 height: 24,

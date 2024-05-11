@@ -21,7 +21,7 @@ const CompletedTaskScreen: React.FC = () => {
 
   useEffect(() => {
     controllers.task
-      .get()
+      .completed()
       .then((_data) => {
         setTasks(_data);
       })
@@ -36,7 +36,7 @@ const CompletedTaskScreen: React.FC = () => {
           <TouchableOpacity onPress={() => router.back()}>
             <Image
               style={styles.LeftIcon}
-              source={require("../assets/images/iconleft.png")}
+              source={require("@/assets/images/iconleft.png")}
             />
           </TouchableOpacity>
           <Text style={styles.heading}>{t("completed_label")} {t("task_title")}</Text>

@@ -45,7 +45,7 @@ export const ClassPicker = () => {
    <View style={styles.header}>
     <TouchableOpacity onPress={() => router.back()}>
      <Image
-      source={require("../../assets/icons/back.png")}
+      source={require("@/assets/icons/back.png")}
       style={styles.backBtn}
      />
     </TouchableOpacity>

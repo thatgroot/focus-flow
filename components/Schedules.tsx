@@ -1,6 +1,6 @@
 import { useAppStore } from "@/store";
 import { controllers } from "@/utils/crud";
-import { t, translateDate } from "@/utils/helpers";
+import { getFlexDirection, t, translateDate } from "@/utils/helpers";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -28,24 +28,35 @@ export const Schedules = ({
 }) => {
   const [checked, setChecked] = useState(false);
   const { locale } = useAppStore();
+  const direction = getFlexDirection(locale);
   useEffect(() => {
     setChecked(data.completionStatus);
   }, []);
   return (
     <View style={[styles.card, { backgroundColor: bgColor, gap: 6 }]}>
-      <View style={{ ...styles.item }}>
+      <View
+        style={[
+          styles.item,
+          {
+            justifyContent: "flex-end",
+            alignItems: locale === "ar" ? "flex-end" : "flex-start",
+          },
+        ]}
+      >
         <View
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "relative",
-            borderRadius: 24,
-            width: 48,
-            height: 24,
-            marginVertical: 6,
-            backgroundColor: "rgba(255,255,255,0.31)",
-          }}
+          style={[
+            {
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
+              borderRadius: 24,
+              width: 48,
+              height: 24,
+              marginVertical: 6,
+              backgroundColor: "rgba(255,255,255,0.31)",
+            },
+          ]}
         >
           <Text
             style={{
@@ -55,13 +66,12 @@ export const Schedules = ({
               color: "#000",
             }}
           >
-            {data.subject ? t('class_title') : t("task_title")}
+            {data.subject ? t("class_title") : t("task_title")}
           </Text>
         </View>
-        <View style={styles.headerTitle}>
+        <View style={[styles.headerTitle,direction]}>
           <Text style={styles.subtitle}>
-            {/* @ts-ignore */}
-            {data.subject ? t(data.subject?.toLocaleLowerCase()) : data.title}
+            {data.subject ? t(data.subject?.toLocaleLowerCase() as any) : data.title}
           </Text>
           <TouchableOpacity onPress={() => {}}>
             <Image source={icon} style={styles.shareIcon} />
@@ -132,7 +142,7 @@ export const Schedules = ({
                 data: {
                   ...others,
                   completionStatus: !checked,
-                  completedOn: new Date()
+                  completedOn: new Date(),
                 },
               });
             } else {
@@ -145,7 +155,7 @@ export const Schedules = ({
                 data: {
                   ...others,
                   completionStatus: !checked,
-                  completedOn: new Date()
+                  completedOn: new Date(),
                 },
               });
             }
@@ -262,6 +272,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignSelf:"stretch"
   },
   checkbox: {
     width: 18,

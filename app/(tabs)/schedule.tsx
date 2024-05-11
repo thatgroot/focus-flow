@@ -1,34 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
   Text,
   TouchableOpacity,
   SafeAreaView,
-  Modal,
   Image,
   Pressable,
   ScrollView,
 } from "react-native";
 
-import { Calendar } from "react-native-calendars";
-import moment from "moment";
-
-import { Schedules } from "@/components/Schedules";
 import { useRouter } from "expo-router";
 import ModalWrapper from "@/components/ModalWrapper";
-import { arrangeByStartTime, getDueDates } from "@/utils/crud";
-import { useAppStore } from "../../store";
+import { useAppStore } from "@/store";
 import { Chip } from "@/components/TaskCategories";
 import Button from "@/elements/Button";
-import DaysOfWeek from "@/components/DaysOfWeek";
-import {
-  date,
-  t,
-  translateDate,
-  translatetime,
-  ucFirst,
-} from "@/utils/helpers";
+import { getFlexDirection, t, ucFirst } from "@/utils/helpers";
+import ScheduleTimeline from "@/components/schedules/ScheduleTimeline";
+import CurrentDateTile from "@/components/date/CurrentDateTile";
 
 const tasks = [
   {
@@ -60,55 +49,21 @@ const tasks = [
 ];
 
 const schedule: React.FC = () => {
-  const days = date.daysOfTheWeek();
-
-  const { locale, i18n, type } = useAppStore();
-
+  const { type, locale } = useAppStore();
+  const direction = getFlexDirection(locale);
   const { setType, tags, setTags } = useAppStore();
-
-  const [selectedDay, setSelectedDay] = useState<Date>(new Date());
-  const [showCalendar, setShowCalendar] = useState<boolean>(false);
-  const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(0);
 
   const [Isvisible, setVisible] = useState(false);
   const [showBadges, setShowBadges] = useState(false);
-  const [markedDates, setMarkedDates] = useState<Date[]>([]);
-
-  const [data, setData] = useState<
-    {
-      time: string;
-      items: Schedule[];
-    }[]
-  >([]);
 
   const router = useRouter();
-
-  const handleDayPress = (dateString: string) => {
-    const date = new Date(dateString);
-    setSelectedDay(date);
-    setCurrentMonthIndex(currentMonthIndex + 1);
-    if (markedDates.includes(date)) {
-      setMarkedDates(markedDates.filter((markedDate) => markedDate !== date));
-    } else {
-      setMarkedDates([...markedDates, date]);
-    }
-  };
-
-  useEffect(() => {
-    getDueDates().then(({ classes, tasks }) => {
-      const arranged = arrangeByStartTime({ classes, tasks });
-      setData(arranged);
-    });
-
-    return () => {};
-  }, []);
 
   const ScheduleActions = () => {
     return (
       <View style={{ height: 460 }}>
         <TouchableOpacity onPress={() => setVisible(!Isvisible)}>
           <Image
-            source={require("../../assets/icons/close.png")}
+            source={require("@/assets/icons/close.png")}
             style={styles.closeBtn}
           />
         </TouchableOpacity>
@@ -157,12 +112,12 @@ const schedule: React.FC = () => {
         >
           <TouchableOpacity
             onPress={() => {
-              setVisible(false)
+              setVisible(false);
               router.push("/schedule");
             }}
           >
             <Image
-              source={require("../../assets/icons/back.png")}
+              source={require("@/assets/icons/back.png")}
               style={{
                 width: 18,
                 height: 18,
@@ -233,223 +188,19 @@ const schedule: React.FC = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={styles.container}>
-        <View style={styles.mainProfile}>
-          <View>
-            <Text style={[styles.headingSub]}>{t("schedule")}</Text>
-          </View>
+        <View style={[styles.mainProfile, direction]}>
+          <Text style={[styles.headingSub]}>{t("schedule")}</Text>
+
           <Pressable>
             <Image
-              source={require("../../assets/icons/share.png")}
+              source={require("@/assets/icons/share.png")}
               style={{ width: 23, height: 24, tintColor: "#000" }}
             />
           </Pressable>
         </View>
 
-        <View style={styles.mainCalendar}>
-          <View>
-            <Text style={[styles.heading, styles.headingSub]}>
-              {t("today")}
-            </Text>
-            <Text style={styles.heading}>
-              {locale === "en"
-                ? new Date().toDateString()
-                : translateDate(new Date().toDateString())}
-            </Text>
-          </View>
-          <View>
-            <TouchableOpacity onPress={() => setShowCalendar(true)}>
-              <Image
-                style={styles.CalendarIcon}
-                source={require("../../assets/images/icon8.png")}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View>
-          <Modal
-            visible={showCalendar}
-            animationType="slide"
-            transparent={true}
-            onRequestClose={() => setShowCalendar(false)}
-          >
-            <View
-              style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-                backgroundColor: "rgba(0,0,0,0.5)",
-              }}
-            >
-              <View
-                style={{
-                  backgroundColor: "#ffffff",
-                  width: 300,
-                  justifyContent: "space-between",
-                  paddingVertical: 16,
-                  paddingHorizontal: 16,
-                  borderRadius: 30,
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    paddingHorizontal: 16,
-                    paddingVertical: 8,
-                    marginBottom: 8,
-                  }}
-                >
-                  <Text style={{ fontWeight: "bold" }}>Select Date</Text>
-                  <TouchableOpacity onPress={() => setShowCalendar(false)}>
-                    {/* <Image source={require('../../assets/cross.png')} style={{ width: 15, height: 15 }} /> */}
-                  </TouchableOpacity>
-                </View>
-                <Calendar
-                  onDayPress={(day) => {
-                    handleDayPress(day.dateString);
-                    // setShowCalendar(false);
-                  }}
-                  markedDates={{
-                    [moment(selectedDay).format("YYYY-MM-DD")]: {
-                      selected: true,
-                      selectedColor: "#4cb050",
-                    },
-                  }}
-                  theme={{
-                    backgroundColor: "#ffffff",
-                    calendarBackground: "#ffffff",
-                    arrowColor: "#4cb050",
-                    todayTextColor: "#4cb050",
-                  }}
-                />
-                <TouchableOpacity
-                  onPress={() => setShowCalendar(false)}
-                  style={{
-                    height: 40,
-                    alignSelf: "center",
-                    marginBottom: 8,
-                    marginTop: 8,
-                    borderRadius: 8,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: 150,
-                    backgroundColor: "#4cb050",
-                  }}
-                >
-                  <Text style={{ color: "#ffffff" }}>Confirm Date</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
-          <View
-            style={{
-              flexDirection: "row",
-              paddingHorizontal: 10,
-              height: 120,
-              alignItems: "center",
-            }}
-          >
-            <DaysOfWeek
-              days={days}
-              onSelect={() => {
-                // todo
-              }}
-            />
-          </View>
-        </View>
-        <View
-          style={{
-            gap: 32,
-          }}
-        >
-          <View style={styles.DueDate}>
-            <Text style={styles.due}>
-              {t("due_date")} {" : "}
-              {locale === "en"
-                ? date.scheduleExpire(data)
-                : translateDate(
-                    date.scheduleExpire(data) ?? new Date().toDateString()
-                  )}
-            </Text>
-          </View>
-          <View
-            style={{
-              gap: 0,
-              paddingBottom: 200,
-            }}
-          >
-            {data.map(({ time, items }, index) => (
-              <View
-                key={index} // Adding a unique key to each rendered item
-                style={{
-                  flexDirection: "row",
-                  width: "100%",
-                  gap: 12,
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 15,
-                    width: 48,
-                    fontFamily: "Inter-Bold",
-                  }}
-                >
-                  {locale === "en" ? time : translatetime(time)}
-                </Text>
-                <View
-                  style={{
-                    alignItems: "center",
-                  }}
-                >
-                  <View
-                    style={{
-                      borderColor: "#8D99DE",
-                      borderWidth: 4,
-                      backgroundColor: "#FFFFFF",
-                      width: 18,
-                      height: 18,
-                      borderRadius: 100,
-                      marginTop: -4,
-                    }}
-                  />
-                  <View
-                    style={{
-                      backgroundColor: "#8D99DE",
-                      width: 5,
-                      flex: 1,
-                      borderEndEndRadius: 24,
-                      borderEndStartRadius: 24,
-                    }}
-                  />
-                </View>
-                <View
-                  style={{
-                    flex: 1,
-                    gap: 2,
-                    flexDirection: "column",
-                    paddingBottom: 18,
-                  }}
-                >
-                  {items.map((item, index) => {
-                    // const itemStartTime = getStartTimeInMinutes(item.startTime);
-                    // const itemEndTime = getStartTimeInMinutes(item.endTime);
-                    // const startTime = formatTime(itemStartTime);
-                    // const endTime = formatTime(itemEndTime);
-                    return (
-                      <Schedules
-                        key={`${item.endDate.getMilliseconds()}_${index}`}
-                        data={item}
-                        bgColor="rgba(254, 181, 166, 1)"
-                        icon={require("../../assets/icons/share.png")}
-                      />
-                    );
-                  })}
-                </View>
-              </View>
-            ))}
-          </View>
-        </View>
+        <CurrentDateTile illustration={false} />
+        <ScheduleTimeline />
 
         <ModalWrapper
           isVisible={Isvisible}
@@ -460,7 +211,7 @@ const schedule: React.FC = () => {
           {showBadges ? <BadgeContainer /> : <ScheduleActions />}
         </ModalWrapper>
       </ScrollView>
-      <View style={styles.bottomBtn}>
+      <View style={[styles.bottomBtn, direction]}>
         <Pressable
           style={styles.planBtn}
           onPress={() => setVisible(!Isvisible)}
@@ -495,21 +246,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 10,
   },
-  profileImage: {
-    width: 53,
-    height: 53,
-    borderRadius: 100,
-  },
+
   header: {
     justifyContent: "center",
     alignItems: "flex-start",
     display: "flex",
     flexDirection: "column",
   },
-  image: {
-    width: 18,
-    height: 18,
-  },
+
   content: {
     justifyContent: "space-between",
     alignItems: "stretch",
@@ -532,98 +276,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     fontWeight: "700",
   },
-  mainCalendar: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 30,
-  },
-  CalendarIcon: {
-    height: 38,
-    width: 38,
-  },
 
-  bgImage: {
-    width: 215,
-    height: 169,
-  },
-  courseCard: {
-    alignItems: "stretch",
-    borderRadius: 12,
-    backgroundColor: "#FFF",
-    display: "flex",
-    marginTop: 16,
-    padding: 25,
-    flexDirection: "row",
-    justifyContent: "flex-start",
-  },
-  maindayWeeks: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 20,
-  },
-
-  dayOfWeek: {
-    color: "#353535",
-    fontFamily: "Inter-Medium",
-    lineHeight: 20,
-    fontSize: 12,
-    letterSpacing: 1,
-  },
-  day: {
-    color: "#353535",
-    fontWeight: "400",
-    lineHeight: 20,
-    fontSize: 19,
-    fontFamily: "Inter-Regular",
-    letterSpacing: 1,
-    marginTop: 10,
-  },
-  BtnDayWeeks: {
-    borderColor: "##8D99DE",
-    borderWidth: 1,
-    marginLeft: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 7,
-    width: 50,
-    height: 80,
-  },
-  courseIcon: {
-    borderRadius: 100,
-    borderColor: "rgba(154, 165, 181, 1)",
-    borderWidth: 2,
-    height: 24,
-    width: 24,
-    marginRight: 12,
-  },
-
-  addButtonText: {
-    fontWeight: "600",
-    fontSize: 20,
-    marginRight: 8,
-    fontFamily: "Inter-Bold",
-  },
-  DueDate: {
-    flexDirection: "row",
-    marginTop: 20,
-  },
-  due: {
-    color: "#9AA5B5",
-    lineHeight: 15.73,
-    fontWeight: "500",
-    fontSize: 13,
-  },
-  yearDay: {
-    fontWeight: "400",
-    fontSize: 13,
-    lineHeight: 15.73,
-    color: "#353535",
-    marginLeft: 4,
-  },
-  stepperStyle: {
-    marginTop: 20,
-  },
   bottomBtn: {
     flexDirection: "row",
     position: "absolute",
@@ -634,6 +287,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     height: 80,
     alignItems: "center",
+    gap: 12,
   },
   planBtn: {
     width: 139,

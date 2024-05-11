@@ -63,7 +63,7 @@ const ShareSuccess = ({
           <Text style={styles.headingText}>Congratulations!</Text>
           <Image
             resizeMode="contain"
-            source={require("../assets/icons/approve.png")}
+            source={require("@/assets/icons/approve.png")}
             style={styles.mainImage}
           />
 
