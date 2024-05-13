@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   StyleSheet,
@@ -14,16 +14,13 @@ import { useRouter } from "expo-router";
 import { auth } from "@/utils/firebase";
 import { signOut } from "firebase/auth";
 import { Avatar } from "@/components/Avatar";
-import { I18n } from "i18n-js";
-import { getFlexDirection, getTextAlignment, setTranslationHandler, t } from "@/utils/helpers";
-import { useAppStore } from "@/store";
-import { translations } from "@/utils/localization";
+import {
+  t,
+} from "@/utils/helpers";
+import LanguageSelector from "@/components/localization/LanguageSelector";
 
 const settings: React.FC = () => {
   const router = useRouter();
-  const { setLocale, locale } = useAppStore();
-
-
 
   const account_navigation = [
     {
@@ -44,7 +41,11 @@ const settings: React.FC = () => {
   ];
 
   const community_navigation = [
-    { title:t("faqs_title"), icon: require("@/assets/images/FAQ.png"), route: "/FAQs" },
+    {
+      title: t("faqs_title"),
+      icon: require("@/assets/images/FAQ.png"),
+      route: "/FAQs",
+    },
     {
       title: t("logout"),
       icon: require("@/assets/images/logout.png"),
@@ -55,20 +56,11 @@ const settings: React.FC = () => {
   const handleSignOut = async () => {
     try {
       await signOut(auth);
-      console.log("Signed out successfully");
       router.push("/auth/signin");
     } catch (error) {
       console.log({ error });
     }
   };
-
-  function changeLocale(_locale: "en" | "ar") {
-    const i18n = new I18n(translations);
-    i18n.locale = _locale;
-    setTranslationHandler(i18n);
-    setLocale(_locale);
-    router.push("/home_screen");
-  }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -91,30 +83,7 @@ const settings: React.FC = () => {
         </View>
 
         <Text style={[styles.headingTimer]}>{t("language_settings")}</Text>
-        <View style={styles.btnView}>
-          <Text style={styles.headingTimerON}>{t("change_language")} ({locale})</Text>
-          <View
-            style={{
-              flexDirection: "row",
-              gap: 12,
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                changeLocale("en");
-              }}
-            >
-              <Text style={styles.headingTimerON}>English</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                changeLocale("ar");
-              }}
-            >
-              <Text style={styles.headingTimerON}>Arabic</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        <LanguageSelector route="/home_screen" />
         <Text style={styles.headingTimer}>{t("account_title")}</Text>
         {account_navigation.map(({ title, icon, route }, index) => (
           <TouchableOpacity
@@ -141,7 +110,7 @@ const settings: React.FC = () => {
             key={index}
             style={styles.AccountView}
             onPress={() => {
-              Alert.alert(title)
+              Alert.alert(title);
               if (title == t("logout")) {
                 handleSignOut();
               } else {

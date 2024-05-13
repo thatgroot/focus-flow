@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "focus-flow",
+    "name": "Focus Flow",
     "slug": "focus-flow",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/icons/logo.png",
     "scheme": "focus-flow",

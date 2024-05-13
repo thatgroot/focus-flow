@@ -105,7 +105,7 @@ export const signin = async ({
 };
 export const inputRegex = {
   email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-  password: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+  password: /.{6,}/,
   text: /^[a-zA-Z\s]*$/,
   number: /^[0-9]*$/,
 };
@@ -159,7 +159,7 @@ export const updateUser = {
   }: CreateDocumentTypScaffold & { email: string }) => {
     sendPasswordResetEmail(auth, email)
       .then(() => {
-        onSuccess("Please check your email for reset link");
+        onSuccess(t("reset_link"));
       })
       .catch(onError);
   },

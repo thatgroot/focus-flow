@@ -15,7 +15,7 @@ const PromiseWaiter = () => {
     Animated.loop(
       Animated.timing(spinValue, {
         toValue: 1,
-        duration: 1500,
+        duration: 3000,
         easing: Easing.linear,
         useNativeDriver: true,
       })

@@ -1,38 +1,23 @@
+import { View } from 'react-native';
+import { createAvatar } from '@dicebear/core';
+import { funEmoji, lorelei } from '@dicebear/collection';
+import { SvgXml } from 'react-native-svg';
 import { auth } from '@/utils/firebase';
-import { LinearGradient } from 'expo-linear-gradient';
-import { View, Text, StyleSheet } from 'react-native';
 
-export function Avatar(): JSX.Element {
- const name = auth.currentUser?.displayName ?? "A Z";
- const initials = name.split(' ').map((word) => word[0].toUpperCase()).join('');
- const colors = ['#f00', '#ff0', '#0f0', '#00f', '#f0f', '#0ff'];
+export  function Avatar() {
+  const avatar = createAvatar(funEmoji, {
+    seed: auth.currentUser?.displayName ?? "Kitty",
+    backgroundColor: ["b6e3f4","c0aede","d1d4f9"]
+  }).toString();
 
- return (
-  <LinearGradient
-   colors={colors}
-   start={[0, 0]}
-   end={[1, 0]}
-   style={styles.avatarContainer}
-  >
-   <Text style={[styles.avatarText]}>
-    {initials}
-   </Text>
-  </LinearGradient>
- );
+  return (
+    <View style={{
+      width:44,
+      height:44,
+      borderRadius:6,
+      overflow:"hidden"
+    }}>
+      <SvgXml xml={avatar} />
+    </View>
+  );
 }
-
-const styles = StyleSheet.create({
- avatarContainer: {
-  width: 50,
-  height: 50,
-  borderRadius: 25,
-  justifyContent: 'center',
-  alignItems: 'center',
- },
- avatarText: {
-  color: '#fff',
-  fontSize: 20,
-  fontWeight: 'bold',
- },
-});
-

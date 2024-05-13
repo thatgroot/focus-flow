@@ -112,6 +112,7 @@ function RootLayoutNav() {
               style={{
                 height: 300,
                 width: 300,
+                borderRadius:64,
               }}
             />
             {show && (

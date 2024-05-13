@@ -6,6 +6,7 @@ import {
   ScrollView,
   Alert,
   TouchableOpacity,
+  KeyboardAvoidingView,
 } from "react-native";
 import LabeledInput from "@/components/InputField";
 import Button from "@/elements/Button";
@@ -17,6 +18,7 @@ import { Image } from "expo-image";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "@/utils/firebase";
 import { useAppStore } from "@/store";
+import LanguageSelector from "@/components/localization/LanguageSelector";
 
 const Signin = () => {
   const router = useRouter();
@@ -30,7 +32,6 @@ const Signin = () => {
     password: "",
   });
 
-  const [matching, setMatching] = useState(false);
   const { locale } = useAppStore();
   const direction = getFlexDirection(locale);
 
@@ -67,7 +68,6 @@ const Signin = () => {
       password: data.password,
       onError: (error) => {
         setLoading(false);
-        Alert.alert(error);
       },
       onSuccess: () => {
         setLoading(false);
@@ -78,8 +78,15 @@ const Signin = () => {
 
   const handleForgotPassword = async () => {
     if (data.email) {
-      await sendPasswordResetEmail(auth, data.email);
-      Alert.alert(t("reset_link"));
+      updateUser.forgotPassword({
+        email: data.email,
+        onError: (error) => {
+          console.log(error);
+        },
+        onSuccess: (message) => {
+          Alert.alert(message);
+        },
+      });
     } else {
       Alert.alert(t("provide_email"));
     }
@@ -87,7 +94,7 @@ const Signin = () => {
 
   return (
     <ScrollView>
-      <View style={styles.container}>
+      <KeyboardAvoidingView behavior="padding" style={styles.container}>
         <Image
           source={require("@/assets/images/register_illustration.png")}
           style={styles.image}
@@ -109,23 +116,7 @@ const Signin = () => {
             )
           )}
 
-          <TouchableOpacity
-            onPress={() => {
-              if (data.email) {
-                updateUser.forgotPassword({
-                  email: data.email,
-                  onError: (error) => {
-                    console.log(error);
-                  },
-                  onSuccess: (message) => {
-                    Alert.alert(message);
-                  },
-                });
-              } else {
-                Alert.alert("Please provide the email");
-              }
-            }}
-          >
+          <TouchableOpacity onPress={handleForgotPassword}>
             <Text style={styles.description}>{t("forgot_password")}</Text>
           </TouchableOpacity>
 
@@ -145,7 +136,16 @@ const Signin = () => {
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+        <View
+          style={{
+            position: "absolute",
+            top: 78,
+            right: 32,
+          }}
+        >
+          <LanguageSelector route="/auth/signin" />
+        </View>
+      </KeyboardAvoidingView>
     </ScrollView>
   );
 };

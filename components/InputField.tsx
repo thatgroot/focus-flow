@@ -1,9 +1,7 @@
 import { useAppStore } from "@/store";
 import { inputRegex } from "@/utils/auth";
 import {
-  getColumnAlignment,
   getFlexDirection,
-  getTextAlignment,
 } from "@/utils/helpers";
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Image, TextInput } from "react-native";
@@ -38,7 +36,6 @@ export default function LabeledInput({
   const { locale } = useAppStore();
 
   const direction = getFlexDirection(locale);
-  const alignment = getTextAlignment(locale);
 
   const [text, setText] = useState("");
   const [compat, setCompat] = useState<"invalid" | "valid" | "inactive">(
@@ -96,9 +93,16 @@ export default function LabeledInput({
           secureTextEntry={inputType === "password" && !toggle} // Set secureTextEntry for password inputType
           value={text}
           autoCapitalize="none"
+          textContentType="oneTimeCode"
         />
         {inputType === "password" && (
           <TouchableOpacity
+            style={{
+              flex: 1,
+              width: 48,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
             onPress={() => {
               setToggle(!toggle);
             }}
@@ -116,7 +120,7 @@ export default function LabeledInput({
             style={styles.errorIcon}
             source={require("@/assets/icons/error.png")}
           />
-          <Text style={styles.errorText}> {error}</Text>
+          <Text style={styles.errorText}>{error}</Text>
         </View>
       )}
     </View>
