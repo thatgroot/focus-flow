@@ -1,5 +1,12 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Alert, KeyboardAvoidingView } from "react-native";
+import React, { useCallback, useState, useMemo } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Alert,
+  KeyboardAvoidingView,
+} from "react-native";
 import LabeledInput from "@/components/InputField";
 import Button from "@/elements/Button";
 import Link from "@/elements/Link";
@@ -13,13 +20,8 @@ import { useAppStore } from "@/store";
 const Signup = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-
-  const [confirm_password,setConfirmPassword] = useState("")
-  const [data, setData] = useState<{
-    name: string;
-    email: string;
-    password: string;
-  }>({
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [data, setData] = useState({
     name: "",
     email: "",
     password: "",
@@ -27,66 +29,68 @@ const Signup = () => {
 
   const [matching, setMatching] = useState(false);
 
-  const fields: {
-    label: string;
-    placeholder: string;
-    type: InputType;
-    error: string;
-    state: InputState;
-    name: string;
-  }[] = [
-    {
-      label: t("full_name"),
-      placeholder: t("full_name"),
-      type: "text",
-      error: "Name is required!",
-      state: "inactive",
-      name: "name",
-    },
-    {
-      label: t("email_address"),
-      placeholder: "teebaapp123@gmail.com",
-      type: "email",
-      error: t("invalid_email"),
-      state: "inactive",
-      name: "email",
-    },
-    {
-      label: t("enter_password"),
-      placeholder: t("password"),
-      type: "password",
-      error: "",
-      state: "inactive",
-      name: "password",
-    },
-  ];
   const { locale } = useAppStore();
-  const direction = getFlexDirection(locale);
+  const direction = useMemo(() => getFlexDirection(locale), [locale]);
 
-  const onHandleSignup = async () => {
+  const fields = useMemo(
+    () => [
+      {
+        label: t("full_name"),
+        placeholder: t("full_name"),
+        type: "text",
+        error: "Name is required!",
+        state: "inactive",
+        name: "name",
+      },
+      {
+        label: t("email_address"),
+        placeholder: "teebaapp123@gmail.com",
+        type: "email",
+        error: t("invalid_email"),
+        state: "inactive",
+        name: "email",
+      },
+      {
+        label: t("enter_password"),
+        placeholder: t("password"),
+        type: "password",
+        error: "",
+        state: "inactive",
+        name: "password",
+      },
+    ],
+    [locale]
+  );
+
+  const onHandleSignup = useCallback(async () => {
     try {
       setLoading(true);
       register({
         ...data,
         onError: (error) => {
           console.log(error);
+          Alert.alert(error.message);
         },
         onSuccess: (message) => {
           Alert.alert(message);
-        },
-      }).then(({ error, message }) => {
-        if (error) {
-          Alert.alert(message);
-        } else {
           router.push("/auth/signin");
-        }
-        setLoading(false);
-      });
+        },
+      }).finally(() => setLoading(false));
     } catch (error: any) {
       setLoading(false);
       Alert.alert(error.message);
     }
-  };
+  }, [data, router]);
+
+  const handleInputChange = useCallback(
+    (name: string, value: string) => {
+      setData((prevData) => ({ ...prevData, [name]: value }));
+      if (name === "password") {
+        setMatching(value === confirmPassword);
+      }
+    },
+    [confirmPassword]
+  );
 
   return (
     <ScrollView>
@@ -105,15 +109,12 @@ const Signup = () => {
                 key={index}
                 label={label}
                 placeholder={placeholder}
-                inputType={type}
+                inputType={type as any}
                 error={error}
-                inputState={matching && type === "password" ? "valid" : state}
-                onChangeText={(text) => {
-                  if (type === "password") {
-                    setMatching(text === confirm_password);
-                  }
-                  setData({ ...data, [name]: text });
-                }}
+                inputState={
+                  matching && type === "password" ? "valid" : (state as any)
+                }
+                onChangeText={(text) => handleInputChange(name, text)}
               />
             )
           )}
@@ -126,28 +127,18 @@ const Signup = () => {
             inputState={!matching ? "invalid" : "valid"}
             onChangeText={(text) => {
               setMatching(text === data.password);
-              setConfirmPassword(text)
+              setConfirmPassword(text);
             }}
           />
 
           <Button
-            disabled={!matching}
+            disabled={!matching || loading}
             onPress={onHandleSignup}
             text={loading ? t("processing_request") : t("sign_up")}
           />
 
-          <View
-            style={[
-              {
-                justifyContent: "flex-start",
-                alignItems: "flex-start",
-                position: "relative",
-                gap: 8,
-              },
-              direction,
-            ]}
-          >
-            <Text style={{ fontSize: 14, textAlign: "left", color: "#353535" }}>
+          <View style={[styles.alternateAction, direction]}>
+            <Text style={styles.alternateText1}>
               {t("already_have_account")}
             </Text>
             <Link
@@ -156,13 +147,7 @@ const Signup = () => {
             />
           </View>
         </View>
-        <View
-          style={{
-            position: "absolute",
-            top: 78,
-            right: 32,
-          }}
-        >
+        <View style={styles.languageSelector}>
           <LanguageSelector route="/auth/register" />
         </View>
       </KeyboardAvoidingView>
@@ -196,6 +181,22 @@ const styles = StyleSheet.create({
     textAlign: "left",
     color: "#353535",
   },
+  alternateAction: {
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    position: "relative",
+    gap: 8,
+  },
+  alternateText1: {
+    fontSize: 14,
+    textAlign: "left",
+    color: "#353535",
+  },
+  languageSelector: {
+    position: "absolute",
+    top: 78,
+    right: 32,
+  },
 });
 
-export default Signup;
+export default React.memo(Signup);

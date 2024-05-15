@@ -1,6 +1,6 @@
 type WithOmitPath = Omit<CreateDocumentType, "path">;
 // Enum for recurrence types
-type Recurrence = "daily" | "weekly" | "monthly";
+type Recurrence = "daily" | "weekly" | "monthly" | string;
 type InputType ="email" | "password" | "text" | "number"
 type InputState ="active" | "invalid" | "valid" | "inactive"
 interface CreateDocumentTypScaffold {
@@ -53,7 +53,7 @@ interface Schedule {
   tags: string[] | [];
   startTime: Date;
   endTime: Date;
-  schedule: "daily" | "monthly" | "weekly"; // This will be a common property for both Task and Class
+  schedule: Recurrence; // This will be a common property for both Task and Class
   completionStatus: boolean;
   completedOn?: any;
 }

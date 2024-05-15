@@ -44,6 +44,7 @@ export default function ScheduleTimeline() {
 
   useEffect(() => {
     getDueDates().then(({ classes, tasks }) => {
+      console.log('tasks', tasks)
       const arranged = arrangeByStartTime({ classes, tasks });
       setData(arranged);
     });

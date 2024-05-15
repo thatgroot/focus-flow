@@ -40,6 +40,16 @@ export const useAppStore = create<State & Actions>((set) => ({
   locale:"en",
   tags: [],
   groups: [],
+  scheduleItem:{
+    startDate: new Date(),
+    endDate: new Date(),
+    startTime: new Date(),
+    endTime: new Date(),
+    note: "",
+    schedule: "daily",
+    completionStatus: false,
+    tags:[],
+  },
   setType: (type: ScheduleType) => set({ type }),
   setLocale: (locale: "en" | "ar") => {
     AsyncStorage.setItem("locale", locale).then(() => {

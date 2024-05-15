@@ -2,9 +2,7 @@ import { useAppStore } from "@/store";
 import { arabic_dates, getFlexDirection, t } from "@/utils/helpers";
 import { Image } from "expo-image";
 import React from "react";
-import { View, Text, StyleSheet, ImageBackground } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 interface Props {
   clock: any;
   users: string[];

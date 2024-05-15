@@ -1,18 +1,16 @@
 import { useAppStore } from "@/store";
 import { inputRegex } from "@/utils/auth";
-import {
-  getFlexDirection,
-} from "@/utils/helpers";
+import { getFlexDirection, stateBorderColor } from "@/utils/helpers";
+import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Image, TextInput } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-
-const stateBorderColor = {
-  active: "#5F75EE",
-  inactive: "#9AA5B5",
-  valid: "#13CE66",
-  invalid: "#E34850",
-};
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 
 interface Props {
   label: string;
@@ -93,23 +91,26 @@ export default function LabeledInput({
           secureTextEntry={inputType === "password" && !toggle} // Set secureTextEntry for password inputType
           value={text}
           autoCapitalize="none"
-          textContentType="oneTimeCode"
+          textContentType={inputType === "password" ? "oneTimeCode" : "none"}
+          autoComplete="off"
+          autoCorrect={false}
         />
         {inputType === "password" && (
           <TouchableOpacity
             style={{
-              flex: 1,
               width: 48,
               justifyContent: "center",
               alignItems: "center",
+              alignSelf: "stretch",
             }}
             onPress={() => {
               setToggle(!toggle);
             }}
           >
-            <Image
-              style={styles.icon}
-              source={require("@/assets/icons/eye.png")} // Placeholder icon, replace with appropriate image
+            <Ionicons
+              name={toggle ? "eye-off" : "eye"}
+              size={18}
+              color="grey"
             />
           </TouchableOpacity>
         )}

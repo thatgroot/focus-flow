@@ -110,7 +110,6 @@ const settings: React.FC = () => {
             key={index}
             style={styles.AccountView}
             onPress={() => {
-              Alert.alert(title);
               if (title == t("logout")) {
                 handleSignOut();
               } else {

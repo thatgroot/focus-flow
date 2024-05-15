@@ -1,3 +1,4 @@
+import { t } from "@/utils/helpers";
 import React, { useEffect, useRef } from "react";
 import { View, StyleSheet, Image, Text, TouchableOpacity } from "react-native";
 import { Modalize } from "react-native-modalize";
@@ -37,9 +38,9 @@ const ShareSuccess = ({
   const _ref = useRef<Modalize>(null);
 
   const congratulationTexts = [
-    { content: "Class Scheduled!", style: styles.headingText },
-    { content: "Share your Schedule", style: styles.subHeadingText },
-    { content: "You can always share your schedule!", style: styles.infoText },
+    { content: t("schedule_confirmation_message"), style: styles.subHeadingText },
+    // { content: "Share your Schedule", style: styles.subHeadingText },
+    // { content: "You can always share your schedule!", style: styles.infoText },
   ];
 
   useEffect(() => {
@@ -60,7 +61,7 @@ const ShareSuccess = ({
     >
       <View style={styles.container}>
         <View style={styles.card}>
-          <Text style={styles.headingText}>Congratulations!</Text>
+          <Text style={styles.headingText}>{t("schedule_confirmation_title")}</Text>
           <Image
             resizeMode="contain"
             source={require("@/assets/icons/approve.png")}
@@ -69,19 +70,19 @@ const ShareSuccess = ({
 
           <ScreenSection textContents={congratulationTexts} />
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               onClose();
             }}
             style={styles.shareButton}
           >
             <Text style={styles.shareButtonText}>Share</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             onPress={() => onClose()}
             style={styles.notNowButton}
           >
-            <Text style={styles.notNowButtonText}>Not Now</Text>
+            <Text style={styles.notNowButtonText}>{t("finish")}</Text>
           </TouchableOpacity>
         </View>
       </View>

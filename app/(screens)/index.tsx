@@ -3,22 +3,43 @@ import { StyleSheet, Text, View } from "react-native";
 import { Color, FontSize, Border } from "@/styles/GlobalStyles";
 import { router } from "expo-router";
 import { auth } from "@/utils/firebase";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { getNetworkStateAsync } from "expo-network";
+import Button from "@/elements/Button";
 
 const Splash = () => {
+  const [reachable, setReachable] = useState<boolean>(false);
+  const [waiting, setWaiting] = useState<boolean>(false);
 
-  useEffect(() => {
+  const checkNetwork = async () => {
+    const state = await getNetworkStateAsync();
+    console.log("state.isInternetReachable", state.isInternetReachable);
+    const isInternetReachable = state.isInternetReachable ?? false;
+    setReachable(isInternetReachable);
+    setWaiting(!isInternetReachable);
+    return isInternetReachable;
+  };
 
-    setTimeout(() => {
+  const handleNavigation = async () => {
+    const isInternetReachable = await checkNetwork();
+    if (isInternetReachable) {
       if (!auth.currentUser?.uid) {
         router.replace("/(screens)/auth/signin");
       } else {
         router.replace("/home_screen");
       }
-    }, 1000);
+    }
+  };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      handleNavigation();
+    }, 500);
+    return () => clearTimeout(timeout);
   }, []);
+
   return (
-    <View style={[styles.splash]}>
+    <View style={styles.splash}>
       <Image
         style={{
           width: 225,
@@ -27,10 +48,33 @@ const Splash = () => {
         contentFit="contain"
         source={require("@/assets/images/group1.png")}
       />
-      <View style={{}}>
-        <Text style={[styles.flowTypo]}>FOCUS</Text>
-        <Text style={[styles.flowTypo]}>FLOW</Text>
+
+      <View>
+        <Text style={styles.flowTypo}>FOCUS</Text>
+        <Text style={styles.flowTypo}>FLOW</Text>
       </View>
+      {!reachable && waiting && (
+        <View
+          style={{
+            alignSelf: "stretch",
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={{
+              fontWeight: "600",
+              marginBottom: 10,
+            }}
+          >
+            Please connect to the internet
+          </Text>
+          <Button
+            text="Try again?"
+            onPress={handleNavigation}
+            disabled={false}
+          />
+        </View>
+      )}
     </View>
   );
 };
@@ -42,7 +86,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: FontSize.size_17xl,
   },
-
   splash: {
     borderRadius: Border.br_xl,
     backgroundColor: Color.bacgroundColor,

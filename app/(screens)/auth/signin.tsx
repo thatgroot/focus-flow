@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo, useState, useCallback, useMemo } from "react";
 import {
   View,
   Text,
@@ -33,50 +33,47 @@ const Signin = () => {
   });
 
   const { locale } = useAppStore();
-  const direction = getFlexDirection(locale);
+  const direction = useMemo(() => getFlexDirection(locale), [locale]);
 
-  const fields: {
-    label: string;
-    placeholder: string;
-    type: InputType;
-    error: string;
-    state: InputState;
-    name: string;
-  }[] = [
-    {
-      label: t("enter_email"),
-      placeholder: "teebaapp123@gmail.com",
-      type: "email",
-      error: t("invalid_email"),
-      state: "inactive",
-      name: "email",
-    },
-    {
-      label: t("enter_password"),
-      placeholder: "Password",
-      type: "password",
-      error: "",
-      state: "inactive",
-      name: "password",
-    },
-  ];
+  const fields = useMemo(
+    () => [
+      {
+        label: t("enter_email"),
+        placeholder: "teebaapp123@gmail.com",
+        type: "email",
+        error: t("invalid_email"),
+        state: "inactive",
+        name: "email",
+      },
+      {
+        label: t("enter_password"),
+        placeholder: t("password"),
+        type: "password",
+        error: "",
+        state: "inactive",
+        name: "password",
+      },
+    ],
+    [locale]
+  );
 
-  const handleSignin = async () => {
+  const handleSignin = useCallback(async () => {
     setLoading(true);
     signin({
       email: data.email,
       password: data.password,
       onError: (error) => {
         setLoading(false);
+        Alert.alert(error);
       },
       onSuccess: () => {
         setLoading(false);
         router.push("/home_screen");
       },
     });
-  };
+  }, [data, router]);
 
-  const handleForgotPassword = async () => {
+  const handleForgotPassword = useCallback(async () => {
     if (data.email) {
       updateUser.forgotPassword({
         email: data.email,
@@ -90,11 +87,11 @@ const Signin = () => {
     } else {
       Alert.alert(t("provide_email"));
     }
-  };
+  }, [data]);
 
   return (
     <ScrollView>
-      <KeyboardAvoidingView behavior="padding" style={styles.container}>
+      <KeyboardAvoidingView behavior="position" style={styles.container}>
         <Image
           source={require("@/assets/images/register_illustration.png")}
           style={styles.image}
@@ -108,10 +105,12 @@ const Signin = () => {
                 key={index}
                 label={label}
                 placeholder={placeholder}
-                inputType={type}
+                inputType={type as any}
                 error={error}
-                inputState={state}
-                onChangeText={(text) => setData({ ...data, [name]: text })}
+                inputState={state as any}
+                onChangeText={(text) =>
+                  setData((prevData) => ({ ...prevData, [name]: text }))
+                }
               />
             )
           )}
@@ -199,4 +198,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Signin;
+export default memo(Signin);

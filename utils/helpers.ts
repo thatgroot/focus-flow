@@ -2,6 +2,12 @@ import { I18n } from "i18n-js";
 import { translations } from "./localization";
 import { I18nManager, TextStyle, ViewStyle } from "react-native";
 
+export const stateBorderColor = {
+  active: "#5F75EE",
+  inactive: "#9AA5B5",
+  valid: "#13CE66",
+  invalid: "#E34850",
+};
 export function addDays(date: Date, days: number): Date {
   const result = new Date(date);
   result.setDate(result.getDate() + days);
@@ -98,7 +104,7 @@ export function dateToTimeFormat(date: Date): string {
 
 export const date = {
   daysOfTheWeek: (): { date: number; day: string }[] => {
-    const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const daysOfWeek = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
     const currentDate = new Date();
     const result = [];
 
@@ -108,6 +114,30 @@ export const date = {
       const dayInitial = daysOfWeek[dayIndex];
 
       result.push({ date, day: dayInitial });
+    }
+
+    return result;
+  },
+  daysOfTheMonth: (): { date: number; day: string }[] => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth(); // 0-indexed month
+    const result = [];
+
+    // Get the first day of the month
+    const firstDay = new Date(year, month, 1);
+
+    // Get the total number of days in the month
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    // Loop through all days in the month
+    for (let i = 0; i < daysInMonth; i++) {
+      const date = i + 1;
+      const day = new Date(year, month, date).toLocaleDateString("en-US", {
+        weekday: "short",
+      });
+
+      result.push({ date, day });
     }
 
     return result;
@@ -188,13 +218,13 @@ interface DateTranslations {
   [key: string]: string;
 }
 export const arabic_days: DayTranslations = {
-  Mon: "الاثنين",
+  Sat: "السبت",
+  Sun: "الأحد",
+  Mon: "الإثنين",
   Tue: "الثلاثاء",
-  Wed: "تزوج",
+  Wed: "الأربعاء",
   Thu: "الخميس",
   Fri: "الجمعة",
-  Sat: "قعد",
-  Sun: "شمس",
 };
 
 const arabic_months: MonthTranslations = {

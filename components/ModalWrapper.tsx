@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Alert,
   Modal,
+  KeyboardAvoidingView,
 } from "react-native";
 import LabeledInput from "./InputField";
 
@@ -25,7 +26,9 @@ const ModalWrapper: React.FC<ModalWrapperProps> = ({
   return (
     <Modal visible={isVisible} onRequestClose={onClose} transparent={true}>
       <View style={styles.modalView}>
-        <View style={styles.container}>{children}</View>
+        <KeyboardAvoidingView behavior="padding">
+          <View style={styles.container}>{children}</View>
+        </KeyboardAvoidingView>
       </View>
     </Modal>
   );

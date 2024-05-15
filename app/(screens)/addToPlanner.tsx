@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 import { Modalize } from "react-native-modalize";
-import { router } from "expo-router";
+import { router, useRouter } from "expo-router";
 import ShareSuccess from "@/components/ShareSuccess";
 import { useAppStore } from "@/store";
 import { SubjectPicker } from "@/components/schedules/SubjectPicker";
@@ -18,10 +18,9 @@ import ShareModal from "@/components/ShareModal";
 import { IHandles } from "react-native-modalize/lib/options";
 import { t } from "@/utils/helpers";
 
-const addToPlanner = () => {
-  const _innerRef = useRef<Modalize>(null);
+const AddToPlanner = () => {
+  const { type, tags, setScheduleItem,  } = useAppStore();
 
-  const { type, tags, setScheduleItem, scheduleItem } = useAppStore();
   const [data, setData] = useState<Schedule>({
     startDate: new Date(),
     endDate: new Date(),
@@ -36,90 +35,93 @@ const addToPlanner = () => {
   const [openModal, setOpenModal] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showShare, setShowShare] = useState(false);
-  const handleCheckboxChange = ({
-    current,
-  }: {
-    current: string;
-    selected: string[];
-  }) => {
-    setData({
-      ...data,
-      subject: current,
-    });
-    setScheduleItem({
-      ...data,
-      subject: current,
-    });
-  };
-
-  const [modelRef, setModalRef] =
-    useState<MutableRefObject<IHandles | undefined>>();
+  const [modelRef, setModalRef] = useState<MutableRefObject<IHandles | undefined>>();
 
   useEffect(() => {
     setOpenModal(type === "task");
-  }, []);
+  }, [type]);
+
+  const handleCheckboxChange = ({ current }: { current: string }) => {
+    const updatedData = { ...data, subject: current };
+    setData(updatedData);
+    setScheduleItem(updatedData);
+  };
+
+  const handleSubjectPickerAction = () => {
+    setOpenModal(true);
+    modelRef?.current?.open();
+    setScheduleItem(data);
+  };
+
+  const handleScheduleModalBack = (_ref: React.MutableRefObject<IHandles | undefined>) => {
+    if(_ref){
+    setModalRef(_ref);
+    setOpenModal(false);
+    _ref.current?.close();}
+  };
+
+  const handleScheduleModalAction = (_ref: React.MutableRefObject<IHandles | undefined>) => {
+    if(_ref){   setModalRef(_ref);
+    setShowSuccess(true);
+    _ref.current?.close();
+    }
+  };
+
+  const handleShareSuccessClose = () => {
+    setShowSuccess(false);
+    setShowShare(true);
+    router.push("/schedule")
+  };
+
+  const handleShareModalBack = () => {
+    setShowShare(false);
+    router.push("/schedule");
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {type === "class" && (
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <Image
-              source={require("@/assets/icons/back.png")}
-              style={styles.backBtn}
-            />
-          </TouchableOpacity>
-          <Text style={styles.headerTxt}>{t("add_to_planner")}</Text>
-        </View>
-      )}
-      {type === "class" && (
-        <SubjectPicker
-          onChange={handleCheckboxChange}
-          onAction={() => {
-            setOpenModal(true);
-            modelRef?.current?.open();
-            setScheduleItem(data);
-          }}
-        />
+        <>
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => router.back()}>
+              <Image
+                source={require("@/assets/icons/back.png")}
+                style={styles.backBtn}
+              />
+            </TouchableOpacity>
+            <Text style={styles.headerTxt}>{t("add_to_planner")}</Text>
+          </View>
+          <SubjectPicker
+            onChange={handleCheckboxChange}
+            onAction={handleSubjectPickerAction}
+          />
+        </>
       )}
 
-      {openModal && !showSuccess && (
-        <ScheduleModal
-          open={openModal}
-          onBack={(_ref) => {
-            setModalRef(_ref);
-            _ref.current?.close();
-          }}
-          onAction={(_ref) => {
-            setModalRef(_ref);
-            setShowSuccess(true);
-            _ref.current?.close();
-          }}
-        />
-      )}
+      <ScheduleModal
+        open={openModal}
+        onBack={handleScheduleModalBack}
+        onAction={handleScheduleModalAction}
+      />
+
       {showSuccess && (
         <ShareSuccess
-          onClose={() => {
-            setShowSuccess(false);
-            setShowShare(true);
-          }}
+          onClose={handleShareSuccessClose}
           share={() => {}}
         />
       )}
 
-      {!showSuccess && showShare && (
+      {/* {!showSuccess && showShare && (
         <ShareModal
-          onBack={() => {
-            setShowShare(false);
-            router.push("/schedule");
-          }}
+          onBack={handleShareModalBack}
         />
-      )}
+      )} */}
     </SafeAreaView>
   );
 };
 
-export default addToPlanner;
+export default AddToPlanner;
+
 
 const styles = StyleSheet.create({
   header: {
@@ -148,15 +150,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     width: "100%",
   },
-  dropDownlist: {
-    borderWidth: 1,
-    borderColor: "rgba(154, 165, 181, 1)",
-    width: 308,
-    height: 50,
-    backgroundColor: "#FAFAFA",
-    borderRadius: 100,
-    marginTop: 20,
-  },
+
   header2: {
     flexDirection: "row",
     gap: 50,
@@ -164,11 +158,7 @@ const styles = StyleSheet.create({
     // justifyContent:'center',
     alignItems: "center",
   },
-  dropDownlistContainer: {
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
+
   textArea: {
     fontSize: 15,
     lineHeight: 20,

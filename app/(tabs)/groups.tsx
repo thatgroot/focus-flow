@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   View,
   StyleSheet,
@@ -34,9 +34,10 @@ const Groups = () => {
   const { setGroup, groups, joinedGroups, searchGroups, locale } =
     useAppStore();
 
-  const direction = getFlexDirection(locale);
-  const alignment = getTextAlignment(locale);
-  const columnAignment = getColumnAlignment(locale)
+  const direction = useMemo(() => getFlexDirection(locale), [locale]);
+  const alignment = useMemo(() => getTextAlignment(locale), [locale]);
+  const columnAignment = useMemo(() => getColumnAlignment(locale), [locale]);
+
   const router = useRouter();
 
   useEffect(() => {

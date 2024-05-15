@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList } from "react-native";
 import DayCard from "./DayCard";
 import { arabic_dates, arabic_days } from "@/utils/helpers";
@@ -11,8 +11,13 @@ export default function DaysOfWeek({
   days: WeekType;
   onSelect: (day: DayType) => void;
 }) {
+  const date = new Date();
+
   const [active, setActive] = useState(0);
   const { locale } = useAppStore();
+  useEffect(() => {
+    setActive(date.getDate()- 1);
+  }, []);
   return (
     <FlatList
       horizontal

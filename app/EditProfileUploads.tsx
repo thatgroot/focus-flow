@@ -20,26 +20,8 @@ import { auth } from "@/utils/firebase";
 import { Avatar } from "@/components/Avatar";
 
 const EditProfileUploads: React.FC = () => {
-  const [image, setImage] = useState<string | null>(null);
-
   const router = useRouter();
-  const navigation = useNavigation();
 
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={styles.container}>
@@ -61,21 +43,18 @@ const EditProfileUploads: React.FC = () => {
           <View style={styles.ProfileMain}>
             <Avatar />
             <View>
-              <Text style={styles.heading}>{auth.currentUser?.displayName}</Text>
+              <Text style={styles.heading}>
+                {auth.currentUser?.displayName}
+              </Text>
             </View>
           </View>
-          <TouchableOpacity onPress={() => {
-
-          }}>
+          <TouchableOpacity onPress={() => {}}>
             <Image
               style={styles.ProfileEdit}
               source={require("@/assets/icons/pencil.png")}
             />
           </TouchableOpacity>
         </View>
-        {/* <TouchableOpacity onPress={pickImage} style={{ marginTop: 10 }}>
-          <Text style={styles.uploadText}>Upload</Text>
-        </TouchableOpacity> */}
 
         <TouchableOpacity style={styles.btn}>
           <Text style={[styles.heading, styles.BtnText]}>Save Changes</Text>

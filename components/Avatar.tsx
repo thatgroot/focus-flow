@@ -1,8 +1,9 @@
-import { View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { createAvatar } from '@dicebear/core';
 import { funEmoji, lorelei } from '@dicebear/collection';
 import { SvgXml } from 'react-native-svg';
 import { auth } from '@/utils/firebase';
+import { router } from 'expo-router';
 
 export  function Avatar() {
   const avatar = createAvatar(funEmoji, {
@@ -11,13 +12,17 @@ export  function Avatar() {
   }).toString();
 
   return (
-    <View style={{
+    <TouchableOpacity
+    onPress={()=>{
+      router.push("/settings");
+    }}
+     style={{
       width:44,
       height:44,
       borderRadius:6,
       overflow:"hidden"
     }}>
       <SvgXml xml={avatar} />
-    </View>
+    </TouchableOpacity>
   );
 }

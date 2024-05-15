@@ -22,7 +22,7 @@ export default function CurrentDateTile({
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(0);
   const [markedDates, setMarkedDates] = useState<Date[]>([]);
-  const days = date.daysOfTheWeek();
+  const days = date.daysOfTheMonth();
 
   const handleDayPress = (dateString: string) => {
     const _date = new Date(dateString);
@@ -76,7 +76,6 @@ export default function CurrentDateTile({
       <DaysOfWeek
         days={days}
         onSelect={() => {
-          // todo
         }}
       />
       <Modal

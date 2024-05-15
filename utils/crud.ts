@@ -253,10 +253,15 @@ export const controllers = {
       });
     },
     completed: async () => {
-      const ref = collection(database, `users/${auth.currentUser?.uid}/tasks`);
-      const _query = query(ref, where("completionStatus", "==", true));
+      let ref = collection(database, `users/${auth.currentUser?.uid}/tasks`);
+      let _query = query(ref, where("completionStatus", "==", true));
       const tasks = await getDocsQuery(_query);
-      return tasks as Schedule[];
+
+
+       ref = collection(database, `users/${auth.currentUser?.uid}/classes`);
+       _query = query(ref, where("completionStatus", "==", true));
+      const classes = await getDocsQuery(_query);
+      return [...tasks,...classes] as Schedule[];
     },
   },
   class: {

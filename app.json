@@ -2,7 +2,7 @@
   "expo": {
     "name": "Focus Flow",
     "slug": "focus-flow",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "orientation": "portrait",
     "icon": "./assets/icons/logo.png",
     "scheme": "focus-flow",
@@ -34,9 +34,7 @@
         "foregroundImage": "./assets/icons/logo.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": [
-        "android.permission.RECORD_AUDIO"
-      ]
+      "permissions": []
     },
     "web": {
       "bundler": "metro",

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -8,6 +8,7 @@ import {
   Image,
   Pressable,
   ScrollView,
+  TextInput,
 } from "react-native";
 
 import { useRouter } from "expo-router";
@@ -19,39 +20,10 @@ import { getFlexDirection, t, ucFirst } from "@/utils/helpers";
 import ScheduleTimeline from "@/components/schedules/ScheduleTimeline";
 import CurrentDateTile from "@/components/date/CurrentDateTile";
 
-const tasks = [
-  {
-    title: "Study",
-    icon: "📗 ",
-    backgroundColor: "#EAECEE",
-  },
-  {
-    title: "Gym",
-    icon: "🏋️",
-    backgroundColor: "rgba(19, 206, 102, 0.29)",
-  },
-  {
-    title: "Sleep",
-    icon: "💤",
-    backgroundColor: "rgba(255, 202, 101, 0.47)",
-  },
-
-  {
-    title: "Chill",
-    icon: "🥳",
-    backgroundColor: "rgba(254, 181, 166, 0.34)",
-  },
-  {
-    title: "Exercise",
-    icon: "🏋️",
-    backgroundColor: "rgba(227, 72, 80, 0.21)",
-  },
-];
-
 const schedule: React.FC = () => {
-  const { type, locale } = useAppStore();
-  const direction = getFlexDirection(locale);
-  const { setType, tags, setTags } = useAppStore();
+  const { setType, tags, setTags, type, locale } = useAppStore();
+
+  const direction = useMemo(() => getFlexDirection(locale), [locale]);
 
   const [Isvisible, setVisible] = useState(false);
   const [showBadges, setShowBadges] = useState(false);
@@ -98,8 +70,10 @@ const schedule: React.FC = () => {
       </View>
     );
   };
+  const [all_tags, setAllTags] = useState<any[]>([]);
 
   function BadgeContainer() {
+    const [new_tag, setNewTag] = useState("");
     return (
       <View style={styles.taskBadgeContainer}>
         <View
@@ -145,14 +119,41 @@ const schedule: React.FC = () => {
             </Text>
           </View>
         </View>
-
         <View style={styles.taskContent}>
           <View style={styles.goalSection}>
             <Text style={styles.goalTitle}>{t("task_goal")}</Text>
             <Text style={styles.goalDescription}>{t("track_spent_time")}</Text>
           </View>
           <View style={styles.tasks}>
-            {tasks.map(({ title, icon, backgroundColor }, index) => (
+            {[
+              {
+                title: "Study",
+                icon: "📗 ",
+                backgroundColor: "#EAECEE",
+              },
+              {
+                title: "Gym",
+                icon: "🏋️",
+                backgroundColor: "rgba(19, 206, 102, 0.29)",
+              },
+              {
+                title: "Sleep",
+                icon: "💤",
+                backgroundColor: "rgba(255, 202, 101, 0.47)",
+              },
+
+              {
+                title: "Chill",
+                icon: "🥳",
+                backgroundColor: "rgba(254, 181, 166, 0.34)",
+              },
+              {
+                title: "Exercise",
+                icon: "🏋️",
+                backgroundColor: "rgba(227, 72, 80, 0.21)",
+              },
+              ...all_tags,
+            ].map(({ title, icon, backgroundColor }, index) => (
               <Chip
                 active={tags.includes(title)}
                 onSelect={(text) => {
@@ -170,8 +171,61 @@ const schedule: React.FC = () => {
               />
             ))}
           </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignSelf: "stretch",
+              height: 48,
+              gap: 12,
+            }}
+          >
+            <TextInput
+              placeholder={t("select_recurrence")}
+              autoCapitalize="none"
+              style={{
+                paddingVertical: 8,
+                paddingHorizontal: 12,
+                borderWidth: 1,
+                borderRadius: 100,
+                borderColor: "#9AA5B5",
+                alignSelf: "stretch",
+                flex: 1,
+              }}
+              onChangeText={(text) => {
+                setNewTag(text);
+              }}
+            />
+            <TouchableOpacity
+              style={[
+                styles.button,
+                {
+                  width: 72,
+                },
+              ]}
+              onPress={() => {
+                if (new_tag) {
+                  if (!tags.includes(new_tag)) {
+                    setTags([...tags, new_tag]);
+                  } else {
+                    const newTags = tags.filter((v) => v !== new_tag);
+                    setTags([...newTags]);
+                  }
+                  setAllTags([
+                    ...all_tags,
+                    {
+                      title: new_tag,
+                      icon: "✨ ",
+                      backgroundColor: "#EAECEE",
+                    },
+                  ]);
+                }
+              }}
+            >
+              <Text style={[styles.text, { fontSize: 12 }]}>{t("create")}</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-
         <Button
           disabled={false}
           text={t("schedule")}
@@ -201,7 +255,6 @@ const schedule: React.FC = () => {
 
         <CurrentDateTile illustration={false} />
         <ScheduleTimeline />
-
         <ModalWrapper
           isVisible={Isvisible}
           onClose={() => {
@@ -413,8 +466,8 @@ const styles = StyleSheet.create({
   taskContent: {
     alignItems: "stretch",
     display: "flex",
-    marginTop: 44,
-    gap: 36,
+    marginTop: 24,
+    gap: 16,
     flexDirection: "column",
   },
   goalSection: {

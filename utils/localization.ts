@@ -114,6 +114,8 @@ const translations = {
     track_spent_time: "Track how you spend your time",
 
     // Schedule Frequency Section
+    select_recurrence: "Select an option",
+    or: "OR",
     schedule_frequency_title: "Choose Frequency",
     daily: "Daily",
     weekly: "Weekly",
@@ -141,6 +143,7 @@ const translations = {
     // Class Scheduled Section
     class_scheduled_title: "Congratulations",
     class_scheduled_message: "Class Scheduled",
+    create: "Create",
 
     // Groups Section
     groups_title: "Your Groups",
@@ -226,7 +229,7 @@ const translations = {
     physics: "فيزياء", // Removed English explanation
     psychology: "علم النفس", // Removed English explanation
     islamic: "إسلامية", // Removed English explanation
-    english: "عربي", // Replaced with Arabic translation
+    english: "اللغة الإنجليزية", // Replaced with Arabic translation
     geography: "جغرافيا", // Removed English explanation
     economy: "اقتصاد", // Removed English explanation
     mathematics: "رياضيات", // Removed English explanation
@@ -301,6 +304,8 @@ const translations = {
     track_spent_time: "تتبع كيفية قضاء وقتك", // Track how you spend your time
 
     // Schedule Frequency Section
+    select_recurrence: "اختر خيارًا",
+    or: "أو",
     schedule_frequency_title: "اختر تكرار",
     daily: "يوميًا",
     weekly: "أسبوعيا",
@@ -328,6 +333,7 @@ const translations = {
     // Class Scheduled Section
     class_scheduled_title: "تهانينا",
     class_scheduled_message: "تم جدولة الفصل",
+    create: "يخلق",
 
     // Groups Section
     groups_title: "مجموعاتك",

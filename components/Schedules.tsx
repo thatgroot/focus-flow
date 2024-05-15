@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   subDetailText: {
-    fontSize: 12,
+    fontSize: 11,
     color: "white",
   },
   shareIcon: {

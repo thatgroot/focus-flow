@@ -13,10 +13,7 @@ import { I18n } from "i18n-js";
 
 import { useEffect, useState } from "react";
 import { Alert, SafeAreaView, Text, View } from "react-native";
-import {
-  GestureHandlerRootView,
-  ScrollView,
-} from "react-native-gesture-handler";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export {
@@ -76,81 +73,24 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const [reachable, setReachable] = useState<boolean>(false);
-  const [show, setShow] = useState(false);
-  const { setLocale } = useAppStore();
-  function checkNetwork() {
-    getNetworkStateAsync().then(function (state) {
-      console.log("state.isInternetReachable", state.isInternetReachable);
-      setShow(!state.isInternetReachable);
-      setReachable(state.isInternetReachable ?? false);
-    });
-  }
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      checkNetwork();
-    }, 2000);
-    return () => clearTimeout(timeout);
-  }, []);
 
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        {!reachable ? (
-          <View
-            style={{
-              flex: 1,
-              alignSelf: "stretch",
-              height: "100%",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: 12,
+        <Stack screenOptions={{ headerShown: false }}>
+          {/* <Stack.Screen name="(screens)" options={{ headerShown: false }} /> */}
+          <Stack.Screen
+            name="(tabs)"
+            options={{
+              title: "home_screen",
+              headerShown: false,
             }}
-          >
-            <Image
-              source={require("@/assets/icons/logo.png")}
-              style={{
-                height: 300,
-                width: 300,
-                borderRadius:64,
-              }}
-            />
-            {show && (
-              <>
-                <Text
-                  style={{
-                    fontWeight: "600",
-                  }}
-                >
-                  Please connect to itnernet
-                </Text>
-
-                <Button
-                  text="Try again?"
-                  onPress={() => {
-                    checkNetwork();
-                  }}
-                  disabled={false}
-                />
-              </>
-            )}
-          </View>
-        ) : (
-          <Stack screenOptions={{ headerShown: false }}>
-            {/* <Stack.Screen name="(screens)" options={{ headerShown: false }} /> */}
-            <Stack.Screen
-              name="(tabs)"
-              options={{
-                title: "home_screen",
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-              name="modal"
-              options={{ presentation: "modal", header: () => <></> }}
-            />
-          </Stack>
-        )}
+          />
+          <Stack.Screen
+            name="modal"
+            options={{ presentation: "modal", header: () => <></> }}
+          />
+        </Stack>
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );
