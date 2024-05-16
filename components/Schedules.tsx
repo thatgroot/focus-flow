@@ -99,7 +99,7 @@ export const Schedules = ({
               >
                 <Text style={[styles.subDetailText, { color: "#fff" }]}>
                   {locale === "en"
-                    ? data?.startDate.toDateString()
+                    ? data?.endDate.toDateString()
                     : translateDate(data.endDate.toDateString())}
                 </Text>
               </View>

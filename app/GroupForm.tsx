@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -19,13 +19,15 @@ import { controllers } from "@/utils/crud";
 import { auth } from "@/utils/firebase";
 import { t } from "@/utils/helpers";
 import LabeledInput from "@/components/InputField";
+import PromiseWaiter from "@/components/promises/PromiseWaiter";
 
 const GroupForm: React.FC = () => {
   const { group, setGroup } = useAppStore();
+  const [loading, setLoading] = useState(false);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <KeyboardAvoidingView behavior="padding" enabled  >
+      <KeyboardAvoidingView behavior="padding" enabled>
         <ScrollView style={styles.container}>
           <View style={styles.mainView}>
             <TouchableOpacity onPress={() => router.back()}>
@@ -43,8 +45,14 @@ const GroupForm: React.FC = () => {
             </View>
             <View />
           </View>
-          <View style={{ marginTop: 48, justifyContent: "center", alignItems: "center", gap: 24 }}>
-
+          <View
+            style={{
+              marginTop: 48,
+              justifyContent: "center",
+              alignItems: "center",
+              gap: 24,
+            }}
+          >
             <LabeledInput
               label={t("group_title_label")}
               placeholder={t("group_title_label")}
@@ -78,7 +86,7 @@ const GroupForm: React.FC = () => {
             </View>
 
             <View style={{ flex: 1, alignSelf: "stretch", gap: 6 }}>
-              <Text style={[styles.StylesTitle,]}>{t("add_time")}</Text>
+              <Text style={[styles.StylesTitle]}>{t("add_time")}</Text>
               <SelectDropdown
                 data={[10, 20, 30, 40, 50, 60].map((i) => `${i} minutes`)}
                 onSelect={(time, index) => {
@@ -98,29 +106,35 @@ const GroupForm: React.FC = () => {
               />
             </View>
 
-            <Button
-              disabled={false}
-              text={t("next")}
-              onPress={() => {
-                if (group) {
-                  controllers.group.add({
-                    data: {
-                      ...group!,
-                      uid: auth.currentUser?.uid!,
-                    },
-                    onError: (error) => {
-                      Alert.alert(error);
-                    },
-                    onSuccess: (id) => {
-                      Alert.alert(id.toString())
-                      router.push("/groups");
-                    },
-                  });
-                } else {
-                  Alert.alert("group details are missing");
-                }
-              }}
-            />
+            {loading ? (
+              <PromiseWaiter />
+            ) : (
+              <Button
+                disabled={false}
+                text={t("next")}
+                onPress={() => {
+                  if (group) {
+                    setLoading(true)
+                    controllers.group.add({
+                      data: {
+                        ...group!,
+                        uid: auth.currentUser?.uid!,
+                      },
+                      onError: (error) => {
+                        setLoading(false)
+                        console.log("error",error)
+                      },
+                      onSuccess: (id) => {
+                        setLoading(false)
+                        router.push("/groups");
+                      },
+                    });
+                  } else {
+                    Alert.alert("group details are missing");
+                  }
+                }}
+              />
+            )}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

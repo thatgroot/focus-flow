@@ -10,7 +10,7 @@ import moment from "moment";
 import React, { useState } from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Calendar } from "react-native-calendars";
-import DaysOfWeek from "../DaysOfWeek";
+import {DaysOfWeek} from "../DaysOfWeek";
 
 export default function CurrentDateTile({
   illustration,
@@ -75,8 +75,6 @@ export default function CurrentDateTile({
       )}
       <DaysOfWeek
         days={days}
-        onSelect={() => {
-        }}
       />
       <Modal
         visible={showCalendar}

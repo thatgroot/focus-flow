@@ -14,11 +14,12 @@ import { useNavigation, useRouter } from "expo-router";
 import { useAppStore } from "@/store";
 import { controllers } from "@/utils/crud";
 import { t } from "@/utils/helpers";
+import PromiseWaiter from "@/components/promises/PromiseWaiter";
 
 const grouppage: React.FC = () => {
   const router = useRouter();
-  const navigation = useNavigation();
   const { group } = useAppStore();
+  const [loading, setLoading] = useState(false);
 
   const [liveSession, setLiveSession] = useState<{
     count: number;
@@ -26,7 +27,7 @@ const grouppage: React.FC = () => {
   }>();
 
   useEffect(() => {
-      controllers.group.sessions
+    controllers.group.sessions
       .liveCount({
         groupId: group?.id!,
       })
@@ -34,11 +35,8 @@ const grouppage: React.FC = () => {
         setLiveSession(data);
       });
 
-    return () => {
-    }
-  }, [])
-
-
+    return () => {};
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -74,30 +72,42 @@ const grouppage: React.FC = () => {
             <View style={styles.dotlive}>
               <View style={styles.dotlivesub}></View>
             </View>
-            <Text style={styles.livestyles}>{t("live_members_count").replace("{__}",`${liveSession?.count??0}`)}</Text>
+            <Text style={styles.livestyles}>
+              {t("live_members_count").replace(
+                "{__}",
+                `${liveSession?.count ?? 0}`
+              )}
+            </Text>
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity
-          style={styles.btn}
-          onPress={async () => {
-            await controllers.group.join({
-              id: group?.id!,
-              onSuccess: (id) => {
-                router.push("/liveNowPage");
-              },
-              onError: (error) => {
-                if (error === "You are already a group member") {
+        {loading ? (
+          <PromiseWaiter />
+        ) : (
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={async () => {
+              setLoading(true);
+              await controllers.group.join({
+                id: group?.id!,
+                onSuccess: (id) => {
+                  setLoading(false);
                   router.push("/liveNowPage");
-                } else {
-                  console.log(error);
-                }
-              },
-            });
-          }}
-        >
-          <Text style={styles.joinStyles}>{t("join_live")}</Text>
-        </TouchableOpacity>
+                },
+                onError: (error) => {
+                  setLoading(false);
+                  if (error === "You are already a group member") {
+                    router.push("/liveNowPage");
+                  } else {
+                    console.log(error);
+                  }
+                },
+              });
+            }}
+          >
+            <Text style={styles.joinStyles}>{t("join_live")}</Text>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity style={styles.BtnLeaderboard}>
           <Text style={styles.LeaderboardStyles}>{t("view_leaderboard")}</Text>
         </TouchableOpacity>

@@ -17,10 +17,13 @@ import { CircularImageWithOverlays } from "@/components/CircularImageWithOverlay
 import { controllers } from "@/utils/crud";
 import { useAppStore } from "@/store";
 import { calculateTotalTime, formatMsToTimeString, t } from "@/utils/helpers";
+import PromiseWaiter from "@/components/promises/PromiseWaiter";
 
 const liveNowPage: React.FC = () => {
   const { group } = useAppStore();
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
   const [status, setStatus] = useState<SessionStatus>("inactive");
   const [isRunning, setIsRunning] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -38,18 +41,18 @@ const liveNowPage: React.FC = () => {
       }
     });
 
-    return () => { };
+    return () => {};
   }, [status]);
 
   function fetchLiveSessionData() {
     controllers.group.sessions
-    .liveCount({
-      groupId: group?.id!,
-    })
-    .then(function (data) {
-      console.log('status ->', status)
-      setLiveSession(data);
-    });
+      .liveCount({
+        groupId: group?.id!,
+      })
+      .then(function (data) {
+        console.log("status ->", status);
+        setLiveSession(data);
+      });
   }
 
   useEffect(() => {
@@ -86,14 +89,14 @@ const liveNowPage: React.FC = () => {
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={styles.container}>
         <View style={styles.mainView}>
-         {
-          status !== "active" &&  <TouchableOpacity onPress={() => router.back()}>
-          <Image
-            style={styles.LeftIcon}
-            source={require("@/assets/images/iconleft.png")}
-          />
-        </TouchableOpacity>
-         }
+          {status !== "active" && (
+            <TouchableOpacity onPress={() => router.back()}>
+              <Image
+                style={styles.LeftIcon}
+                source={require("@/assets/images/iconleft.png")}
+              />
+            </TouchableOpacity>
+          )}
           <View style={styles.mainStudy}>
             <Image
               style={styles.LeftIcon}
@@ -140,7 +143,12 @@ const liveNowPage: React.FC = () => {
             <View style={styles.dotlive}>
               <View style={styles.dotlivesub}></View>
             </View>
-            <Text style={styles.livestyles}>{t("live_members_count").replace("{__}",`${liveSession?.count??0}`)}</Text>
+            <Text style={styles.livestyles}>
+              {t("live_members_count").replace(
+                "{__}",
+                `${liveSession?.count ?? 0}`
+              )}
+            </Text>
           </TouchableOpacity>
         </View>
         <View>
@@ -151,102 +159,117 @@ const liveNowPage: React.FC = () => {
           </Text>
         </View>
 
-        <View style={styles.BoxView}>
-          {status === "inactive" && (
-            <TouchableOpacity
-              style={styles.btnView}
-              onPress={async () => {
-                const time = calculateTotalTime(
-                  elapsedTime,
-                  timeSpent === "" ? "00:00:00" : timeSpent
-                );
-                await controllers.group.sessions.add({
-                  groupId: group?.id!,
-                  data: {
-                    timeSpent: formatMsToTimeString(time),
-                    status: "active",
-                  },
-                  onError(error) {
-                    Alert.alert(error);
-                  },
-                  onSuccess(id) {
-                    setStatus("active");
-                    handleStart();
-                    fetchLiveSessionData()
-                  },
-                });
-              }}
-            >
-              <Image
-                style={styles.icon}
-                source={require("@/assets/images/play.png")}
-              />
-            </TouchableOpacity>
-          )}
-          {status === "active" && (
-            <TouchableOpacity
-              style={styles.btnView}
-              onPress={async () => {
-                const time = calculateTotalTime(
-                  elapsedTime,
-                  timeSpent === "" ? "00:00:00" : timeSpent
-                );
-                await controllers.group.sessions.add({
-                  groupId: group?.id!,
-                  data: {
-                    timeSpent: formatMsToTimeString(time),
-                    status: "inactive",
-                  },
-                  onError(error) {
-                    Alert.alert(error);
-                  },
-                  onSuccess(id) {
-                    handleStop();
-                    setStatus("inactive");
-                    fetchLiveSessionData()
-                  },
-                });
-              }}
-            >
-              <Image
-                style={styles.icon}
-                source={require("@/assets/images/stop.png")}
-              />
-            </TouchableOpacity>
-          )}
-          {status === "active" && (
-            <TouchableOpacity
-              style={[styles.btnView, styles.BoxViewcolor]}
-              onPress={async () => {
-                const time = calculateTotalTime(
-                  elapsedTime,
-                  timeSpent === "" ? "00:00:00" : timeSpent
-                );
-                await controllers.group.sessions.add({
-                  groupId: group?.id!,
-                  data: {
-                    timeSpent: formatMsToTimeString(time),
-                    status: "paused",
-                  },
-                  onError(error) {
-                    Alert.alert(error);
-                  },
-                  onSuccess(id) {
-                    handlePause();
-                    setStatus("inactive");
-                    fetchLiveSessionData()
-                  },
-                });
-              }}
-            >
-              <Image
-                style={styles.icon}
-                tintColor={"rgba(241, 137, 124, 1)"}
-                source={require("@/assets/images/pause.png")}
-              />
-            </TouchableOpacity>
-          )}
-        </View>
+        {loading ? (
+          <PromiseWaiter />
+        ) : (
+          <View style={styles.BoxView}>
+            {status === "inactive" && (
+              <TouchableOpacity
+                style={styles.btnView}
+                onPress={async () => {
+                  setLoading(true);
+                  const time = calculateTotalTime(
+                    elapsedTime,
+                    timeSpent === "" ? "00:00:00" : timeSpent
+                  );
+                  await controllers.group.sessions.add({
+                    groupId: group?.id!,
+                    data: {
+                      timeSpent: formatMsToTimeString(time),
+                      status: "active",
+                    },
+                    onError(error) {
+                      setLoading(false);
+                      console.log(error);
+                    },
+                    onSuccess(id) {
+                      setLoading(false);
+                      setStatus("active");
+                      handleStart();
+                      fetchLiveSessionData();
+                    },
+                  });
+                }}
+              >
+                <Image
+                  style={styles.icon}
+                  source={require("@/assets/images/play.png")}
+                />
+              </TouchableOpacity>
+            )}
+            {status === "active" && (
+              <TouchableOpacity
+                style={styles.btnView}
+                onPress={async () => {
+                  setLoading(true);
+
+                  const time = calculateTotalTime(
+                    elapsedTime,
+                    timeSpent === "" ? "00:00:00" : timeSpent
+                  );
+                  await controllers.group.sessions.add({
+                    groupId: group?.id!,
+                    data: {
+                      timeSpent: formatMsToTimeString(time),
+                      status: "inactive",
+                    },
+                    onError(error) {
+                      setLoading(false);
+
+                      console.log(error);
+                    },
+                    onSuccess(id) {
+                      setLoading(false);
+                      handleStop();
+                      setStatus("inactive");
+                      fetchLiveSessionData();
+                    },
+                  });
+                }}
+              >
+                <Image
+                  style={styles.icon}
+                  source={require("@/assets/images/stop.png")}
+                />
+              </TouchableOpacity>
+            )}
+            {status === "active" && (
+              <TouchableOpacity
+                style={[styles.btnView, styles.BoxViewcolor]}
+                onPress={async () => {
+                      setLoading(true);
+                      const time = calculateTotalTime(
+                    elapsedTime,
+                    timeSpent === "" ? "00:00:00" : timeSpent
+                  );
+                  await controllers.group.sessions.add({
+                    groupId: group?.id!,
+                    data: {
+                      timeSpent: formatMsToTimeString(time),
+                      status: "paused",
+                    },
+                    onError(error) {
+                      setLoading(false);
+                      console.log(error);
+                    },
+                    onSuccess(id) {
+                      setLoading(false);
+                      handlePause();
+                      setStatus("inactive");
+                      fetchLiveSessionData();
+                    },
+                  });
+                }}
+              >
+                <Image
+                  style={styles.icon}
+                  tintColor={"rgba(241, 137, 124, 1)"}
+                  source={require("@/assets/images/pause.png")}
+                />
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

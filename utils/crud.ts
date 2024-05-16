@@ -542,7 +542,7 @@ function buildScheduleQuery(type: "tasks" | "classes") {
   return query(
     collection(database, path),
     where("endDate", ">=", addDays(new Date(), 0)), // Today or later
-    where("endDate", "<=", addDays(new Date(), 14)) // Within the next 3 days
+    where("endDate", "<=", addDays(new Date(), 45)) // Within the next 3 days
   );
 }
 

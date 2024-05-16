@@ -19,6 +19,7 @@ import CustomTimePicker from "@/components/TimePicker";
 import { hasEmptyValues, t, translateDate, ucFirst } from "@/utils/helpers";
 import { IHandles } from "react-native-modalize/lib/options";
 import { DropDown } from "../DropDown";
+import PromiseWaiter from "../promises/PromiseWaiter";
 
 const recurrences: Recurrence[] = ["daily", "weekly", "monthly"];
 
@@ -32,6 +33,7 @@ export const ScheduleModal = ({
   onBack: (innerRef: React.MutableRefObject<IHandles | undefined>) => void;
 }) => {
   const { type, tags, scheduleItem, locale } = useAppStore();
+  const [loading, setLoading] = useState(false);
 
   const [showCalendar, setShowCalendar] = useState(false);
 
@@ -274,55 +276,68 @@ export const ScheduleModal = ({
               </View>
             </View>
           </View>
-          <View style={styles.modalBtn}>
-            <Button
-              disabled={false}
-              text={t("finish")}
-              onPress={() => {
-                const missing = hasEmptyValues<Schedule>(data);
-                if (type === "task") {
-                  if (!missing.includes("note")) {
-                    setData({
-                      ...data,
-                      subject: "",
-                    });
-                    controllers.task.add({
-                      data: {
+
+          {loading ? (
+            <PromiseWaiter />
+          ) : (
+            <View style={styles.modalBtn}>
+              <Button
+                disabled={false}
+                text={t("finish")}
+                onPress={() => {
+                  setLoading(true);
+                  const missing = hasEmptyValues<Schedule>(data);
+                  if (type === "task") {
+                    if (!missing.includes("note")) {
+                      setData({
                         ...data,
                         subject: "",
-                      },
-                      onError: (error) => {
-                        Alert.alert(error);
-                      },
-                      onSuccess: () => {
-                        onAction(_ref);
-                      },
-                    });
+                      });
+                      controllers.task.add({
+                        data: {
+                          ...data,
+                          subject: "",
+                        },
+                        onError: (error) => {
+                          setLoading(false);
+
+                          console.log(error);
+                        },
+                        onSuccess: () => {
+                          setLoading(false);
+                          onAction(_ref);
+                        },
+                      });
+                    } else {
+                      Alert.alert("Please provide ", "notes");
+                    }
                   } else {
-                    Alert.alert("Please provide ","notes");
+                    if (missing.length === 0) {
+                      setLoading(true);
+
+                      controllers.class.add({
+                        data: {
+                          ...data,
+                          subject: scheduleItem?.subject,
+                        },
+                        onError: (error) => {
+                          setLoading(false);
+                          console.log(error);
+                        },
+                        onSuccess: () => {
+                          setLoading(false);
+                          onAction(_ref);
+                        },
+                      });
+                    } else {
+                      console.log(JSON.stringify(data));
+                      Alert.alert("Please provide ", missing.join(","));
+                    }
                   }
-                } else {
-                  if (missing.length === 0) {
-                    controllers.class.add({
-                      data: {
-                        ...data,
-                        subject: scheduleItem?.subject,
-                      },
-                      onError: (error) => {
-                        Alert.alert(error);
-                      },
-                      onSuccess: () => {
-                        onAction(_ref);
-                      },
-                    });
-                  } else {
-                    console.log(JSON.stringify(data));
-                    Alert.alert("Please provide ", missing.join(","));
-                  }
-                }
-              }}
-            />
-          </View>
+                }}
+              />
+            </View>
+          )}
         </View>
       )}
     </Modalize>
