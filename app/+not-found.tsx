@@ -1,10 +1,16 @@
-import { Link, Stack } from 'expo-router';
-import { StyleSheet } from 'react-native';
+import { t } from "@/utils/helpers";
+import { router } from "expo-router";
+import { Button, StyleSheet, Text, View } from "react-native";
 
 export default function NotFoundScreen() {
   return (
     <>
-      <Stack.Screen options={{ title: 'Oops!' }} />
+      <View style={styles.container}>
+        <Text>Oops! no page found!</Text>
+        <Button title={t("go_back")} onPress={() => {
+          router.back()
+        }} />
+      </View>
     </>
   );
 }
@@ -12,13 +18,13 @@ export default function NotFoundScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     padding: 20,
   },
   title: {
     fontSize: 20,
-    fontFamily: 'bold',
+    fontFamily: "bold",
   },
   link: {
     marginTop: 15,
@@ -26,6 +32,6 @@ const styles = StyleSheet.create({
   },
   linkText: {
     fontSize: 14,
-    color: '#2e78b7',
+    color: "#2e78b7",
   },
 });

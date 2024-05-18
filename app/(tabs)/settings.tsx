@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
   View,
   StyleSheet,
@@ -14,27 +14,31 @@ import { useRouter } from "expo-router";
 import { auth } from "@/utils/firebase";
 import { signOut } from "firebase/auth";
 import { Avatar } from "@/components/Avatar";
-import {
-  t,
-} from "@/utils/helpers";
+import { getFlexDirection, getTextAlignment, t } from "@/utils/helpers";
 import LanguageSelector from "@/components/localization/LanguageSelector";
+import { useAppStore } from "@/store";
 
 const settings: React.FC = () => {
   const router = useRouter();
 
+  const { locale } = useAppStore();
+
+  const direction = useMemo(() => getFlexDirection(locale), [locale]);
+  const alignment = useMemo(() => getTextAlignment(locale), [locale]);
+
   const account_navigation = [
     {
-      title: t("edit_profile"),
+      title: "edit_profile",
       icon: require("@/assets/images/user.png"),
-      route: "/EditProfile",
+      route: "/pages/edit_profile",
     },
     {
-      title: t("manage_account"),
+      title: "manage_account",
       icon: require("@/assets/images/profile_9483336.png"),
       route: "/ManageAccount",
     },
     {
-      title: t("contact_support"),
+      title: "contact_support",
       icon: require("@/assets/images/customer-service_174188 .png"),
       route: "/ContactSupport",
     },
@@ -42,12 +46,12 @@ const settings: React.FC = () => {
 
   const community_navigation = [
     {
-      title: t("faqs_title"),
+      title: "faqs_title",
       icon: require("@/assets/images/FAQ.png"),
       route: "/FAQs",
     },
     {
-      title: t("logout"),
+      title: "logout",
       icon: require("@/assets/images/logout.png"),
       route: "",
     },
@@ -57,16 +61,15 @@ const settings: React.FC = () => {
     try {
       await signOut(auth);
       router.push("/auth/signin");
-    } catch (error) {
-      console.log({ error });
+    } catch (_error) {
     }
   };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={styles.container}>
-        <View style={styles.mainsection}>
-          <View style={styles.ProfileMain}>
+        <View style={[styles.mainsection, direction]}>
+          <View style={[styles.ProfileMain, direction]}>
             <Avatar />
             <View>
               <Text style={styles.heading}>
@@ -74,62 +77,111 @@ const settings: React.FC = () => {
               </Text>
             </View>
           </View>
-          <TouchableOpacity onPress={() => router.push("/EditProfileUploads")}>
+          <TouchableOpacity
+            onPress={() => router.push("/pages/edit_profileUploads")}
+          >
             <Image
               style={styles.ProfileEdit}
-              source={require("../../assets/icons/pencil.png")}
+              source={require("@/assets/icons/pencil.png")}
             />
           </TouchableOpacity>
         </View>
 
-        <Text style={[styles.headingTimer]}>{t("language_settings")}</Text>
-        <LanguageSelector route="/home_screen" />
-        <Text style={styles.headingTimer}>{t("account_title")}</Text>
-        {account_navigation.map(({ title, icon, route }, index) => (
-          <TouchableOpacity
-            key={index}
-            style={styles.AccountView}
-            onPress={() => router.push(route as any)}
-          >
-            <View style={styles.IconView}>
-              <View style={styles.BoxView}>
-                <Image style={styles.userIcon} source={icon} />
-              </View>
-              <Text style={styles.headingEdit}>{title}</Text>
-            </View>
-
-            <Image
-              style={styles.Arrow}
-              source={require("../../assets/images/GroupArrow.png")}
-            />
-          </TouchableOpacity>
-        ))}
-        <Text style={styles.headingTimer}>{t("community_title")}</Text>
-        {community_navigation.map(({ title, icon, route }, index) => (
-          <TouchableOpacity
-            key={index}
-            style={styles.AccountView}
-            onPress={() => {
-              if (title == t("logout")) {
-                handleSignOut();
-              } else {
-                router.push(route as any);
-              }
+        <Text
+          style={[
+            styles.headingTimer,
+            {
+              textAlign: locale === "ar" ? "right" : "left",
+            },
+          ]}
+        >
+          {t("language_settings")}
+        </Text>
+        <LanguageSelector route="/settings" />
+        <View
+          style={{
+            gap: 12,
+          }}
+        >
+          <Text style={styles.headingTimer}>{t("account_title")}</Text>
+          <View
+            style={{
+              gap: 4,
             }}
           >
-            <View style={styles.IconView}>
-              <View style={styles.BoxView}>
-                <Image style={styles.userIcon} source={icon} />
-              </View>
-              <Text style={styles.headingEdit}>{title}</Text>
-            </View>
+            {account_navigation.map(({ title, icon, route }, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[styles.AccountView, direction]}
+                onPress={() => router.push(route as any)}
+              >
+                <View style={[styles.IconView, direction]}>
+                  <View style={styles.BoxView}>
+                    <Image style={styles.userIcon} source={icon} />
+                  </View>
+                  <Text style={styles.headingEdit}>{t(title as any)}</Text>
+                </View>
 
-            <Image
-              style={styles.Arrow}
-              source={require("../../assets/images/GroupArrow.png")}
-            />
-          </TouchableOpacity>
-        ))}
+                <Image
+                  style={[
+                    styles.Arrow,
+                    {
+                      transform: [
+                        { rotate: locale === "ar" ? "180deg" : "0deg" },
+                      ],
+                    },
+                  ]}
+                  source={require("@/assets/images/GroupArrow.png")}
+                />
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+        <View
+          style={{
+            gap: 12,
+          }}
+        >
+          <Text style={styles.headingTimer}>{t("community_title")}</Text>
+          <View
+            style={{
+              gap: 4,
+            }}
+          >
+            {community_navigation.map(({ title, icon, route }, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[styles.AccountView,direction]}
+                onPress={() => {
+                  if (title == "logout") {
+                    handleSignOut();
+                  } else {
+                    router.push(route as any);
+                  }
+                }}
+              >
+                <View style={[styles.IconView,direction]}>
+                  <View style={styles.BoxView}>
+                    <Image style={styles.userIcon} source={icon} />
+                  </View>
+                  <Text style={styles.headingEdit}>{t(title as any)}</Text>
+                </View>
+
+                <Image
+                   style={[
+                    styles.Arrow,
+                    {
+                      transform: [
+                        { rotate: locale === "ar" ? "180deg" : "0deg" },
+                      ],
+                    },
+                  ]}
+                  source={require("@/assets/images/GroupArrow.png")}
+                />
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

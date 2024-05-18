@@ -13,7 +13,6 @@ const Splash = () => {
 
   const checkNetwork = async () => {
     const state = await getNetworkStateAsync();
-    console.log("state.isInternetReachable", state.isInternetReachable);
     const isInternetReachable = state.isInternetReachable ?? false;
     setReachable(isInternetReachable);
     setWaiting(!isInternetReachable);

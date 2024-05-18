@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo } from "react";
+import React, {  useState, useMemo } from "react";
 import {
   View,
   Text,
@@ -20,7 +20,6 @@ import { useAppStore } from "@/store";
 const Signup = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [data, setData] = useState({
     name: "",
     email: "",
@@ -62,13 +61,13 @@ const Signup = () => {
     [locale]
   );
 
-  const onHandleSignup = useCallback(async () => {
+  const onHandleSignup = async () => {
     try {
       setLoading(true);
       register({
         ...data,
         onError: (error) => {
-          console.log(error);
+
           Alert.alert(error.message);
         },
         onSuccess: (message) => {
@@ -80,17 +79,7 @@ const Signup = () => {
       setLoading(false);
       Alert.alert(error.message);
     }
-  }, [data, router]);
-
-  const handleInputChange = useCallback(
-    (name: string, value: string) => {
-      setData((prevData) => ({ ...prevData, [name]: value }));
-      if (name === "password") {
-        setMatching(value === confirmPassword);
-      }
-    },
-    [confirmPassword]
-  );
+  };
 
   return (
     <ScrollView>
@@ -114,7 +103,9 @@ const Signup = () => {
                 inputState={
                   matching && type === "password" ? "valid" : (state as any)
                 }
-                onChangeText={(text) => handleInputChange(name, text)}
+                onChangeText={(text) =>
+                  setData((prevData) => ({ ...prevData, [name]: text }))
+                }
               />
             )
           )}
@@ -127,7 +118,6 @@ const Signup = () => {
             inputState={!matching ? "invalid" : "valid"}
             onChangeText={(text) => {
               setMatching(text === data.password);
-              setConfirmPassword(text);
             }}
           />
 

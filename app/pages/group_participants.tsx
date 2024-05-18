@@ -63,12 +63,20 @@ const ParticipantsPage: React.FC = () => {
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView style={styles.container}>
                 <View style={styles.mainView}>
-                    <TouchableOpacity onPress={() => router.back()}>
-                        <Image style={styles.LeftIcon} source={require('../assets/images/iconleft.png')} />
+                <TouchableOpacity
+              style={{
+                height: 32,
+                width: 32,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              onPress={() => router.back()}
+            >
+                        <Image style={styles.LeftIcon} source={require('@/assets/icons/back.png')} />
                     </TouchableOpacity>
                     <View style={styles.mainStudy}>
 
-                        <Image style={styles.LeftIcon} source={require('../assets/images/team.png')} />
+                        <Image style={styles.LeftIcon} source={require('@/assets/images/team.png')} />
                         <Text style={styles.heading}>Study Together</Text>
                     </View>
                     <View />

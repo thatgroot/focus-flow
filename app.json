@@ -2,7 +2,7 @@
   "expo": {
     "name": "Focus Flow",
     "slug": "focus-flow",
-    "version": "1.0.5",
+    "version": "1.0.9",
     "orientation": "portrait",
     "icon": "./assets/icons/logo.png",
     "scheme": "focus-flow",
@@ -27,7 +27,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.focusflow.app"
+      "bundleIdentifier": "com.focusflow.app",
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {

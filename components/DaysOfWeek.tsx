@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native";
 import DayCard from "./DayCard";
 import { arabic_dates, arabic_days } from "@/utils/helpers";

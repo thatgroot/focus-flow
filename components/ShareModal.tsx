@@ -30,7 +30,15 @@ export default function ShareModal({
     >
       <View style={styles.container}>
         <View style={styles.shareContainer}>
-          <TouchableOpacity onPress={onBack}>
+          <TouchableOpacity
+            style={{
+              height: 32,
+              width: 32,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            onPress={onBack}
+          >
             <Image
               style={styles.icon}
               source={require("@/assets/icons/back.png")}
@@ -92,10 +100,10 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     backgroundColor: "#FFF",
     display: "flex",
-    flex:1,
+    flex: 1,
     fontSize: 16,
     padding: 32,
-    gap:64
+    gap: 64,
   },
   shareContainer: {
     flexDirection: "row",
@@ -118,7 +126,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    flex:1,
+    flex: 1,
     position: "relative",
     paddingHorizontal: 12,
     paddingVertical: 12,

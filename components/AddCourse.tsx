@@ -6,7 +6,7 @@ import LabeledInput from "@/components/InputField";
 import Button from "@/elements/Button";
 import { theme } from "@/styles/theme";
 import { Image } from "expo-image";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import React, { useState } from "react";
 import {
   ScrollView,
@@ -16,6 +16,7 @@ import {
   Modal,
   Pressable,
   Alert,
+  TouchableOpacity,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -101,19 +102,32 @@ export default function AddCourse() {
   const insets = useSafeAreaInsets();
   const [modalVisible, setModalVisible] = useState(false);
 
-  const handleCheckboxChange = ({current,selected}:{ current: string;
-    selected: string[];}) => {
-    console.log("Selected label:", JSON.stringify(current));
-    // Handle the selected label here (e.g., update state)
+  const handleCheckboxChange = ({
+    current,
+    selected,
+  }: {
+    current: string;
+    selected: string[];
+  }) => {
   };
   return (
     <ScrollView
       style={{ ...styles.container, paddingTop: insets.top, paddingLeft: 20 }}
     >
-      <Image
-        source={require("@/assets/icons/back.png")}
-        style={{ height: 18, width: 18 }}
-      />
+      <TouchableOpacity
+        style={{
+          height: 32,
+          width: 32,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        onPress={() => router.back()}
+      >
+        <Image
+          source={require("@/assets/icons/back.png")}
+          style={styles.button}
+        />
+      </TouchableOpacity>
       <View
         style={{
           justifyContent: "center",
@@ -136,6 +150,7 @@ export default function AddCourse() {
           {["Pscychology", "Biology", "Physics", "Mathematics"].map(
             (label, index) => (
               <Checkbox
+              value=""
                 isRadio={true}
                 isChecked={false}
                 onPress={() => {}}
@@ -156,7 +171,7 @@ export default function AddCourse() {
         }}
       />
 
-      <AddCourseModal isVisible={modalVisible} onClose={()=>{}}/>
+      <AddCourseModal isVisible={modalVisible} onClose={() => {}} />
 
       <Pressable
         style={[styles.button, styles.buttonOpen]}
@@ -204,7 +219,7 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     color: "white",
-    fontFamily: 'Inter-Bold',
+    fontFamily: "Inter-Bold",
     textAlign: "center",
   },
   modalText: {

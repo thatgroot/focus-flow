@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   ScrollView,
   TextInput,
+  Button,
 } from "react-native";
 import { EvilIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -31,8 +32,18 @@ const gradients = [
 ];
 
 const Groups = () => {
-  const { setGroup, groups, joinedGroups, searchGroups, locale } =
-    useAppStore();
+  const {
+    setGroup,
+    groups,
+    my_groups,
+    joinedGroups,
+    loadMyGroups,
+    searched_groups,
+    searchGroups,
+    locale,
+  } = useAppStore();
+
+  const [query, setQuery] = useState("");
 
   const direction = useMemo(() => getFlexDirection(locale), [locale]);
   const alignment = useMemo(() => getTextAlignment(locale), [locale]);
@@ -41,18 +52,44 @@ const Groups = () => {
   const router = useRouter();
 
   useEffect(() => {
+    loadMyGroups();
     joinedGroups();
+
     return () => {};
   }, []);
 
-  useEffect(() => {
-    console.log("groups", groups);
-    return () => {};
-  }, [groups]);
-
   const renderJoinedGroups = () => {
     return (
-      <View style={{ gap: 18 }}>
+      <View style={[{ gap: 18, marginTop: 36 }, getColumnAlignment(locale)]}>
+        <View
+          style={[
+            {
+              flexDirection: "row",
+              flexWrap: "wrap",
+              justifyContent: "space-between",
+              rowGap: 12,
+            },
+            direction,
+          ]}
+        >
+          {searched_groups.map((group, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => handleGroupPress(group)}
+              style={{ width: "48%" }}
+            >
+              <StudyGroup
+                time=""
+                memberCount={group.memberCount}
+                users={getGroupUsers()}
+                title={group.title}
+                bio={group.bio}
+                gradient={gradients[index % gradients.length]}
+              />
+            </TouchableOpacity>
+          ))}
+        </View>
+
         <View style={[{ gap: 4 }, getColumnAlignment(locale)]}>
           <Text style={[styles.headingGroups, alignment]}>
             {t("joined_groups_title").replace(
@@ -118,7 +155,7 @@ const Groups = () => {
             direction,
           ]}
         >
-          {groups?.map((group, index) => (
+          {my_groups?.map((group, index) => (
             <TouchableOpacity
               key={index}
               onPress={() => handleGroupPress(group)}
@@ -140,7 +177,7 @@ const Groups = () => {
 
   const handleGroupPress = (group: Group) => {
     setGroup(group);
-    router.push("/GroupBoard");
+    router.push("/pages/group_board");
   };
 
   const getGroupUsers = () => {
@@ -155,15 +192,26 @@ const Groups = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
-        <Image
-          style={styles.iconLeft}
-          source={require("@/assets/images/iconleft.png")}
-        />
+        <TouchableOpacity
+          style={{
+            height: 32,
+            width: 32,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          onPress={() => router.back()}
+        >
+          <Image
+            source={require("@/assets/icons/back.png")}
+            style={styles.iconLeft}
+          />
+        </TouchableOpacity>
+
         <View style={[styles.mainHeading, direction]}>
           <Text style={styles.heading}>{t("groups_title")}</Text>
           <TouchableOpacity
             style={styles.plusBtn}
-            onPress={() => router.push("/GroupForm")}
+            onPress={() => router.push("/pages/create_group")}
           >
             <Image
               style={styles.iconPlus}
@@ -173,19 +221,46 @@ const Groups = () => {
           </TouchableOpacity>
         </View>
         <View style={[styles.mainSearch, direction]}>
-          <EvilIcons name="search" size={24} color="#9AA5B5" />
-          <TextInput
-            placeholder={t("search_group_placeholder")}
-            style={styles.textInput}
-            placeholderTextColor={"#9AA5B5"}
-            onChangeText={(text) => {
-              if (text) {
-                searchGroups(text);
+          <View
+            style={{
+              flexDirection: "row",
+            }}
+          >
+            <EvilIcons name="search" size={24} color="#9AA5B5" />
+            <TextInput
+              placeholder={t("search_group_placeholder")}
+              style={styles.textInput}
+              placeholderTextColor={"#9AA5B5"}
+              onChangeText={(text) => {
+                setQuery(text);
+              }}
+            />
+          </View>
+          <TouchableOpacity
+            disabled={false}
+            style={{
+              height: 40,
+              borderRadius: 20,
+              paddingHorizontal: 12,
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "#8a97dd",
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 3,
+              },
+            }}
+            onPress={() => {
+              if (query) {
+                searchGroups(query);
               } else {
                 joinedGroups();
               }
             }}
-          />
+          >
+            <Text style={{ color: "white" }}>Search</Text>
+          </TouchableOpacity>
         </View>
 
         {groups.length === 0 ? (
@@ -253,17 +328,13 @@ const styles = StyleSheet.create({
   mainSearch: {
     borderWidth: 1,
     borderColor: "#9AA5B5",
-    width: "100%",
-    height: 52.5,
     borderRadius: 100,
-    justifyContent: "center",
+    justifyContent: "space-between",
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 20,
-    marginBottom: 20,
+    padding: 2,
   },
   textInput: {
-    flex: 1,
     color: "#9AA5B5",
     fontSize: 16,
     fontWeight: "300",

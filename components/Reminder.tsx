@@ -20,7 +20,7 @@ const Reminder: React.FC = () => {
 
   return (
     <View style={styles.container}>
-       <Image style={styles.mainbell} source={require('../assets/images/schoolbell.png')} />
+       <Image style={styles.mainbell} source={require('@/assets/images/schoolbell.png')} />
       <View style={styles.subContainer}>
         <Text style={styles.titleText}>Reminder</Text>
       </View>

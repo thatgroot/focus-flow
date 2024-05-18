@@ -69,7 +69,7 @@ const HomeScreen: React.FC = () => {
         type="recent"
         onPress={() => {
           setGroup({ ...groups[0] });
-          router.push("/GroupBoard");
+          router.push("/pages/group_board");
         }}
       />
     ));
@@ -86,7 +86,7 @@ const HomeScreen: React.FC = () => {
             <TimerSection
               onPress={() => {
                 setGroup({ ...groups[0] });
-                router.push("/GroupBoard");
+                router.push("/pages/group_board");
               }}
               clock={require("@/assets/images/clock.png")}
               users={[

@@ -57,14 +57,9 @@ const DATA = [
 ];
 
 const SignInScreen = () => {
-  const [isVisible, setIsVisible] = useState(false);
 
 
 
-  const handleCheckboxChange = (selectedLabels: string[]) => {
-    console.log("Selected label:", JSON.stringify(selectedLabels));
-    // Handle the selected label here (e.g., update state)
-  };
   return (
     <ScrollView style={{ backgroundColor: theme.colors.background, flex: 1 }}>
       <View style={styles.container}>
@@ -211,10 +206,6 @@ const SignInScreen = () => {
           disabled={false}
           onPress={async () => {
             const data = await getDueDates();
-            const tasks = data.tasks;
-            const classes = data.classes;
-            console.log(tasks[0].subject);
-            console.log(classes.at(0), data.classes);
           }}
           text="Get Schedules"
         />

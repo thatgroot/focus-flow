@@ -43,12 +43,20 @@ export const ClassPicker = () => {
  return (
   <SafeAreaView style={{ flex: 1 }}>
    <View style={styles.header}>
-    <TouchableOpacity onPress={() => router.back()}>
-     <Image
-      source={require("@/assets/icons/back.png")}
-      style={styles.backBtn}
-     />
-    </TouchableOpacity>
+   <TouchableOpacity
+              style={{
+                height: 32,
+                width: 32,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              onPress={() => router.back()}
+            >
+              <Image
+                source={require("@/assets/icons/back.png")}
+                style={styles.backBtn}
+              />
+            </TouchableOpacity>
     <Text style={styles.headerTxt}>Add to Planner</Text>
    </View>
    <SubjectPicker onChange={handleCheckboxChange} onAction={() => {

@@ -69,9 +69,11 @@ export const Schedules = ({
             {data.subject ? t("class_title") : t("task_title")}
           </Text>
         </View>
-        <View style={[styles.headerTitle,direction]}>
+        <View style={[styles.headerTitle, direction]}>
           <Text style={styles.subtitle}>
-            {data.subject ? t(data.subject?.toLocaleLowerCase() as any) : data.title}
+            {data.subject
+              ? t(data.subject?.toLocaleLowerCase() as any)
+              : data.title}
           </Text>
           <TouchableOpacity onPress={() => {}}>
             <Image source={icon} style={styles.shareIcon} />
@@ -107,7 +109,7 @@ export const Schedules = ({
           </View>
         </View>
       </View>
-      <View
+      <TouchableOpacity
         style={{
           display: "flex",
           flexDirection: "row",
@@ -116,6 +118,38 @@ export const Schedules = ({
           alignItems: "center",
           position: "relative",
           gap: 6,
+        }}
+        onPress={() => {
+          const { id, ...others } = data;
+          if (data.subject) {
+            controllers.class.update({
+              onError: (error) => {
+                Alert.alert(error);
+              },
+              onSuccess: (id) => {},
+              id: id!,
+              data: {
+                ...others,
+                completionStatus: !checked,
+                completedOn: new Date(),
+              },
+            });
+          } else {
+            controllers.task.update({
+              onError: (error) => {
+                Alert.alert(error);
+              },
+              onSuccess: (id) => {},
+              id: id!,
+              data: {
+                ...others,
+                completionStatus: !checked,
+                completedOn: new Date(),
+              },
+            });
+          }
+
+          setChecked(!checked);
         }}
       >
         <Text
@@ -129,53 +163,18 @@ export const Schedules = ({
           {t("mark_as_complete")}
         </Text>
 
-        <TouchableOpacity
-          onPress={() => {
-            const { id, ...others } = data;
-            if (data.subject) {
-              controllers.class.update({
-                onError: (error) => {
-                  Alert.alert(error);
-                },
-                onSuccess: (id) => {},
-                id: id!,
-                data: {
-                  ...others,
-                  completionStatus: !checked,
-                  completedOn: new Date(),
-                },
-              });
-            } else {
-              controllers.task.update({
-                onError: (error) => {
-                  Alert.alert(error);
-                },
-                onSuccess: (id) => {},
-                id: id!,
-                data: {
-                  ...others,
-                  completionStatus: !checked,
-                  completedOn: new Date(),
-                },
-              });
-            }
-
-            setChecked(!checked);
-          }}
-        >
-          {checked ? (
-            <Image
-              style={{
-                width: 18,
-                height: 18,
-              }}
-              source={require("@/assets/images/checked_radio.png")}
-            />
-          ) : (
-            <View style={[styles.checkbox]} />
-          )}
-        </TouchableOpacity>
-      </View>
+        {checked ? (
+          <Image
+            style={{
+              width: 18,
+              height: 18,
+            }}
+            source={require("@/assets/images/checked_radio.png")}
+          />
+        ) : (
+          <View style={[styles.checkbox]} />
+        )}
+      </TouchableOpacity>
     </View>
   );
 };
@@ -272,7 +271,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignSelf:"stretch"
+    alignSelf: "stretch",
   },
   checkbox: {
     width: 18,

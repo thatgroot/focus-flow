@@ -25,21 +25,30 @@ const CompletedTaskScreen: React.FC = () => {
       .then((_data) => {
         setTasks(_data);
       })
-      .catch((error) => {
-        console.log("error", error);
+      .catch((_error) => {
       });
   }, []);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={styles.container}>
         <View style={styles.mainView}>
-          <TouchableOpacity onPress={() => router.back()}>
+          <TouchableOpacity
+            style={{
+              height: 32,
+              width: 32,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            onPress={() => router.back()}
+          >
             <Image
               style={styles.LeftIcon}
-              source={require("@/assets/images/iconleft.png")}
+              source={require("@/assets/icons/back.png")}
             />
           </TouchableOpacity>
-          <Text style={styles.heading}>{t("completed_label")} {t("task_title")}</Text>
+          <Text style={styles.heading}>
+            {t("completed_label")} {t("task_title")}
+          </Text>
           <View />
         </View>
         <View

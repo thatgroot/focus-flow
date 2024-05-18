@@ -85,6 +85,12 @@ const schedule: React.FC = () => {
           }}
         >
           <TouchableOpacity
+            style={{
+              height: 32,
+              width: 32,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
             onPress={() => {
               setVisible(false);
               router.push("/schedule");
@@ -171,7 +177,7 @@ const schedule: React.FC = () => {
               />
             ))}
           </View>
-          {/* <View
+          <View
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
@@ -224,7 +230,7 @@ const schedule: React.FC = () => {
             >
               <Text style={[styles.text, { fontSize: 12 }]}>{t("create")}</Text>
             </TouchableOpacity>
-          </View> */}
+          </View>
         </View>
         <Button
           disabled={false}

@@ -1,17 +1,19 @@
 import { useAppStore } from "@/store";
-import { setTranslationHandler, t } from "@/utils/helpers";
+import { getFlexDirection, setTranslationHandler, t } from "@/utils/helpers";
 import { translations } from "@/utils/localization";
-import { AllRoutes, router } from "expo-router";
+import {  router } from "expo-router";
 import { I18n } from "i18n-js";
-import React from "react";
+import React, { useMemo } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export default function LanguageSelector({ route }: { route: AllRoutes }) {
+export default function LanguageSelector({ route }: { route: any }) {
   const languages = {
     en: "English",
     ar: "عربي", // Arabic for "Arabic"
   };
   const { setLocale, locale } = useAppStore();
+  const direction = useMemo(() => getFlexDirection(locale), [locale]);
+
   function changeLocale(_locale: "en" | "ar") {
     const i18n = new I18n(translations);
     i18n.locale = _locale;
@@ -20,7 +22,7 @@ export default function LanguageSelector({ route }: { route: AllRoutes }) {
     router.push(route);
   }
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,direction]}>
       {Object.keys(languages).map((key, index) => {
         return (
           <TouchableOpacity

@@ -26,10 +26,18 @@ const EditProfileUploads: React.FC = () => {
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={styles.container}>
         <View style={styles.mainView}>
-          <TouchableOpacity onPress={() => router.back()}>
+        <TouchableOpacity
+              style={{
+                height: 32,
+                width: 32,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              onPress={() => router.back()}
+            >
             <Image
               style={styles.LeftIcon}
-              source={require("@/assets/images/iconleft.png")}
+              source={require("@/assets/icons/back.png")}
             />
           </TouchableOpacity>
 

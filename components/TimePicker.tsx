@@ -8,6 +8,49 @@ import {
   StyleSheet,
 } from "react-native";
 
+export const GroupTimePicker = ({
+  onPick,
+}: {
+  onPick: (value: String) => void;
+}) => {
+  const [value, setValue] = useState("30");
+  const [unit, setUnit] = useState("hours");
+
+  const handleHourChange = (text: string) => {
+    const value = `${text.padStart(2, "0")} ${unit}`;
+    setValue(text);
+    onPick(value);
+  };
+
+  const toggleUnit = () => {
+    onPick(
+      `${value.padStart(2, "0")} ${unit === "hours" ? "minutes" : "hours"}`
+    );
+    setUnit(unit === "hours" ? "minutes" : "hours");
+  };
+
+  return (
+    <View style={styles.container}>
+      <TextInput
+        placeholderTextColor={"#aeaeae"}
+        style={styles.input}
+        value={value}
+        placeholder={"00"}
+        onChangeText={handleHourChange}
+        keyboardType="number-pad"
+      />
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          toggleUnit();
+        }}
+      >
+        <Text style={styles.buttonText}>{unit}</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
 const CustomTimePicker = ({
   defaultValue,
   onPick,
@@ -101,23 +144,32 @@ const CustomTimePicker = ({
 
 const styles = StyleSheet.create({
   container: {
+    borderWidth: 1,
+    borderColor: "#9AA5B5",
+    backgroundColor: "#ccc",
+    height: 50,
+    borderRadius: 100,
+    paddingLeft: 10,
+    marginTop: 20,
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
     gap: 6,
-    padding: 12,
   },
 
   input: {
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    backgroundColor: "#ccc",
     borderRadius: 5,
+    flex: 1,
+    textAlign: "center",
+    alignSelf: "stretch",
   },
   button: {
-    backgroundColor: "#ccc",
     borderRadius: 5,
+    flex: 1,
+    alignSelf: "stretch",
+    justifyContent: "center",
+    alignItems: "center",
   },
   buttonText: {
     fontSize: 14,

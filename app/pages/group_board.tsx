@@ -42,10 +42,18 @@ const grouppage: React.FC = () => {
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={styles.container}>
         <View style={styles.mainView}>
-          <TouchableOpacity onPress={() => router.back()}>
+        <TouchableOpacity
+              style={{
+                height: 32,
+                width: 32,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              onPress={() => router.back()}
+            >
             <Image
               style={styles.LeftIcon}
-              source={require("@/assets/images/iconleft.png")}
+              source={require("@/assets/icons/back.png")}
             />
           </TouchableOpacity>
           <View style={styles.mainStudy}>
@@ -92,14 +100,14 @@ const grouppage: React.FC = () => {
                 id: group?.id!,
                 onSuccess: (id) => {
                   setLoading(false);
-                  router.push("/liveNowPage");
+                  router.push("/pages/live_study");
                 },
                 onError: (error) => {
                   setLoading(false);
                   if (error === "You are already a group member") {
-                    router.push("/liveNowPage");
+                    router.push("/pages/live_study");
                   } else {
-                    console.log(error);
+
                   }
                 },
               });

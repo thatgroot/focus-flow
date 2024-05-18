@@ -257,11 +257,10 @@ export const controllers = {
       let _query = query(ref, where("completionStatus", "==", true));
       const tasks = await getDocsQuery(_query);
 
-
-       ref = collection(database, `users/${auth.currentUser?.uid}/classes`);
-       _query = query(ref, where("completionStatus", "==", true));
+      ref = collection(database, `users/${auth.currentUser?.uid}/classes`);
+      _query = query(ref, where("completionStatus", "==", true));
       const classes = await getDocsQuery(_query);
-      return [...tasks,...classes] as Schedule[];
+      return [...tasks, ...classes] as Schedule[];
     },
   },
   class: {
@@ -502,8 +501,29 @@ export const controllers = {
     get: async () => {
       const ref = collection(database, `users/${auth.currentUser?.uid}/groups`);
       const data = await getDocs(query(ref));
+      const groups: Group[] = [];
+      await Promise.all(
+        data.docs.map(async ({ id }) => {
+          const groupRef = doc(database, `groups/${id}`);
+          const snapshot = await getDoc(groupRef);
 
-      return data.docs.map((doc) => doc.data());
+          const membersRef = doc(database, `members/${id}`);
+          const membersSnapshot = await getDoc(membersRef);
+          if (snapshot.exists() || membersSnapshot.exists()) {
+            let members = [];
+            if (membersSnapshot.data()) {
+              members = membersSnapshot.data()!["members"] ?? [];
+            }
+            snapshot.data();
+            groups.push({
+              id: snapshot.id,
+              ...(snapshot.data() as Group),
+              memberCount: members.length as number,
+            });
+          }
+        })
+      );
+      return groups;
     },
 
     live: async () => {},
@@ -544,6 +564,11 @@ function buildScheduleQuery(type: "tasks" | "classes") {
     where("endDate", ">=", addDays(new Date(), 0)), // Today or later
     where("endDate", "<=", addDays(new Date(), 45)) // Within the next 3 days
   );
+}
+
+function buildAllSchedueQuery(type: "tasks" | "classes") {
+  const path = `users/${auth.currentUser?.uid}/${type}`;
+  return query(collection(database, path));
 }
 
 export function arrangeByStartTime({
@@ -598,6 +623,15 @@ export function arrangeByStartTime({
 export async function getDueDates() {
   const tasksQuery = buildScheduleQuery("tasks");
   const classesQuery = buildScheduleQuery("classes");
+  const tasks = toSchedules(await getDocsQuery(tasksQuery));
+  const classes = toSchedules(await getDocsQuery(classesQuery));
+  const sessions = toSessions(await controllers.group.sessions.get());
+  return { classes, tasks, sessions };
+}
+
+export async function getAllSchedules() {
+  const tasksQuery = buildAllSchedueQuery("tasks");
+  const classesQuery = buildAllSchedueQuery("classes");
   const tasks = toSchedules(await getDocsQuery(tasksQuery));
   const classes = toSchedules(await getDocsQuery(classesQuery));
   const sessions = toSessions(await controllers.group.sessions.get());

@@ -1,4 +1,4 @@
-import React, { memo, useState, useCallback, useMemo } from "react";
+import React, { memo, useState, useMemo } from "react";
 import {
   View,
   Text,
@@ -10,13 +10,10 @@ import {
 } from "react-native";
 import LabeledInput from "@/components/InputField";
 import Button from "@/elements/Button";
-import Link from "@/elements/Link";
-import { register, signin, updateUser } from "@/utils/auth";
+import { signin, updateUser } from "@/utils/auth";
 import { getFlexDirection, t } from "@/utils/helpers";
 import { useRouter } from "expo-router";
 import { Image } from "expo-image";
-import { sendPasswordResetEmail } from "firebase/auth";
-import { auth } from "@/utils/firebase";
 import { useAppStore } from "@/store";
 import LanguageSelector from "@/components/localization/LanguageSelector";
 
@@ -57,7 +54,7 @@ const Signin = () => {
     [locale]
   );
 
-  const handleSignin = useCallback(async () => {
+  const handleSignin = async () => {
     setLoading(true);
     signin({
       email: data.email,
@@ -71,14 +68,14 @@ const Signin = () => {
         router.push("/home_screen");
       },
     });
-  }, [data, router]);
+  };
 
-  const handleForgotPassword = useCallback(async () => {
+  const handleForgotPassword = async () => {
     if (data.email) {
       updateUser.forgotPassword({
         email: data.email,
         onError: (error) => {
-          console.log(error);
+
         },
         onSuccess: (message) => {
           Alert.alert(message);
@@ -87,7 +84,7 @@ const Signin = () => {
     } else {
       Alert.alert(t("provide_email"));
     }
-  }, [data]);
+  };
 
   return (
     <ScrollView>

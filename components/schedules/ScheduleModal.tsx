@@ -7,7 +7,7 @@ import {
   TextInput,
   Alert,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Button from "@/elements/Button";
 import { Modalize } from "react-native-modalize";
 import { router } from "expo-router";
@@ -73,17 +73,14 @@ export const ScheduleModal = ({
       ...data,
       subject: scheduleItem?.subject,
     });
-    console.log("open", open);
-    console.log("scheduleItem.subject", scheduleItem?.subject);
     if (open) _ref.current?.open();
   }, [open]);
-  const handleSelect = (value: any) => {
+  const handleSelect = useCallback((value: any) => {
     handleChange({
       name: "schedule",
       value: value,
     });
-    console.log(value);
-  };
+  }, []);
 
   return (
     <Modalize
@@ -126,6 +123,12 @@ export const ScheduleModal = ({
         <View style={styles.modalView}>
           <View style={[styles.header2, { marginTop: 20, marginLeft: 0 }]}>
             <TouchableOpacity
+              style={{
+                height: 32,
+                width: 32,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
               onPress={() => {
                 onBack(_ref);
                 if (type === "task") {
@@ -172,10 +175,7 @@ export const ScheduleModal = ({
                         name: "schedule",
                         value: text,
                       });
-                      console.log(
-                        "text",
-                        text.replaceAll(" ", "_").toLowerCase()
-                      );
+
                     }}
                   />
                 );
@@ -230,50 +230,25 @@ export const ScheduleModal = ({
               </TouchableOpacity>
             </View>
             <View style={styles.containerDate}>
-              <View
-                style={{
-                  borderWidth: 1,
-                  borderColor: "#9AA5B5",
-                  backgroundColor: "#ccc",
-                  width: 155,
-                  height: 50,
-                  borderRadius: 100,
-                  paddingLeft: 10,
-                  marginTop: 20,
+              <CustomTimePicker
+                defaultValue={data.startTime}
+                onPick={(date) => {
+                  handleChange({
+                    name: "startTime",
+                    value: date,
+                  });
                 }}
-              >
-                <CustomTimePicker
-                  defaultValue={data.startTime}
-                  onPick={(date) => {
-                    handleChange({
-                      name: "startTime",
-                      value: date,
-                    });
-                  }}
-                />
-              </View>
-              <View
-                style={{
-                  borderWidth: 1,
-                  borderColor: "#9AA5B5",
-                  backgroundColor: "#ccc",
-                  width: 155,
-                  height: 50,
-                  borderRadius: 100,
-                  paddingLeft: 10,
-                  marginTop: 20,
+              />
+
+              <CustomTimePicker
+                defaultValue={data.endTime}
+                onPick={(date) => {
+                  handleChange({
+                    name: "endTime",
+                    value: date,
+                  });
                 }}
-              >
-                <CustomTimePicker
-                  defaultValue={data.endTime}
-                  onPick={(date) => {
-                    handleChange({
-                      name: "endTime",
-                      value: date,
-                    });
-                  }}
-                />
-              </View>
+              />
             </View>
           </View>
 
@@ -288,12 +263,12 @@ export const ScheduleModal = ({
                   setLoading(true);
                   const missing = hasEmptyValues<Schedule>(data);
                   if (type === "task") {
-                    if (!missing.includes("note")) {
-                      setData({
-                        ...data,
-                        subject: "",
-                      });
-                      controllers.task.add({
+                    setData({
+                      ...data,
+                      subject: "",
+                    });
+                    controllers.task
+                      .add({
                         data: {
                           ...data,
                           subject: "",
@@ -301,38 +276,35 @@ export const ScheduleModal = ({
                         onError: (error) => {
                           setLoading(false);
 
-                          console.log(error);
                         },
                         onSuccess: () => {
                           setLoading(false);
                           onAction(_ref);
                         },
+                      })
+                      .finally(() => {
+                        setLoading(false);
                       });
-                    } else {
-                      Alert.alert("Please provide ", "notes");
-                    }
                   } else {
-                    if (missing.length === 0) {
-                      setLoading(true);
-
-                      controllers.class.add({
+                    setLoading(true);
+                    controllers.class
+                      .add({
                         data: {
                           ...data,
                           subject: scheduleItem?.subject,
                         },
                         onError: (error) => {
                           setLoading(false);
-                          console.log(error);
+
                         },
                         onSuccess: () => {
                           setLoading(false);
                           onAction(_ref);
                         },
+                      })
+                      .finally(() => {
+                        setLoading(false);
                       });
-                    } else {
-                      console.log(JSON.stringify(data));
-                      Alert.alert("Please provide ", missing.join(","));
-                    }
                   }
                 }}
               />
@@ -410,6 +382,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    gap: 24,
     width: "100%",
   },
   modalBtn: {

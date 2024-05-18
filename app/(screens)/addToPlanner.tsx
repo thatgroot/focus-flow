@@ -19,7 +19,7 @@ import { IHandles } from "react-native-modalize/lib/options";
 import { t } from "@/utils/helpers";
 
 const AddToPlanner = () => {
-  const { type, tags, setScheduleItem,  } = useAppStore();
+  const { type, tags, setScheduleItem } = useAppStore();
 
   const [data, setData] = useState<Schedule>({
     startDate: new Date(),
@@ -35,7 +35,8 @@ const AddToPlanner = () => {
   const [openModal, setOpenModal] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showShare, setShowShare] = useState(false);
-  const [modelRef, setModalRef] = useState<MutableRefObject<IHandles | undefined>>();
+  const [modelRef, setModalRef] =
+    useState<MutableRefObject<IHandles | undefined>>();
 
   useEffect(() => {
     setOpenModal(type === "task");
@@ -53,24 +54,30 @@ const AddToPlanner = () => {
     setScheduleItem(data);
   };
 
-  const handleScheduleModalBack = (_ref: React.MutableRefObject<IHandles | undefined>) => {
-    if(_ref){
-    setModalRef(_ref);
-    setOpenModal(false);
-    _ref.current?.close();}
+  const handleScheduleModalBack = (
+    _ref: React.MutableRefObject<IHandles | undefined>
+  ) => {
+    if (_ref) {
+      setModalRef(_ref);
+      setOpenModal(false);
+      _ref.current?.close();
+    }
   };
 
-  const handleScheduleModalAction = (_ref: React.MutableRefObject<IHandles | undefined>) => {
-    if(_ref){   setModalRef(_ref);
-    setShowSuccess(true);
-    _ref.current?.close();
+  const handleScheduleModalAction = (
+    _ref: React.MutableRefObject<IHandles | undefined>
+  ) => {
+    if (_ref) {
+      setModalRef(_ref);
+      setShowSuccess(true);
+      _ref.current?.close();
     }
   };
 
   const handleShareSuccessClose = () => {
     setShowSuccess(false);
     setShowShare(true);
-    router.push("/schedule")
+    router.push("/schedule");
   };
 
   const handleShareModalBack = () => {
@@ -83,7 +90,15 @@ const AddToPlanner = () => {
       {type === "class" && (
         <>
           <View style={styles.header}>
-            <TouchableOpacity onPress={() => router.back()}>
+            <TouchableOpacity
+              style={{
+                height: 32,
+                width: 32,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              onPress={() => router.back()}
+            >
               <Image
                 source={require("@/assets/icons/back.png")}
                 style={styles.backBtn}
@@ -105,10 +120,7 @@ const AddToPlanner = () => {
       />
 
       {showSuccess && (
-        <ShareSuccess
-          onClose={handleShareSuccessClose}
-          share={() => {}}
-        />
+        <ShareSuccess onClose={handleShareSuccessClose} share={() => {}} />
       )}
 
       {/* {!showSuccess && showShare && (
@@ -121,7 +133,6 @@ const AddToPlanner = () => {
 };
 
 export default AddToPlanner;
-
 
 const styles = StyleSheet.create({
   header: {

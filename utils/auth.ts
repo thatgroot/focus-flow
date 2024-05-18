@@ -87,7 +87,6 @@ export const signin = async ({
       }
     })
     .catch((error: any) => {
-      console.log("error", error.code);
       let message = "";
       if (error.code === "auth/too-many-requests") {
         message = t("too_many_requests");
@@ -106,7 +105,7 @@ export const signin = async ({
 export const inputRegex = {
   email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
   password: /.{6,}/,
-  text: /^[a-zA-Z\s]*$/,
+  text: /^[a-zA-Z0-9\s]*$/,
   number: /^[0-9]*$/,
 };
 
@@ -123,10 +122,7 @@ export const updateUser = {
             onSuccess("Please verify your new email");
           })
           .catch(onError);
-        // updateEmail(auth.currentUser, value)
-        // .then(() => {
-        //   onSuccess("email udated successfully");
-        // })
+
       } catch (error) {
         onError(error);
       }
@@ -136,20 +132,42 @@ export const updateUser = {
   },
 
   password: ({
-    value,
+    old_password,
+    new_password,
     onSuccess,
     onError,
-  }: CreateDocumentTypScaffold & { value: string }) => {
+  }: CreateDocumentTypScaffold & {
+    old_password: string;
+    new_password: string;
+  }) => {
     reauthenticateWithCredential(
       auth.currentUser!,
-      EmailAuthProvider.credential(auth.currentUser?.email!, "bdz035Iq")
-    ).then((creds) => {
-      updatePassword(auth.currentUser!, value)
-        .then(() => {
-          onSuccess("password udated successfully");
-        })
-        .catch(onError);
-    });
+      EmailAuthProvider.credential(auth.currentUser?.email!, old_password)
+    )
+      .then((creds) => {
+        updatePassword(auth.currentUser!, new_password)
+          .then(() => {
+            onSuccess("password udated successfully");
+          })
+          .catch((e) => {
+            onError(onError);
+          });
+      })
+      .catch((error) => {
+        let message = "";
+        if (error.code === "auth/too-many-requests") {
+          message = t("too_many_requests");
+        } else if (error.code === "auth/invalid-credential") {
+          message = t("invalid_password");
+        } else if (error.code === "auth/invalid-email") {
+          message = t("invalid_mail_address");
+        } else {
+          // message = t("failed_login");
+          message = error.code;
+        }
+        //
+        onError(message);
+      });
   },
 
   forgotPassword: ({

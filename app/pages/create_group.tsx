@@ -10,30 +10,39 @@ import {
   Alert,
   KeyboardAvoidingView,
 } from "react-native";
-import SelectDropdown from "react-native-select-dropdown";
 
 import { router } from "expo-router";
-import { useAppStore } from "@/store";
 import Button from "@/elements/Button";
 import { controllers } from "@/utils/crud";
 import { auth } from "@/utils/firebase";
 import { t } from "@/utils/helpers";
 import LabeledInput from "@/components/InputField";
 import PromiseWaiter from "@/components/promises/PromiseWaiter";
+import { GroupTimePicker } from "@/components/TimePicker";
 
 const GroupForm: React.FC = () => {
-  const { group, setGroup } = useAppStore();
+  const [group, setGroup] = useState<Group>();
+  // const { locale } = useAppStore();
   const [loading, setLoading] = useState(false);
+  // const direction = useMemo(() => getFlexDirection(locale), [locale]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView behavior="padding" enabled>
         <ScrollView style={styles.container}>
           <View style={styles.mainView}>
-            <TouchableOpacity onPress={() => router.back()}>
+            <TouchableOpacity
+              style={{
+                height: 32,
+                width: 32,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              onPress={() => router.back()}
+            >
               <Image
                 style={styles.LeftIcon}
-                source={require("@/assets/images/iconleft.png")}
+                source={require("@/assets/icons/back.png")}
               />
             </TouchableOpacity>
             <View style={styles.mainStudy}>
@@ -87,22 +96,13 @@ const GroupForm: React.FC = () => {
 
             <View style={{ flex: 1, alignSelf: "stretch", gap: 6 }}>
               <Text style={[styles.StylesTitle]}>{t("add_time")}</Text>
-              <SelectDropdown
-                data={[10, 20, 30, 40, 50, 60].map((i) => `${i} minutes`)}
-                onSelect={(time, index) => {
+              <GroupTimePicker
+                onPick={(value) => {
                   setGroup({
                     ...group!,
-                    time,
+                    time: value.toString(),
                   });
                 }}
-                defaultButtonText={group?.time ? group?.time : "10 minutes"}
-                buttonTextAfterSelection={(time, index) => {
-                  return time;
-                }}
-                rowTextForSelection={(time, index) => {
-                  return time;
-                }}
-                buttonStyle={styles.dropDownlist}
               />
             </View>
 
@@ -113,24 +113,34 @@ const GroupForm: React.FC = () => {
                 disabled={false}
                 text={t("next")}
                 onPress={() => {
-                  if (group) {
-                    setLoading(true)
+                  const missing = [];
+                  if (!group?.title) {
+                    missing.push("title");
+                  }
+                  if (!group?.bio) {
+                    missing.push("bio");
+                  }
+                  if (!group?.time) {
+                    missing.push("time");
+                  }
+                  if (missing.length === 0) {
+                    setLoading(true);
                     controllers.group.add({
                       data: {
                         ...group!,
                         uid: auth.currentUser?.uid!,
                       },
                       onError: (error) => {
-                        setLoading(false)
-                        console.log("error",error)
+                        setLoading(false);
                       },
                       onSuccess: (id) => {
-                        setLoading(false)
-                        router.push("/groups");
+                        setLoading(false);
+                        router.replace("/groups")
                       },
                     });
                   } else {
-                    Alert.alert("group details are missing");
+                    setLoading(false);
+                    Alert.alert("Please provide " + missing.toString());
                   }
                 }}
               />
@@ -227,7 +237,6 @@ const styles = StyleSheet.create({
   dropDownlist: {
     borderWidth: 2,
     borderColor: "rgba(154, 165, 181, 1)=",
-    width: "100%",
     height: 60,
     backgroundColor: "#FAFAFA",
     borderRadius: 100,

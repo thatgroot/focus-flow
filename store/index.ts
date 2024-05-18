@@ -1,6 +1,7 @@
 import { controllers } from "@/utils/crud";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { I18n } from "i18n-js";
+import { Alert } from "react-native";
 import { create, useStore } from "zustand";
 
 type State = {
@@ -10,37 +11,32 @@ type State = {
   studySession?: StudySession;
   groupInfo?: Group;
   groups: Group[];
+  searched_groups: Group[];
+  my_groups: Group[];
   type?: ScheduleType;
   tags: string[];
   scheduleItem?: Schedule;
 };
 
-type SetTypeAction = (type: ScheduleType) => void;
-type SetTagsAction = (tag: string[]) => void;
-type SetGroupAction = (group: Group) => void;
-type SetGroupsAction = () => void;
-type SetGroupSearchAction = (text: string) => void;
-type SetStudySessionAction = (id: string) => void;
-type SetScheduleItemAction = (data: Schedule) => void;
-
 type Actions = {
-  setType: SetTypeAction;
-  setTags: SetTagsAction;
-  setScheduleItem: SetScheduleItemAction;
-  setGroup: SetGroupAction;
-  joinedGroups: SetGroupsAction;
-  searchGroups: SetGroupSearchAction;
-  groupSession: SetStudySessionAction;
+  setType: (type: ScheduleType) => void;
+  setTags: (tag: string[]) => void;
+  setScheduleItem: (data: Schedule) => void;
+  setGroup: (group: Group) => void;
+  joinedGroups: () => void;
+  loadMyGroups: () => void;
+  searchGroups: (text: string) => void;
+  groupSession: (id: string) => void;
   setLocale: (type: "en" | "ar") => void;
 };
 
-
-
 export const useAppStore = create<State & Actions>((set) => ({
-  locale:"en",
+  locale: "en",
   tags: [],
   groups: [],
-  scheduleItem:{
+  my_groups: [],
+  searched_groups: [],
+  scheduleItem: {
     startDate: new Date(),
     endDate: new Date(),
     startTime: new Date(),
@@ -48,7 +44,7 @@ export const useAppStore = create<State & Actions>((set) => ({
     note: "",
     schedule: "daily",
     completionStatus: false,
-    tags:[],
+    tags: [],
   },
   setType: (type: ScheduleType) => set({ type }),
   setLocale: (locale: "en" | "ar") => {
@@ -65,14 +61,27 @@ export const useAppStore = create<State & Actions>((set) => ({
       });
     });
   },
-  searchGroups: (text: string) => {
-    controllers.group.search({ title: text }).then((data) => {
-      if (data) {
-        set({
-          groups: data,
-        });
-      }
+  loadMyGroups: () => {
+    controllers.group.get().then((data) => {
+      set({
+        my_groups: data ?? [],
+      });
     });
+  },
+  searchGroups: (text: string) => {
+    if (!text) {
+      set({
+        searched_groups: [],
+      });
+    } else {
+      controllers.group.search({ title: text }).then((data) => {
+        if (data) {
+          set({
+            searched_groups: data,
+          });
+        }
+      });
+    }
   },
   groupSession: (id: string) => {
     controllers.group.sessions.getFor(id).then((data) => {

@@ -3,25 +3,12 @@ import {
   View,
   StyleSheet,
   Text,
-  TouchableOpacity,
-  SafeAreaView,
-  Modal,
-  Image,
-  Pressable,
-  ScrollView,
 } from "react-native";
 
-import { Calendar } from "react-native-calendars";
-import moment from "moment";
 
 import { Schedules } from "@/components/Schedules";
-import { useRouter } from "expo-router";
-import ModalWrapper from "@/components/ModalWrapper";
-import { arrangeByStartTime, getDueDates } from "@/utils/crud";
+import { arrangeByStartTime, getAllSchedules, getDueDates } from "@/utils/crud";
 import { useAppStore } from "@/store";
-import { Chip } from "@/components/TaskCategories";
-import Button from "@/elements/Button";
-import DaysOfWeek from "@/components/DaysOfWeek";
 import {
   date,
   getFlexDirection,
@@ -29,12 +16,11 @@ import {
   t,
   translateDate,
   translatetime,
-  ucFirst,
 } from "@/utils/helpers";
 import PromiseWaiter from "../promises/PromiseWaiter";
 
 export default function ScheduleTimeline() {
-  const { locale, i18n, type } = useAppStore();
+  const { locale } = useAppStore();
   const [data, setData] = useState<
     {
       time: string;
@@ -43,8 +29,7 @@ export default function ScheduleTimeline() {
   >([]);
 
   useEffect(() => {
-    getDueDates().then(({ classes, tasks }) => {
-      console.log('tasks', tasks)
+    getAllSchedules().then(({ classes, tasks }) => {
       const arranged = arrangeByStartTime({ classes, tasks });
       setData(arranged);
     });

@@ -275,7 +275,6 @@ export function translateDate(value: string): string {
 
 export function translatetime(value: string): string {
   const [hour, minute] = value.split(":");
-  console.log("hour,minute", hour, minute);
   let _hour = hour
     .split("")
     .map((part) => arabic_dates[part])

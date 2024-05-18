@@ -29,6 +29,7 @@ const Inputs = ({
       <TextInput
         ref={inputRef}
         placeholder={placeholder}
+        placeholderTextColor={"#aeaeae"}
         style={styles.inputTime}
         onChangeText={handleTextChange}
       />

@@ -7,8 +7,6 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
-  Alert,
-  Button,
 } from "react-native";
 import { calculateAngle, calculatePosition } from "@/utils";
 
@@ -50,7 +48,6 @@ const liveNowPage: React.FC = () => {
         groupId: group?.id!,
       })
       .then(function (data) {
-        console.log("status ->", status);
         setLiveSession(data);
       });
   }
@@ -90,10 +87,18 @@ const liveNowPage: React.FC = () => {
       <ScrollView style={styles.container}>
         <View style={styles.mainView}>
           {status !== "active" && (
-            <TouchableOpacity onPress={() => router.back()}>
+            <TouchableOpacity
+              style={{
+                height: 32,
+                width: 32,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              onPress={() => router.back()}
+            >
               <Image
                 style={styles.LeftIcon}
-                source={require("@/assets/images/iconleft.png")}
+                source={require("@/assets/icons/back.png")}
               />
             </TouchableOpacity>
           )}
@@ -138,7 +143,7 @@ const liveNowPage: React.FC = () => {
         <View style={styles.mainlive}>
           <TouchableOpacity
             style={styles.btnLive}
-            onPress={() => router.push("/ParticipantsPage")}
+            onPress={() => router.push("/pages/group_participants")}
           >
             <View style={styles.dotlive}>
               <View style={styles.dotlivesub}></View>
@@ -180,7 +185,6 @@ const liveNowPage: React.FC = () => {
                     },
                     onError(error) {
                       setLoading(false);
-                      console.log(error);
                     },
                     onSuccess(id) {
                       setLoading(false);
@@ -215,8 +219,6 @@ const liveNowPage: React.FC = () => {
                     },
                     onError(error) {
                       setLoading(false);
-
-                      console.log(error);
                     },
                     onSuccess(id) {
                       setLoading(false);
@@ -237,8 +239,8 @@ const liveNowPage: React.FC = () => {
               <TouchableOpacity
                 style={[styles.btnView, styles.BoxViewcolor]}
                 onPress={async () => {
-                      setLoading(true);
-                      const time = calculateTotalTime(
+                  setLoading(true);
+                  const time = calculateTotalTime(
                     elapsedTime,
                     timeSpent === "" ? "00:00:00" : timeSpent
                   );
@@ -250,7 +252,6 @@ const liveNowPage: React.FC = () => {
                     },
                     onError(error) {
                       setLoading(false);
-                      console.log(error);
                     },
                     onSuccess(id) {
                       setLoading(false);
