@@ -175,6 +175,7 @@ const translations = {
     all_time: "All Time",
 
     // Group Information Section
+    title: "Title",
     group_title_label: "Group Title",
     group_bio_label: "Group Bio",
     add_time: "Add Time",
@@ -371,6 +372,7 @@ const translations = {
     all_time: "كل الوقت",
 
     // Group Information Section
+    title: "عنوان",
     group_title_label: "عنوان المجموعة",
     group_bio_label: "المجموعة الحيوية",
     add_time: "إضافة وقت",

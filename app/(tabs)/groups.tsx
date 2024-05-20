@@ -52,7 +52,6 @@ const Groups = () => {
   const router = useRouter();
 
   useEffect(() => {
-    console.log('useEfft')
     loadMyGroups();
     joinedGroups();
     return () => {};

@@ -40,6 +40,7 @@ export const ScheduleModal = ({
   const _ref = useRef<Modalize>();
 
   const [data, setData] = useState<Schedule>({
+    title: "",
     startDate: new Date(),
     endDate: new Date(),
     startTime: new Date(),
@@ -182,8 +183,30 @@ export const ScheduleModal = ({
               }}
             />
 
+            {type === "task" && (
+              <TextInput
+                placeholder={t("note_title")}
+                placeholderTextColor={"#9AA5B5"}
+                style={{
+                  paddingVertical: 12,
+                  paddingHorizontal: 12,
+                  borderWidth: 1,
+                  borderRadius: 100,
+                  borderColor: "#9AA5B5",
+                  flex: 1,
+                  alignSelf: "stretch",
+                }}
+                defaultValue={data.title}
+                onChangeText={(text) => {
+                  handleChange({
+                    name: "title",
+                    value: text,
+                  });
+                }}
+              />
+            )}
             <TextInput
-              placeholder={t("note_placeholder")}
+              placeholder={t("task_title")}
               style={styles.textArea}
               defaultValue={data.note}
               onChangeText={(text) => {
@@ -357,8 +380,8 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    marginTop:20,
-    gap:16,
+    marginTop: 20,
+    gap: 16,
   },
   textArea: {
     fontSize: 15,
@@ -367,7 +390,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#9AA5B5",
     height: 120,
-    alignSelf:"stretch",
+    alignSelf: "stretch",
     borderRadius: 10,
     paddingLeft: 10,
     fontWeight: "500",

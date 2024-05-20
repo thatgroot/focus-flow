@@ -206,7 +206,8 @@ const schedule: React.FC = () => {
               style={[
                 styles.button,
                 {
-                  width: 72,
+                  width: 48,
+                  height:48
                 },
               ]}
               onPress={() => {
@@ -228,7 +229,7 @@ const schedule: React.FC = () => {
                 }
               }}
             >
-              <Text style={[styles.text, { fontSize: 12 }]}>{t("create")}</Text>
+              <Text style={[styles.text, { fontSize: 12 }]}>+</Text>
             </TouchableOpacity>
           </View>
         </View>

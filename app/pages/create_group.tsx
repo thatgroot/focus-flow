@@ -20,18 +20,20 @@ import { t } from "@/utils/helpers";
 import LabeledInput from "@/components/InputField";
 import PromiseWaiter from "@/components/promises/PromiseWaiter";
 import { GroupTimePicker } from "@/components/TimePicker";
+import { useAppStore } from "@/store";
 
 const GroupForm: React.FC = () => {
   const [group, setGroup] = useState<Group>();
+  const { updateGroups } = useAppStore();
   // const { locale } = useAppStore();
   const [loading, setLoading] = useState(false);
   // const direction =   getFlexDirection(locale)
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-        <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
         <ScrollView style={styles.container}>
           <View style={styles.mainView}>
             <TouchableOpacity
@@ -139,6 +141,10 @@ const GroupForm: React.FC = () => {
                         setLoading(false);
                       },
                       onSuccess: (id) => {
+                        updateGroups({
+                          ...group!,
+                          uid: auth.currentUser?.uid!,
+                        });
                         setLoading(false);
                         router.replace("/groups");
                       },

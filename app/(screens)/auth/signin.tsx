@@ -93,6 +93,7 @@ const Signin = () => {
         <View style={styles.formContainer}>
           <Text style={styles.title}>{t("signin")}</Text>
           <Text style={styles.description}>{t("signin_subtitle")}</Text>
+
           <LabeledInput
             label={t("email_address")}
             placeholder="teebaapp123@gmail.com"

@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-} from "react-native";
-
+import { View, StyleSheet, Text } from "react-native";
 
 import { Schedules } from "@/components/Schedules";
 import { arrangeByStartTime, getAllSchedules, getDueDates } from "@/utils/crud";
@@ -18,7 +13,7 @@ import {
   translatetime,
 } from "@/utils/helpers";
 import PromiseWaiter from "../promises/PromiseWaiter";
-
+const bg = ["#FFCA65", "#9AA5B5", "#FEB5A6", "#8D99DE"];
 export default function ScheduleTimeline() {
   const { locale } = useAppStore();
   const [data, setData] = useState<
@@ -70,7 +65,7 @@ export default function ScheduleTimeline() {
                   width: "100%",
                   gap: 12,
                 },
-                getFlexDirection(locale)
+                getFlexDirection(locale),
               ]}
             >
               <Text
@@ -118,12 +113,13 @@ export default function ScheduleTimeline() {
                   paddingBottom: 18,
                 }}
               >
-                {items.map((item, index) => {
+                {items.map((item, key) => {
+
                   return (
                     <Schedules
-                      key={`${item.endDate.getMilliseconds()}_${index}`}
+                      key={`${item.endDate.getMilliseconds()}_${index}_${key}`}
                       data={item}
-                      bgColor="rgba(254, 181, 166, 1)"
+                      bgColor={index+key % bg.length} // Corrected here
                       icon={require("@/assets/icons/share.png")}
                     />
                   );

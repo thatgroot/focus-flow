@@ -184,9 +184,16 @@ export const controllers = {
       });
     },
     get: async (): Promise<UserInfoData> => {
-      const ref = collection(database, `usersInfo/${auth.currentUser?.uid}`);
-      const data = await getDocs(query(ref));
-      return data.docs.map((doc) => doc.data())[0];
+      const ref = doc(database, `usersInfo/${auth.currentUser?.uid}`);
+      const snapshot = await getDoc(ref);
+      const data = snapshot.data();
+      return data as UserInfoData;
+    },
+    getFor: async (uid: string): Promise<UserInfoData> => {
+      const ref = doc(database, `usersInfo/${uid}`);
+      const snapshot = await getDoc(ref);
+      const data = snapshot.data();
+      return data as UserInfoData;
     },
   },
   course: {
@@ -305,11 +312,11 @@ export const controllers = {
   },
   group: {
     search: async ({ title }: Pick<Group, "title">) => {
-      console.log(title)
+      console.log(title);
       const ref = collection(database, `groups`);
       const _query = query(ref, where("title", "==", title.trim()));
       const groups = await getDocsQuery(_query);
-      console.log('groups', groups)
+      console.log("groups", groups);
       return groups as Group[];
     },
 
@@ -364,11 +371,22 @@ export const controllers = {
     join: async ({ id, onSuccess, onError }: WithOmitPath & { id: string }) => {
       const ref = doc(database, `members/${id}`);
       const snapshot = await getDoc(ref);
-      if (!snapshot.exists()) {
+      const data = snapshot.data();
+      let exists = false;
+      if (data && data["members"]) {
+        const members: string[] = data["members"];
+        exists = members.includes(auth.currentUser?.uid!);
+      } else {
+        exists = false;
+      }
+      console.log("exists", exists);
+      if (!exists) {
+        console.log("joining");
         await setDoc(ref, {
           members: [auth.currentUser?.uid],
         }).then(async () => {
           await performCrud({
+            method: "set",
             path: `users/${auth.currentUser?.uid}/memberOf/${id}`,
             data: { id, joinedOn: new Date() },
             onSuccess,
@@ -530,6 +548,37 @@ export const controllers = {
     },
 
     live: async () => {},
+    leave: async ({
+      group_id,
+      onError,
+      onSuccess,
+    }: WithOmitPath & { group_id: string }) => {
+      const membersRef = doc(database, `members/${group_id}`);
+      const membersSnapshot = await getDoc(membersRef);
+      if (membersSnapshot.exists()) {
+        const members: string[] = membersSnapshot.data()["members"];
+        const new_members = members.filter(
+          (member) => member !== auth.currentUser?.uid
+        );
+        await performCrud({
+          path: `members/${group_id}`,
+          data: {
+            members: new_members,
+          },
+          method: "update",
+          onSuccess: async () => {
+            const path = `users/${auth.currentUser?.uid}/memberOf/${group_id}`;
+            await performCrud({
+              path,
+              method: "delete",
+              onSuccess,
+              onError,
+            });
+          },
+          onError,
+        });
+      }
+    },
     joined: async () => {
       const ref = collection(
         database,

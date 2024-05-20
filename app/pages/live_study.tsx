@@ -16,12 +16,12 @@ import { controllers } from "@/utils/crud";
 import { useAppStore } from "@/store";
 import { calculateTotalTime, formatMsToTimeString, t } from "@/utils/helpers";
 import PromiseWaiter from "@/components/promises/PromiseWaiter";
-import { auth } from "@/utils/firebase";
-
+import { Audio } from "expo-av";
 const liveNowPage: React.FC = () => {
   const { group } = useAppStore();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [owner, setOwner] = useState("");
 
   const [status, setStatus] = useState<SessionStatus>("inactive");
   const [isRunning, setIsRunning] = useState(false);
@@ -32,6 +32,33 @@ const liveNowPage: React.FC = () => {
     count: number;
     data: GroupSession[];
   }>();
+  const [sound, setSound] = useState<Audio.Sound>();
+  async function playSound() {
+    console.log("Loading Sound");
+    const { sound } = await Audio.Sound.createAsync(
+      require("@/assets/audio/soundtrack.mp3"),
+      {
+        volume:0.3
+      }
+    );
+    setSound(sound);
+    Audio.setAudioModeAsync({
+      playsInSilentModeIOS: true,
+    });
+    console.log("Playing Sound");
+    await sound.playAsync();
+  }
+
+
+  useEffect(() => {
+
+    return sound
+      ? () => {
+          console.log("Unloading Sound");
+          sound.unloadAsync();
+        }
+      : undefined;
+  }, []);
 
   useEffect(() => {
     controllers.group.sessions.getFor(group?.id!).then(function (data) {
@@ -51,6 +78,9 @@ const liveNowPage: React.FC = () => {
       .then(function (data) {
         setLiveSession(data);
       });
+    controllers.userInfo.getFor(group?.uid!).then((info) => {
+      setOwner(info.name as string);
+    });
   }
 
   useEffect(() => {
@@ -74,9 +104,17 @@ const liveNowPage: React.FC = () => {
   };
 
   const handlePause = () => {
+    sound?.stopAsync()
+    Audio.setAudioModeAsync({
+      playsInSilentModeIOS: false,
+    });
     setIsRunning(false);
   };
   const handleStop = () => {
+    sound?.stopAsync()
+    Audio.setAudioModeAsync({
+      playsInSilentModeIOS: false,
+    });
     setIsRunning(false);
     setElapsedTime(0);
     previousTimeRef.current = new Date().getTime();
@@ -113,9 +151,7 @@ const liveNowPage: React.FC = () => {
         </View>
         <Text style={styles.headingOwner}>{t("group_owner_label")}</Text>
         <View style={styles.together}>
-          <Text style={styles.headingCaster}>
-            {auth.currentUser?.displayName}
-          </Text>
+          <Text style={styles.headingCaster}>{owner}</Text>
           <View style={styles.boxDays}>
             <Text style={[styles.heading, styles.daytext]}>
               {group?.time}/day
@@ -193,6 +229,7 @@ const liveNowPage: React.FC = () => {
                       setStatus("active");
                       handleStart();
                       fetchLiveSessionData();
+                      playSound();
                     },
                   });
                 }}

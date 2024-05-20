@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   ScrollView,
   Alert,
+  Pressable,
 } from "react-native";
 
 import { useNavigation, useRouter } from "expo-router";
@@ -21,7 +22,7 @@ const grouppage: React.FC = () => {
   const router = useRouter();
   const { group } = useAppStore();
   const [loading, setLoading] = useState(false);
-
+  const [owner, setOwner] = useState("");
   const [liveSession, setLiveSession] = useState<{
     count: number;
     data: GroupSession[];
@@ -35,6 +36,10 @@ const grouppage: React.FC = () => {
       .then(function (data) {
         setLiveSession(data);
       });
+
+    controllers.userInfo.getFor(group?.uid!).then((info) => {
+      setOwner(info.name as string);
+    });
 
     return () => {};
   }, []);
@@ -69,7 +74,7 @@ const grouppage: React.FC = () => {
         <Text style={styles.headingOwner}>{t("group_owner_label")}</Text>
         <View style={styles.together}>
           <Text style={styles.headingCaster}>
-            {auth.currentUser?.displayName}
+            {owner}
           </Text>
           <View style={styles.boxDays}>
             <Text style={[styles.heading, styles.daytext]}>
@@ -106,8 +111,10 @@ const grouppage: React.FC = () => {
                   router.push("/pages/live_study");
                 },
                 onError: (error) => {
+                  console.log(error);
                   setLoading(false);
                   if (error === "You are already a group member") {
+                    Alert.alert(error);
                     router.push("/pages/live_study");
                   } else {
                   }
@@ -121,7 +128,21 @@ const grouppage: React.FC = () => {
         <TouchableOpacity style={styles.BtnLeaderboard}>
           <Text style={styles.LeaderboardStyles}>{t("view_leaderboard")}</Text>
         </TouchableOpacity>
-        <Text style={styles.LeaveStyles}>{t("leave_group")}</Text>
+        <TouchableOpacity
+          onPress={() => {
+            controllers.group.leave({
+              group_id: group?.id!,
+              onError: (error) => {
+                console.log(error);
+              },
+              onSuccess: (message) => {
+                router.replace("/groups");
+              },
+            });
+          }}
+        >
+          <Text style={styles.LeaveStyles}>{t("leave_group")}</Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );

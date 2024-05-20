@@ -10,19 +10,19 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-
+const bgColors = [
+  "rgba(255, 202, 101, 1)",
+  "rgba(154, 165, 181, 0.25)",
+  "rgba(254, 181, 166, 1)",
+  "rgba(141, 153, 222, 1)",
+  "rgba(104, 299, 181, 0.25)",
+];
 export const Schedules = ({
   bgColor,
   icon,
   data,
 }: {
-  bgColor:
-    | "rgba(255, 202, 101, 1)"
-    | "rgba(154, 165, 181, 0.25)"
-    | "rgba(254, 181, 166, 1)"
-    | "rgba(141, 153, 222, 1)"
-    | "rgba(154, 165, 181, 0.25)";
-
+  bgColor: number;
   icon: any;
   data: Schedule;
 }) => {
@@ -33,7 +33,20 @@ export const Schedules = ({
     setChecked(data.completionStatus);
   }, []);
   return (
-    <View style={[styles.card, { backgroundColor: bgColor, gap: 6 }]}>
+    <View
+      style={[
+        styles.card,
+        {
+          backgroundColor:
+            bgColors[
+              bgColor > bgColors.length - 1
+                ? Math.floor(Math.random() * 4)
+                : bgColor
+            ],
+          gap: 6,
+        },
+      ]}
+    >
       <View
         style={[
           styles.item,
@@ -126,9 +139,7 @@ export const Schedules = ({
               onError: (error) => {
                 Alert.alert(error);
               },
-              onSuccess: (id) => {
-
-              },
+              onSuccess: (id) => {},
               id: id!,
               data: {
                 ...others,
@@ -141,9 +152,7 @@ export const Schedules = ({
               onError: (error) => {
                 Alert.alert(error);
               },
-              onSuccess: (id) => {
-
-              },
+              onSuccess: (id) => {},
               id: id!,
               data: {
                 ...others,

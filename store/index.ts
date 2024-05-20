@@ -25,6 +25,7 @@ type Actions = {
   setGroup: (group: Group) => void;
   joinedGroups: () => void;
   loadMyGroups: () => void;
+  updateGroups: (group: Group) => void;
   searchGroups: (text: string) => void;
   groupSession: (id: string) => void;
   setLocale: (type: "en" | "ar") => void;
@@ -68,15 +69,21 @@ export const useAppStore = create<State & Actions>((set) => ({
       });
     });
   },
+  updateGroups: (group: Group) => {
+    set((prev) => {
+      return {
+        my_groups: [...prev.groups, group],
+      };
+    });
+  },
   searchGroups: (text: string) => {
-
-      controllers.group.search({ title: text }).then((data) => {
-        if (data) {
-          set({
-            searched_groups: data,
-          });
-        }
-      });
+    controllers.group.search({ title: text }).then((data) => {
+      if (data) {
+        set({
+          searched_groups: data,
+        });
+      }
+    });
   },
   groupSession: (id: string) => {
     controllers.group.sessions.getFor(id).then((data) => {
