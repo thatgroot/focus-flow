@@ -15,6 +15,7 @@ import { useAppStore } from "@/store";
 import { controllers } from "@/utils/crud";
 import { t } from "@/utils/helpers";
 import PromiseWaiter from "@/components/promises/PromiseWaiter";
+import { auth } from "@/utils/firebase";
 
 const grouppage: React.FC = () => {
   const router = useRouter();
@@ -42,15 +43,15 @@ const grouppage: React.FC = () => {
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={styles.container}>
         <View style={styles.mainView}>
-        <TouchableOpacity
-              style={{
-                height: 32,
-                width: 32,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              onPress={() => router.back()}
-            >
+          <TouchableOpacity
+            style={{
+              height: 32,
+              width: 32,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            onPress={() => router.back()}
+          >
             <Image
               style={styles.LeftIcon}
               source={require("@/assets/icons/back.png")}
@@ -67,7 +68,9 @@ const grouppage: React.FC = () => {
         </View>
         <Text style={styles.headingOwner}>{t("group_owner_label")}</Text>
         <View style={styles.together}>
-          <Text style={styles.headingCaster}>Elven Caster</Text>
+          <Text style={styles.headingCaster}>
+            {auth.currentUser?.displayName}
+          </Text>
           <View style={styles.boxDays}>
             <Text style={[styles.heading, styles.daytext]}>
               {group?.time}/day
@@ -107,7 +110,6 @@ const grouppage: React.FC = () => {
                   if (error === "You are already a group member") {
                     router.push("/pages/live_study");
                   } else {
-
                   }
                 },
               });

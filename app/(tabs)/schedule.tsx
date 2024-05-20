@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, {  useState } from "react";
 import {
   View,
   StyleSheet,
@@ -23,7 +23,7 @@ import CurrentDateTile from "@/components/date/CurrentDateTile";
 const schedule: React.FC = () => {
   const { setType, tags, setTags, type, locale } = useAppStore();
 
-  const direction = useMemo(() => getFlexDirection(locale), [locale]);
+  const direction =   getFlexDirection(locale)
 
   const [Isvisible, setVisible] = useState(false);
   const [showBadges, setShowBadges] = useState(false);

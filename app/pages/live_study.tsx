@@ -16,6 +16,7 @@ import { controllers } from "@/utils/crud";
 import { useAppStore } from "@/store";
 import { calculateTotalTime, formatMsToTimeString, t } from "@/utils/helpers";
 import PromiseWaiter from "@/components/promises/PromiseWaiter";
+import { auth } from "@/utils/firebase";
 
 const liveNowPage: React.FC = () => {
   const { group } = useAppStore();
@@ -75,7 +76,6 @@ const liveNowPage: React.FC = () => {
   const handlePause = () => {
     setIsRunning(false);
   };
-
   const handleStop = () => {
     setIsRunning(false);
     setElapsedTime(0);
@@ -113,7 +113,9 @@ const liveNowPage: React.FC = () => {
         </View>
         <Text style={styles.headingOwner}>{t("group_owner_label")}</Text>
         <View style={styles.together}>
-          <Text style={styles.headingCaster}>Elven Caster</Text>
+          <Text style={styles.headingCaster}>
+            {auth.currentUser?.displayName}
+          </Text>
           <View style={styles.boxDays}>
             <Text style={[styles.heading, styles.daytext]}>
               {group?.time}/day

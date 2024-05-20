@@ -35,7 +35,7 @@ const TimeEntry = ({
         style={[
           styles.container,
           { backgroundColor: type === "recent" ? "#FEB5A610" : "#13CE6625" },
-          getFlexDirection(locale),
+          getFlexDirection(locale)
         ]}
       >
         <View style={styles.contentContainer}>

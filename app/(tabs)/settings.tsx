@@ -23,8 +23,7 @@ const settings: React.FC = () => {
 
   const { locale } = useAppStore();
 
-  const direction = useMemo(() => getFlexDirection(locale), [locale]);
-  const alignment = useMemo(() => getTextAlignment(locale), [locale]);
+  const direction =   getFlexDirection(locale)
 
   const account_navigation = [
     {

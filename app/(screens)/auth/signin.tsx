@@ -1,4 +1,4 @@
-import React, { memo, useState, useMemo } from "react";
+import React, { memo, useState } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   Alert,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import LabeledInput from "@/components/InputField";
 import Button from "@/elements/Button";
@@ -16,6 +17,24 @@ import { useRouter } from "expo-router";
 import { Image } from "expo-image";
 import { useAppStore } from "@/store";
 import LanguageSelector from "@/components/localization/LanguageSelector";
+const fields = [
+  {
+    label: t("enter_email"),
+    placeholder: "teebaapp123@gmail.com",
+    type: "email",
+    error: t("invalid_email"),
+    state: "inactive",
+    name: "email",
+  },
+  {
+    label: t("enter_password"),
+    placeholder: t("password"),
+    type: "password",
+    error: "",
+    state: "inactive",
+    name: "password",
+  },
+];
 
 const Signin = () => {
   const router = useRouter();
@@ -30,29 +49,7 @@ const Signin = () => {
   });
 
   const { locale } = useAppStore();
-  const direction = useMemo(() => getFlexDirection(locale), [locale]);
-
-  const fields = useMemo(
-    () => [
-      {
-        label: t("enter_email"),
-        placeholder: "teebaapp123@gmail.com",
-        type: "email",
-        error: t("invalid_email"),
-        state: "inactive",
-        name: "email",
-      },
-      {
-        label: t("enter_password"),
-        placeholder: t("password"),
-        type: "password",
-        error: "",
-        state: "inactive",
-        name: "password",
-      },
-    ],
-    [locale]
-  );
+  const direction = getFlexDirection(locale);
 
   const handleSignin = async () => {
     setLoading(true);
@@ -74,9 +71,7 @@ const Signin = () => {
     if (data.email) {
       updateUser.forgotPassword({
         email: data.email,
-        onError: (error) => {
-
-        },
+        onError: (error) => {},
         onSuccess: (message) => {
           Alert.alert(message);
         },
@@ -87,8 +82,10 @@ const Signin = () => {
   };
 
   return (
-    <ScrollView>
-      <KeyboardAvoidingView behavior="position" style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <ScrollView>
         <Image
           source={require("@/assets/images/register_illustration.png")}
           style={styles.image}
@@ -96,21 +93,31 @@ const Signin = () => {
         <View style={styles.formContainer}>
           <Text style={styles.title}>{t("signin")}</Text>
           <Text style={styles.description}>{t("signin_subtitle")}</Text>
-          {fields.map(
-            ({ label, placeholder, type, error, state, name }, index) => (
-              <LabeledInput
-                key={index}
-                label={label}
-                placeholder={placeholder}
-                inputType={type as any}
-                error={error}
-                inputState={state as any}
-                onChangeText={(text) =>
-                  setData((prevData) => ({ ...prevData, [name]: text }))
-                }
-              />
-            )
-          )}
+          <LabeledInput
+            label={t("email_address")}
+            placeholder="teebaapp123@gmail.com"
+            keyboardType="email-address"
+            inputType="email"
+            error={t("invalid_email")}
+            inputState="inactive"
+            name="email"
+            onChangeText={(name, text) => {
+              setData((prevData) => ({ ...prevData, [name]: text }));
+            }}
+          />
+
+          <LabeledInput
+            label={t("enter_password")}
+            placeholder={t("password")}
+            keyboardType="default"
+            inputType="password"
+            error=""
+            inputState="inactive"
+            name="password"
+            onChangeText={(name, text) => {
+              setData((prevData) => ({ ...prevData, [name]: text }));
+            }}
+          />
 
           <TouchableOpacity onPress={handleForgotPassword}>
             <Text style={styles.description}>{t("forgot_password")}</Text>
@@ -141,8 +148,8 @@ const Signin = () => {
         >
           <LanguageSelector route="/auth/signin" />
         </View>
-      </KeyboardAvoidingView>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -160,6 +167,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 24,
     paddingHorizontal: 18,
+    paddingBottom: 96,
   },
   title: {
     fontSize: 20,

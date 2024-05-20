@@ -69,11 +69,7 @@ export const useAppStore = create<State & Actions>((set) => ({
     });
   },
   searchGroups: (text: string) => {
-    if (!text) {
-      set({
-        searched_groups: [],
-      });
-    } else {
+
       controllers.group.search({ title: text }).then((data) => {
         if (data) {
           set({
@@ -81,7 +77,6 @@ export const useAppStore = create<State & Actions>((set) => ({
           });
         }
       });
-    }
   },
   groupSession: (id: string) => {
     controllers.group.sessions.getFor(id).then((data) => {

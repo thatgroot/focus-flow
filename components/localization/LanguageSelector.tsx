@@ -12,7 +12,7 @@ export default function LanguageSelector({ route }: { route: any }) {
     ar: "عربي", // Arabic for "Arabic"
   };
   const { setLocale, locale } = useAppStore();
-  const direction = useMemo(() => getFlexDirection(locale), [locale]);
+  const direction =   getFlexDirection(locale)
 
   function changeLocale(_locale: "en" | "ar") {
     const i18n = new I18n(translations);

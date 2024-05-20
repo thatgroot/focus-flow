@@ -45,16 +45,16 @@ const Groups = () => {
 
   const [query, setQuery] = useState("");
 
-  const direction = useMemo(() => getFlexDirection(locale), [locale]);
-  const alignment = useMemo(() => getTextAlignment(locale), [locale]);
-  const columnAignment = useMemo(() => getColumnAlignment(locale), [locale]);
+  const direction = getFlexDirection(locale);
+  const alignment = getTextAlignment(locale);
+  const columnAignment = getColumnAlignment(locale);
 
   const router = useRouter();
 
   useEffect(() => {
+    console.log('useEfft')
     loadMyGroups();
     joinedGroups();
-
     return () => {};
   }, []);
 
@@ -67,7 +67,7 @@ const Groups = () => {
               flexDirection: "row",
               flexWrap: "wrap",
               justifyContent: "space-between",
-              rowGap: 12,
+              gap: 12,
             },
             direction,
           ]}
@@ -107,7 +107,7 @@ const Groups = () => {
               flexDirection: "row",
               flexWrap: "wrap",
               justifyContent: "space-between",
-              rowGap: 12,
+              gap: 12,
             },
             direction,
           ]}
@@ -150,7 +150,7 @@ const Groups = () => {
               flexDirection: "row",
               flexWrap: "wrap",
               justifyContent: "space-between",
-              rowGap: 12,
+              gap: 12,
             },
             direction,
           ]}
@@ -224,12 +224,18 @@ const Groups = () => {
           <View
             style={{
               flexDirection: "row",
+              flex: 1,
+              alignSelf: "stretch",
+              alignItems: "center",
             }}
           >
             <EvilIcons name="search" size={24} color="#9AA5B5" />
             <TextInput
               placeholder={t("search_group_placeholder")}
-              style={styles.textInput}
+              style={[
+                styles.textInput,
+                { flex: 1, alignSelf: "stretch" },
+              ]}
               placeholderTextColor={"#9AA5B5"}
               onChangeText={(text) => {
                 setQuery(text);
@@ -262,15 +268,10 @@ const Groups = () => {
             <Text style={{ color: "white" }}>Search</Text>
           </TouchableOpacity>
         </View>
-
-        {groups.length === 0 ? (
-          <PromiseWaiter />
-        ) : (
-          <>
-            {renderJoinedGroups()}
-            {renderFeaturedGroups()}
-          </>
-        )}
+        <>
+          {renderJoinedGroups()}
+          {renderFeaturedGroups()}
+        </>
       </ScrollView>
     </SafeAreaView>
   );

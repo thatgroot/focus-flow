@@ -34,8 +34,7 @@ export const GroupTimePicker = ({
       <TextInput
         placeholderTextColor={"#aeaeae"}
         style={styles.input}
-        value={value}
-        placeholder={"00"}
+        placeholder={value ?? "00"}
         onChangeText={handleHourChange}
         keyboardType="number-pad"
       />
@@ -145,17 +144,14 @@ const CustomTimePicker = ({
 const styles = StyleSheet.create({
   container: {
     borderWidth: 1,
-    borderColor: "#9AA5B5",
-    backgroundColor: "#ccc",
-    height: 50,
-    borderRadius: 100,
-    paddingLeft: 10,
-    marginTop: 20,
-    flex: 1,
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    flexDirection: "row",
-    gap: 6,
+    borderColor: "#9AA5B5",
+    height: 40,
+    paddingHorizontal: 6,
+    borderRadius: 20,
+    flex:1,
   },
 
   input: {

@@ -70,7 +70,7 @@ export default function ScheduleTimeline() {
                   width: "100%",
                   gap: 12,
                 },
-                getFlexDirection(locale),
+                getFlexDirection(locale)
               ]}
             >
               <Text

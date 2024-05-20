@@ -9,6 +9,7 @@ import {
   ScrollView,
   Alert,
   KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 
 import { router } from "expo-router";
@@ -24,11 +25,13 @@ const GroupForm: React.FC = () => {
   const [group, setGroup] = useState<Group>();
   // const { locale } = useAppStore();
   const [loading, setLoading] = useState(false);
-  // const direction = useMemo(() => getFlexDirection(locale), [locale]);
+  // const direction =   getFlexDirection(locale)
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <KeyboardAvoidingView behavior="padding" enabled>
+        <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
         <ScrollView style={styles.container}>
           <View style={styles.mainView}>
             <TouchableOpacity
@@ -63,12 +66,13 @@ const GroupForm: React.FC = () => {
             }}
           >
             <LabeledInput
+              name="title"
               label={t("group_title_label")}
               placeholder={t("group_title_label")}
               inputType="text"
               error=""
               inputState="inactive"
-              onChangeText={(text: string) => {
+              onChangeText={(name: string, text: string) => {
                 setGroup({
                   ...group!,
                   title: text,
@@ -78,13 +82,14 @@ const GroupForm: React.FC = () => {
 
             <View style={{ flex: 1, alignSelf: "stretch" }}>
               <LabeledInput
+                name="bio"
                 label={t("group_bio_label")}
                 placeholder={t("group_bio_label")}
                 multiline={true}
                 inputType="text"
                 error="Bio is require!"
                 inputState="inactive"
-                onChangeText={(text: string) => {
+                onChangeText={(name: string, text: string) => {
                   setGroup({
                     ...group!,
                     bio: text,
@@ -135,7 +140,7 @@ const GroupForm: React.FC = () => {
                       },
                       onSuccess: (id) => {
                         setLoading(false);
-                        router.replace("/groups")
+                        router.replace("/groups");
                       },
                     });
                   } else {

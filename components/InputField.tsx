@@ -2,7 +2,7 @@ import { useAppStore } from "@/store";
 import { inputRegex } from "@/utils/auth";
 import { getFlexDirection, stateBorderColor } from "@/utils/helpers";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,23 +10,28 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  KeyboardTypeOptions,
 } from "react-native";
 
 interface Props {
   label: string;
   placeholder: string;
   inputType: "email" | "password" | "text" | "number";
+  keyboardType?:KeyboardTypeOptions | "default";
   error: string;
-  onChangeText?: ((text: string) => void) | undefined;
+  name: string;
+  onChangeText?: ((name: string, text: string) => void) | undefined;
   inputState: InputState;
   multiline?: boolean;
 }
 
-export default function LabeledInput({
+function LabeledInput({
   label,
   placeholder,
   inputType,
+  keyboardType,
   error,
+  name,
   onChangeText,
   inputState,
   multiline,
@@ -35,21 +40,18 @@ export default function LabeledInput({
 
   const direction = getFlexDirection(locale);
 
-  const [text, setText] = useState("");
   const [compat, setCompat] = useState<"invalid" | "valid" | "inactive">(
     "inactive"
   );
 
   const [toggle, setToggle] = useState(false);
-  const handleChangeText = (inputText: string) => {
-    setText(inputText);
-    if (onChangeText) onChangeText(inputText);
-    validateInput(inputText);
-  };
-
-  const validateInput = (inputText: string) => {
-    setCompat(inputRegex[inputType].test(inputText) ? "valid" : "invalid");
-  };
+  const handleChangeText = useCallback(
+    (inputText: string) => {
+      if (onChangeText) onChangeText(name, inputText);
+      setCompat(inputRegex[inputType].test(inputText) ? "valid" : "invalid");
+    },
+    [onChangeText, inputState, multiline, locale]
+  );
 
   return (
     <View style={[styles.container]}>
@@ -86,10 +88,9 @@ export default function LabeledInput({
           placeholder={multiline ? "" : placeholder}
           multiline={multiline}
           keyboardType={
-            inputType === "number" ? "numeric" : "default" // Set keyboardType based on inputType
+           keyboardType// Set keyboardType based on inputType
           }
           secureTextEntry={inputType === "password" && !toggle} // Set secureTextEntry for password inputType
-          value={text}
           autoCapitalize="none"
           textContentType={inputType === "password" ? "oneTimeCode" : "none"}
           autoComplete="off"
@@ -178,3 +179,4 @@ const styles = StyleSheet.create({
     color: "red",
   },
 });
+export default memo(LabeledInput);

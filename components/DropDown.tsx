@@ -26,22 +26,18 @@ export const DropDown: React.FC<DropDownProps> = ({
   onSelect,
   actions,
 }) => {
-  const { locale } = useAppStore();
   const [isVisible, setIsVisible] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(null);
+  const [selectedValue, setSelectedValue] = useState<string>();
 
-  const handleSelect = (value: any) => {
-    setSelectedValue(value);
+  const handleSelect = (value: string) => {
+    setSelectedValue(value.toLowerCase());
     onSelect(value);
     setIsVisible(false);
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.dropdownButton}
-        onPress={() => setIsVisible(true)}
-      >
+      <TouchableOpacity onPress={() => setIsVisible(true)}>
         <Text>
           {label === "daily" || label === "weekly" || label === "monthly"
             ? t(selectedValue as any)
@@ -83,25 +79,22 @@ export const DropDown: React.FC<DropDownProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 20,
     alignSelf: "stretch",
     backgroundColor: "#FAFAFA",
     borderRadius: 100,
-  },
-  dropdownButton: {
-    paddingVertical: 16,
-    paddingHorizontal: 12,
     borderWidth: 1,
-    borderRadius: 100,
     borderColor: "#9AA5B5",
+    paddingVertical: 12,
+    paddingHorizontal: 12,
   },
+  dropdownButton: {},
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.5)",
   },
   modalContent: {
     position: "absolute",
-    top: "30%",
+    bottom: "25%",
     left: "10%",
     right: "10%",
     backgroundColor: "#fff",

@@ -11,6 +11,7 @@ import {
   Alert,
   InteractionManager,
   KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 
 import { useRouter } from "expo-router";
@@ -44,9 +45,10 @@ const EditProfile: React.FC = () => {
     emailRef.current?.focus();
   };
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
       <ScrollView style={styles.container}>
-      <KeyboardAvoidingView behavior="position" enabled>
         <View style={styles.mainView}>
           <TouchableOpacity
             style={{
@@ -256,7 +258,6 @@ const EditProfile: React.FC = () => {
                   },
                   onError: (error) => {
                     setLoading(false);
-
                   },
                 });
               } else if (
@@ -275,7 +276,6 @@ const EditProfile: React.FC = () => {
                   onError: (error) => {
                     setLoading(false);
                     Alert.alert(error.toString());
-
                   },
                 });
               } else {
@@ -287,9 +287,8 @@ const EditProfile: React.FC = () => {
             <Text style={[styles.heading, styles.BtnText]}>Save Changes</Text>
           </TouchableOpacity>
         )}
-      </KeyboardAvoidingView>
       </ScrollView>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -300,6 +299,7 @@ const styles = StyleSheet.create({
     height: "100%",
     paddingHorizontal: 22,
     paddingVertical: 22,
+    paddingTop: 72,
   },
   LeftIcon: {
     width: 18,

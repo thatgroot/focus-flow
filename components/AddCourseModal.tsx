@@ -32,12 +32,7 @@ const AddCourseModal: React.FC<AddCourseModalProps> = ({
         />
       </View>
       <Text style={styles.title}>Add Custom Course</Text>
-      <LabeledInput
-        placeholder="Enter Course Name"
-        inputType="text"
-        label=""
-        error="please provide course name"
-      />
+
       <TouchableOpacity style={styles.button} onPress={onClose}>
         <Text style={styles.buttonText}>Add</Text>
       </TouchableOpacity>

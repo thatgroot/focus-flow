@@ -126,7 +126,9 @@ export const Schedules = ({
               onError: (error) => {
                 Alert.alert(error);
               },
-              onSuccess: (id) => {},
+              onSuccess: (id) => {
+
+              },
               id: id!,
               data: {
                 ...others,
@@ -139,7 +141,9 @@ export const Schedules = ({
               onError: (error) => {
                 Alert.alert(error);
               },
-              onSuccess: (id) => {},
+              onSuccess: (id) => {
+
+              },
               id: id!,
               data: {
                 ...others,

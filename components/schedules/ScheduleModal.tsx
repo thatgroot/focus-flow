@@ -11,7 +11,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Button from "@/elements/Button";
 import { Modalize } from "react-native-modalize";
 import { router } from "expo-router";
-import Inputs from "@/components/Inputs";
+import DatePicker from "@/components/DatePicker";
 import { Calendar } from "react-native-calendars";
 import { useAppStore } from "@/store";
 import { controllers } from "@/utils/crud";
@@ -146,7 +146,7 @@ export const ScheduleModal = ({
               {ucFirst(t(`schedule_${type}`))}
             </Text>
           </View>
-          <View style={styles.dropDownlistContainer}>
+          <View style={styles.form_container}>
             <DropDown
               label={
                 data.schedule === "daily" ||
@@ -162,6 +162,7 @@ export const ScheduleModal = ({
                   <TextInput
                     keyboardType="default"
                     placeholder={t("select_recurrence")}
+                    placeholderTextColor={"#9AA5B5"}
                     autoCapitalize={"none"}
                     style={{
                       paddingVertical: 16,
@@ -175,7 +176,6 @@ export const ScheduleModal = ({
                         name: "schedule",
                         value: text,
                       });
-
                     }}
                   />
                 );
@@ -201,14 +201,13 @@ export const ScheduleModal = ({
                   setShowCalendar(true);
                 }}
               >
-                <Inputs
+                <DatePicker
                   placeholder={
                     locale === "en"
                       ? data.startDate.toDateString()
                       : translateDate(data.startDate.toDateString())
                   }
                   icon={require("@/assets/icons/calenderIcon.png")}
-                  isTime={false}
                 />
               </TouchableOpacity>
               <TouchableOpacity
@@ -217,15 +216,13 @@ export const ScheduleModal = ({
                   setShowCalendar(true);
                 }}
               >
-                <Inputs
-                  onChangeText={() => {}}
+                <DatePicker
                   placeholder={
                     locale === "en"
                       ? data.endDate.toDateString()
                       : translateDate(data.endDate.toDateString())
                   }
                   icon={require("@/assets/icons/calenderIcon.png")}
-                  isTime={false}
                 />
               </TouchableOpacity>
             </View>
@@ -275,7 +272,6 @@ export const ScheduleModal = ({
                         },
                         onError: (error) => {
                           setLoading(false);
-
                         },
                         onSuccess: () => {
                           setLoading(false);
@@ -295,7 +291,6 @@ export const ScheduleModal = ({
                         },
                         onError: (error) => {
                           setLoading(false);
-
                         },
                         onSuccess: () => {
                           setLoading(false);
@@ -321,7 +316,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 50,
     marginTop: 40,
-    // justifyContent:'center',
     alignItems: "center",
     marginLeft: 20,
   },
@@ -359,10 +353,12 @@ const styles = StyleSheet.create({
     // justifyContent:'center',
     alignItems: "center",
   },
-  dropDownlistContainer: {
+  form_container: {
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
+    marginTop:20,
+    gap:16,
   },
   textArea: {
     fontSize: 15,
@@ -370,11 +366,10 @@ const styles = StyleSheet.create({
     fontFamily: "Inter-Regular",
     borderWidth: 1,
     borderColor: "#9AA5B5",
-    width: 308,
-    height: 127,
+    height: 120,
+    alignSelf:"stretch",
     borderRadius: 10,
     paddingLeft: 10,
-    marginTop: 20,
     fontWeight: "500",
   },
 

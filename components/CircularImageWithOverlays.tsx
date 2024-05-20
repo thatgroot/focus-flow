@@ -2,9 +2,12 @@ import { Image } from "expo-image";
 import React from "react";
 import { View, StyleSheet } from "react-native";
 
-export const CircularImageWithOverlays: React.FC<CircularImageOverlayProps> = ({
+export const CircularImageWithOverlays   = ({
   mainImage,
   orbitImages,
+}:{
+  mainImage:any,
+  orbitImages:any[]
 }) => {
   const renderSmallImage = ({
     source,

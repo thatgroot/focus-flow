@@ -12,10 +12,11 @@ const PromiseWaiter = () => {
   const spinValue = new Animated.Value(0);
 
   React.useEffect(() => {
+
     Animated.loop(
       Animated.timing(spinValue, {
-        toValue: 1,
-        duration: 3000,
+        toValue: 4,
+        duration: 10000,
         easing: Easing.linear,
         useNativeDriver: true,
       })

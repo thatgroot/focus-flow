@@ -11,6 +11,7 @@ import {
   updateDoc,
   where,
   deleteDoc,
+  or,
 } from "firebase/firestore";
 import { auth, database } from "./firebase";
 import {
@@ -304,9 +305,11 @@ export const controllers = {
   },
   group: {
     search: async ({ title }: Pick<Group, "title">) => {
+      console.log(title)
       const ref = collection(database, `groups`);
       const _query = query(ref, where("title", "==", title.trim()));
       const groups = await getDocsQuery(_query);
+      console.log('groups', groups)
       return groups as Group[];
     },
 
